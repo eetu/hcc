@@ -1,15 +1,9 @@
-import { createServer } from "http";
-import next from "next";
-import { parse } from "url";
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import type { NextApiRequest, NextApiResponse } from "next";
 import { discovery, api } from "node-hue-api";
 import { cleanEnv, str } from "envalid";
 import { Api } from "node-hue-api/dist/esm/api/Api";
 import dotenv from "dotenv";
-
-const port = parseInt(process.env.PORT || "3000", 10);
-const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
-const handle = app.getRequestHandler();
 
 dotenv.config();
 const env = cleanEnv(process.env, {
@@ -83,9 +77,16 @@ const getHueApi = async () => {
   }
 };
 
-const start = async () => {
-  await app.prepare();
+type Data = {
+  id: string;
+  name: string;
+  temperature: string;
+};
 
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data[]>
+) {
   const hueApi = await getHueApi();
 
   if (!hueApi) {
@@ -95,30 +96,19 @@ const start = async () => {
   const sensors = await hueApi.sensors.getAll();
   const temperatureSensors = sensors.filter((s) => s.type === "ZLLTemperature");
 
-  temperatureSensors.forEach((s) => {
+  const temps = temperatureSensors.map((s) => {
     const id = s.getAttributeValue("id");
     const name = s.getAttributeValue("name");
     const temperature = s.getStateAttributeValue("temperature");
+
     console.log(`${name} (${id}): ${temperature / 100}`);
+
+    return {
+      id,
+      name,
+      temperature,
+    };
   });
 
-  createServer((req, res) => {
-    const parsedUrl = parse(req.url || "", true);
-    const { pathname, query } = parsedUrl;
-
-    if (pathname === "/foobar") {
-      console.log(JSON.stringify(query, null, 2));
-      app.render(req, res, "/posts", query);
-    } else {
-      handle(req, res, parsedUrl);
-    }
-  }).listen(port);
-
-  console.log(
-    `> Server listening at http://localhost:${port} as ${
-      dev ? "development" : process.env.NODE_ENV
-    }`
-  );
-};
-
-start();
+  res.status(200).json(temps);
+}

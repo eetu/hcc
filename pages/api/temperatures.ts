@@ -77,14 +77,32 @@ const getHueApi = async () => {
   }
 };
 
+type RoomType = "inside" | "outside";
+
 type Data = {
-  id: string;
   name: string;
-  temperature: string;
+  temperature: number;
+  type: RoomType;
+};
+
+type SensorMapping = {
+  name: string;
+  type: RoomType;
+};
+
+const rooms: Record<string, SensorMapping> = {
+  "00:17:88:01:02:10:20:a1-02-0402": { name: "Keittiö", type: "inside" },
+  "00:17:88:01:06:46:65:99-02-0402": { name: "Kuisti", type: "inside" },
+  "00:17:88:01:06:f7:e0:38-02-0402": { name: "Takkahuone", type: "inside" },
+  "00:17:88:01:06:f6:72:c0-02-0402": { name: "Baarihuone", type: "inside" },
+  "00:17:88:01:06:44:82:76-02-0402": { name: "Etuovi", type: "outside" },
+  "00:17:88:01:06:44:03:3c-02-0402": { name: "Autotalli", type: "outside" },
+  "00:17:88:01:08:67:21:2c-02-0402": { name: "Olohuone", type: "inside" },
+  "00:17:88:01:09:15:9b:6c-02-0402": { name: "Käytävä", type: "inside" },
 };
 
 export default async function handler(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse<Data[]>
 ) {
   const hueApi = await getHueApi();
@@ -97,16 +115,16 @@ export default async function handler(
   const temperatureSensors = sensors.filter((s) => s.type === "ZLLTemperature");
 
   const temps = temperatureSensors.map((s) => {
-    const id = s.getAttributeValue("id");
-    const name = s.getAttributeValue("name");
-    const temperature = s.getStateAttributeValue("temperature");
-
-    console.log(`${name} (${id}): ${temperature / 100}`);
+    const uniqueid = s.getAttributeValue("uniqueid");
+    const room = rooms[uniqueid];
+    const name = room.name;
+    const type = room.type;
+    const temperature = s.getStateAttributeValue("temperature") / 100;
 
     return {
-      id,
       name,
       temperature,
+      type,
     };
   });
 

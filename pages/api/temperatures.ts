@@ -79,7 +79,8 @@ const getHueApi = async () => {
 
 type RoomType = "inside" | "outside";
 
-type Data = {
+export type Room = {
+  id: string;
   name: string;
   temperature: number;
   type: RoomType;
@@ -103,7 +104,7 @@ const rooms: Record<string, SensorMapping> = {
 
 export default async function handler(
   _req: NextApiRequest,
-  res: NextApiResponse<Data[]>
+  res: NextApiResponse<Room[]>
 ) {
   const hueApi = await getHueApi();
 
@@ -122,6 +123,7 @@ export default async function handler(
     const temperature = s.getStateAttributeValue("temperature") / 100;
 
     return {
+      id: uniqueid,
       name,
       temperature,
       type,

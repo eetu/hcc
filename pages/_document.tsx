@@ -16,10 +16,16 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+          <link rel="alternate icon" href="/favicon.ico" />
           <link
             href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap"
             rel="stylesheet"
           />
+          <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+            rel="stylesheet"
+          ></link>
         </Head>
         <body>
           <Main />

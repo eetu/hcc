@@ -1,18 +1,37 @@
+import { useState } from "react";
 import { Room } from "../pages/api/temperatures";
 import styles from "../styles/temperature.module.css";
 
 type TemperatureProps = {
-  room: Room;
+  temperature: number;
+  title: React.ReactNode;
+  rooms: Room[];
 };
 
-const Temperature: React.FC<TemperatureProps> = ({ room }) => {
+const Temperature: React.FC<TemperatureProps> = ({
+  rooms,
+  title,
+  temperature,
+}) => {
+  const [showRooms, setShowRooms] = useState(false);
+
   return (
-    <div className={styles.card}>
-      <div className={styles.title}>{room.name}</div>
+    <div className={styles.card} onClick={() => setShowRooms(!showRooms)}>
+      <div className={styles.title}>{title}</div>
       <div className={styles.temperature}>
-        {room.temperature.toPrecision(2)}
+        {temperature.toPrecision(2)}
         <span className={styles.degree}>°C</span>
       </div>
+      {showRooms && (
+        <div className={styles.rooms}>
+          {rooms.map((r) => (
+            <div key={r.id}>
+              <span>{r.name}</span>
+              <span>{r.temperature.toPrecision(2)}&nbsp;°C</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

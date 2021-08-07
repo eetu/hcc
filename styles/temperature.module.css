@@ -7,7 +7,7 @@
   padding: 1.5em;
   margin: 1em;
   width: 150px;
-  height: 150px;
+  min-height: 150px;
   border-radius: 10px;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
@@ -31,4 +31,25 @@
   font-size: 20px;
   opacity: 0.5;
   margin-top: 5px;
+}
+
+.rooms {
+  border-top: 1px lightgray solid;
+  display: table;
+  font-weight: lighter;
+  font-size: 12px;
+}
+
+.rooms div {
+  display: table-row;
+}
+
+.rooms span {
+  display: table-cell;
+  padding: 5px;
+}
+
+button.toggleRooms {
+  border: none;
+  background-color: transparent;
 }

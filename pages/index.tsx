@@ -6,8 +6,9 @@ import Temperature from "../components/temperature";
 import Head from "next/head";
 import Icon from "../components/icon";
 import Spinner from "../components/spinner";
+import Weather from "../components/weather";
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+export const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 function Temperatures(props: any) {
   const { data, error } = useSWR<Room[]>("/api/temperatures", fetcher, {
@@ -44,6 +45,7 @@ function Temperatures(props: any) {
           }
           title={<Icon>cottage</Icon>}
         />
+        <Weather></Weather>
       </div>
     </>
   );

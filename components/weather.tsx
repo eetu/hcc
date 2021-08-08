@@ -1,44 +1,43 @@
 import styles from "../styles/weather.module.css";
 import classNames from "classnames";
 import Icon from "./icon";
-import Image, { ImageLoader } from "next/image";
 import useSWR from "swr";
 import { fetcher } from "../pages";
 import Spinner from "./spinner";
+import "weather-react-icons/lib/css/weather-icons.css";
+import { WeatherIcon } from "weather-react-icons";
+import { WeatherReponse } from "../pages/api/weather";
 
 type WeatherProps = {};
 
-type Weather = {
-  coord: object;
-  weather: Array<{
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
-  }>;
-};
-
-const weatherIconLoader: ImageLoader = ({ src }) => {
-  console.log(src);
-  return `http://openweathermap.org/img/wn/${src}@2x.png`;
-};
-
 const Weather: React.FC<WeatherProps> = ({}) => {
-  const { data, error } = useSWR<Weather>("/api/weather", fetcher, {
+  const { data, error } = useSWR<WeatherReponse>("/api/weather", fetcher, {
     refreshInterval: 3600000, // refresh once per hour
     refreshWhenHidden: true,
   });
 
   if (!data) return <Spinner />;
 
-  const weather = data.weather[0];
+  const weather = data.current.weather[0];
+  const today = data.daily[0];
+  console.log(today);
+
   return (
     <div className={styles.weather}>
-      <Image
-        loader={weatherIconLoader}
-        src={{ src: weather.icon, height: 150, width: 150 }}
-        alt={weather.main}
-      ></Image>
+      <div className={styles.title}>{weather.description}</div>
+      <div className={styles.current}>
+        <div>
+          <div className={styles.temp}>
+            {`${data.current.feels_like.toPrecision(2)}°`}
+          </div>
+          <div className={styles.description}>Tuntuu kuin</div>
+        </div>
+        <WeatherIcon
+          className={styles.weatherIcon}
+          iconId={weather.id}
+          name="owm"
+        ></WeatherIcon>
+      </div>
     </div>
   );
 };

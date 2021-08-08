@@ -18,15 +18,18 @@ const Temperature: React.FC<TemperatureProps> = ({
   const [showRooms, setShowRooms] = useState(false);
 
   return (
-    <div className={styles.card} onClick={() => setShowRooms(!showRooms)}>
-      <div className={styles.cardTop}>
+    <div
+      className={styles.temperature}
+      onClick={() => setShowRooms(!showRooms)}
+    >
+      <div className={styles.temperatureTop}>
         <div className={styles.title}>{title}</div>
-        <div className={styles.temperature}>
+        <div className={styles.temp}>
           {temperature.toPrecision(2)}
-          <span className={styles.degree}>°C</span>
+          <span className={styles.degree}>°</span>
         </div>
       </div>
-      <div className={styles.cardMiddle}>
+      <div className={styles.temperatureMiddle}>
         <div
           className={classNames(styles.rooms, {
             [styles.collapsed]: !showRooms,
@@ -35,13 +38,13 @@ const Temperature: React.FC<TemperatureProps> = ({
           {rooms.map((r) => (
             <div key={r.id}>
               <span>{r.name}</span>
-              <span>{r.temperature.toPrecision(2)}&nbsp;°C</span>
+              <span>{r.temperature.toPrecision(2)}&nbsp;°</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className={styles.cardBottom}>
+      <div className={styles.temperatureBottom}>
         <Icon>menu</Icon>
       </div>
     </div>

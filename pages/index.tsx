@@ -27,6 +27,7 @@ function Temperatures(props: any) {
         <title>Hue Control Center</title>
       </Head>
       <div className={styles.grid}>
+        <Weather />
         <Temperature
           rooms={outside}
           temperature={
@@ -34,7 +35,7 @@ function Temperatures(props: any) {
               return acc + room.temperature;
             }, 0) / outside.length
           }
-          title={<Icon>wb_sunny</Icon>}
+          title={<Icon>park</Icon>}
         />
         <Temperature
           rooms={inside}
@@ -43,9 +44,8 @@ function Temperatures(props: any) {
               return acc + room.temperature;
             }, 0) / inside.length
           }
-          title={<Icon>cottage</Icon>}
+          title={<Icon>home</Icon>}
         />
-        <Weather></Weather>
       </div>
     </>
   );

@@ -16,6 +16,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta name="mobile-web-app-capable" content="yes" />
           <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
           <link rel="alternate icon" href="/favicon.ico" />
           <link

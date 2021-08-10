@@ -77,7 +77,7 @@ const getHueApi = async () => {
   }
 };
 
-type RoomType = "inside" | "outside";
+type RoomType = "inside" | "inside_cold" | "outside";
 
 export type Room = {
   id: string;
@@ -93,7 +93,7 @@ type SensorMapping = {
 
 const rooms: Record<string, SensorMapping> = {
   "00:17:88:01:02:10:20:a1-02-0402": { name: "Keittiö", type: "inside" },
-  "00:17:88:01:06:46:65:99-02-0402": { name: "Kuisti", type: "inside" },
+  "00:17:88:01:06:46:65:99-02-0402": { name: "Kuisti", type: "inside_cold" },
   "00:17:88:01:06:f7:e0:38-02-0402": { name: "Takkahuone", type: "inside" },
   "00:17:88:01:06:f6:72:c0-02-0402": { name: "Baarihuone", type: "inside" },
   "00:17:88:01:06:44:82:76-02-0402": { name: "Etuovi", type: "outside" },

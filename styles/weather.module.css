@@ -1,16 +1,36 @@
 .weather {
+  margin: 1em;
+  width: calc(400px + 2em);
+}
+
+.weatherTop {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 10px;
+  border-radius: 10px 10px 0 0;
   background-color: white;
-  margin: 1em;
-  width: 300px;
   min-height: 160px;
   padding: 1.5em;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border-bottom: 1px lightgray solid;
+}
+
+.collapsed .weatherTop {
+  border: none;
+}
+
+.weatherBottom {
+  border-radius: 0 0 10px 10px;
+  height: 25px;
+  background-color: white;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  text-align: center;
+  color: #e6e6e6;
+}
+
+.weatherMiddle {
+  padding: 0 10px;
 }
 
 .title {
@@ -19,9 +39,43 @@
 
 .current {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.currentTemp {
+  display: flex;
+  margin-top: 1.5em;
 }
 
 .daily {
+  position: relative;
+  display: flex;
+  margin-top: 1.5em;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.daily .section {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px lightgrey solid;
+  width: 25%;
+  text-align: center;
+}
+
+.daily .section:last-of-type {
+  border-right: none;
+}
+
+.daily .sectionTitle {
+  font-weight: lighter;
+}
+
+.daily .sectionTemp {
+  margin-top: 0.25em;
 }
 
 .temp {
@@ -39,4 +93,53 @@
   margin-left: 25px;
   font-size: 52px;
   align-self: center;
+}
+
+.collapsed .daysWrapper {
+  display: none !important;
+}
+
+.daysWrapper {
+  border: 1px lightgray solid;
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+.days {
+  display: table;
+  font-weight: regular;
+  font-size: 18px;
+  width: 100%;
+}
+
+.days div {
+  display: table-row;
+}
+
+.days div:nth-child(odd) {
+  background-color: #fff;
+}
+
+.days div:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.days span {
+  height: 42px;
+  display: table-cell;
+  padding: 5px;
+  vertical-align: middle;
+}
+
+.days span:nth-child(1) {
+  text-align: center;
+}
+
+.days span:nth-child(2) {
+  font-weight: bold;
+}
+
+.hourlyIcon {
+  margin-top: 5px;
+  font-size: 24px;
 }

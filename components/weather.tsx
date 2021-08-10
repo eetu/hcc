@@ -20,11 +20,20 @@ const Weather: React.FC<WeatherProps> = ({}) => {
   });
   const [showDays, setshowDays] = useState(false);
 
-  if (!data) return <Spinner />;
+  if (!data)
+    return (
+      <div className={styles.weather}>
+        <div className={styles.weatherTop}>
+          <div className={styles.current}>
+            <Spinner />
+          </div>
+        </div>
+        <div className={styles.weatherBottom}></div>
+      </div>
+    );
 
   const weather = data.current.weather[0];
   const today = data.daily[0];
-  console.log(data.hourly);
 
   return (
     <div

@@ -6,12 +6,10 @@
   display: flex;
   flex-direction: column;
   border-radius: 10px 10px 0 0;
-  background-color: white;
+  background-color: var(--background-color);
   min-height: 160px;
   padding: 1.5em;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-  border-bottom: 1px lightgray solid;
+  box-shadow: var(--shadow);
 }
 
 .collapsed .weatherTop {
@@ -21,11 +19,11 @@
 .weatherBottom {
   border-radius: 0 0 10px 10px;
   height: 25px;
-  background-color: white;
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  background-color: var(--background-color);
+  box-shadow: var(--shadow);
+
   text-align: center;
-  color: #e6e6e6;
+  color: #d8d8d8;
 }
 
 .weatherMiddle {
@@ -116,11 +114,11 @@
 }
 
 .days div:nth-child(odd) {
-  background-color: #fff;
+  background-color: var(--background-color);
 }
 
 .days div:nth-child(even) {
-  background-color: #fafafa;
+  background-color: var(--even-color);
 }
 
 .days span {

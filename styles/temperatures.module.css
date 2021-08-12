@@ -23,21 +23,20 @@
 }
 
 .time {
-  font-family: "digital-7";
+  /* font-family: "digital-7"; */
   font-size: 6em;
 }
 
-.time span:nth-of-type(2) {
+/* .time span:nth-of-type(2) {
   animation-name: blinker;
-  animation-duration: 0.5s;
+  animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
   animation-direction: alternate;
-}
+} */
 
 .date {
-  margin-top: 1em;
-  font-size: 1em;
+  font-size: 1.5em;
   font-weight: lighter;
   text-transform: capitalize;
 }

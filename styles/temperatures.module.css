@@ -24,15 +24,15 @@
 
 .time {
   font-family: "digital-7";
-}
-
-.time :nth-child(1) {
   font-size: 6em;
 }
 
-.time :nth-child(2) {
-  font-weight: lighter;
-  font-size: 2em;
+.time span:nth-of-type(2) {
+  animation-name: blinker;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-direction: alternate;
 }
 
 .date {
@@ -40,4 +40,13 @@
   font-size: 1em;
   font-weight: lighter;
   text-transform: capitalize;
+}
+
+@keyframes blinker {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

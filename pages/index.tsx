@@ -33,8 +33,9 @@ function Temperatures(props: any) {
       </Head>
       <div className={styles.title}>
         <div className={styles.time}>
-          <span>{format(currentTime, "HH:mm")}</span>
-          <span>{format(currentTime, ".ss")}</span>
+          <span>{format(currentTime, "HH")}</span>
+          <span>:</span>
+          <span>{format(currentTime, "mm")}</span>
         </div>
         <div className={styles.date}>
           {format(currentTime, "EEEE dd. MMMM yyyy", { locale: fiLocale })}

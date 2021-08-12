@@ -41,8 +41,9 @@ function Temperatures(props: any) {
         </div>
       </div>
       <div className={styles.grid}>
-        <Weather />
+        <Weather className={styles.weather} />
         <Temperature
+          className={styles.temperature}
           rooms={outside}
           temperature={
             outside.reduce((acc, room) => {
@@ -52,6 +53,7 @@ function Temperatures(props: any) {
           title={<Icon>park</Icon>}
         />
         <Temperature
+          className={styles.temperature}
           rooms={inside}
           temperature={
             inside.reduce((acc, room) => {

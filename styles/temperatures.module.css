@@ -1,10 +1,18 @@
 .grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 600px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   margin-top: 1em;
+}
+
+.grid .weather {
+  grid-column: 1 / span 2;
+  grid-row: 1;
+  padding: 1em;
+}
+
+.grid .temperature {
+  padding: 1em;
+  grid-row: 2;
 }
 
 .title {

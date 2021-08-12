@@ -11,9 +11,11 @@ import { useState } from "react";
 import { format } from "date-fns";
 import fiLocale from "date-fns/locale/fi";
 
-type WeatherProps = {};
+type WeatherProps = {
+  className?: string;
+};
 
-const Weather: React.FC<WeatherProps> = ({}) => {
+const Weather: React.FC<WeatherProps> = ({ className }) => {
   const { data, error } = useSWR<WeatherReponse>("/api/weather", fetcher, {
     refreshInterval: 3600000, // refresh once per hour
     refreshWhenHidden: true,
@@ -37,7 +39,9 @@ const Weather: React.FC<WeatherProps> = ({}) => {
 
   return (
     <div
-      className={classNames(styles.weather, { [styles.collapsed]: !showDays })}
+      className={classNames(className, styles.weather, {
+        [styles.collapsed]: !showDays,
+      })}
       onClick={() => setshowDays(!showDays)}
     >
       <div className={styles.weatherTop}>

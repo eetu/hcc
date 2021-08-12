@@ -5,12 +5,14 @@ import classNames from "classnames";
 import Icon from "./icon";
 
 type TemperatureProps = {
+  className?: string;
   temperature: number;
   title: React.ReactNode;
   rooms: Room[];
 };
 
 const Temperature: React.FC<TemperatureProps> = ({
+  className,
   rooms,
   title,
   temperature,
@@ -19,7 +21,7 @@ const Temperature: React.FC<TemperatureProps> = ({
 
   return (
     <div
-      className={styles.temperature}
+      className={classNames(className, styles.temperature)}
       onClick={() => setShowRooms(!showRooms)}
     >
       <div className={styles.temperatureTop}>

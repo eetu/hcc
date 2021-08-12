@@ -1,6 +1,5 @@
 .weather {
-  margin: 1em;
-  width: calc(400px + 2em);
+  min-width: 400px;
 }
 
 .weatherTop {

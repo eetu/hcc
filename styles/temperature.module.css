@@ -44,8 +44,7 @@
 .rooms {
   border: 1px lightgray solid;
   display: table;
-  font-weight: regular;
-  font-size: 14px;
+  font-size: 18px;
   width: 100%;
 }
 

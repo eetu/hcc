@@ -5,11 +5,9 @@ import dotenv from "dotenv";
 dotenv.config();
 const env = cleanEnv(process.env, {
   OPEN_WEATHER_API_KEY: str(),
+  POSITION_LAT: str(),
+  POSITION_LON: str(),
 });
-
-const query = "33800,fi";
-const lat = "61.478398";
-const lon = "23.795573";
 
 export type WeatherCurrent = {
   dt: number;
@@ -105,17 +103,9 @@ export type WeatherReponse = {
   daily: Array<WeatherDaily>;
 };
 
-const getCurrentWeather = async () => {
-  const res = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${query}&units=metric&appid=${env.OPEN_WEATHER_API_KEY}&lang=fi`
-  );
-
-  return res.json();
-};
-
 const getWeather = async () => {
   const res = await fetch(
-    `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely&units=metric&appId=${env.OPEN_WEATHER_API_KEY}&lang=fi`
+    `https://api.openweathermap.org/data/2.5/onecall?lat=${env.POSITION_LAT}&lon=${env.POSITION_LON}&exclude=minutely&units=metric&appId=${env.OPEN_WEATHER_API_KEY}&lang=fi`
   );
   return res.json();
 };

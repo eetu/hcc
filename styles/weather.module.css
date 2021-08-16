@@ -93,13 +93,15 @@
 }
 
 .collapsed .daysWrapper {
-  display: none !important;
+  height: 0;
+  border: none;
 }
 
 .daysWrapper {
-  border: 1px lightgray solid;
-  max-height: 200px;
+  border-top: 1px lightgray solid;
   overflow-y: scroll;
+  height: 200px;
+  transition: height 0.25s ease-in-out;
 }
 
 .days {

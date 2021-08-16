@@ -24,7 +24,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
 
   if (!data)
     return (
-      <div className={styles.weather}>
+      <div className={classNames(className, styles.weather)}>
         <div className={styles.weatherTop}>
           <div className={styles.current}>
             <Spinner />

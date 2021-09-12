@@ -16,9 +16,10 @@ const getBridgeAddress = async () => {
 
   if (results.length === 0) {
     console.error("Failed to discover bridge");
-    return "";
+    return undefined;
   }
-  return results[0].ipaddress;
+
+  return results.find((b) => !b.error)?.ipaddress;
 };
 
 const getUsername = async (unauthenticatedApi: Api) => {
@@ -48,7 +49,10 @@ const getUsername = async (unauthenticatedApi: Api) => {
 
 const getHueApi = async () => {
   const address = await getBridgeAddress();
-  if (address.length === 0) {
+
+  console.log(`Tyring to connect bridge at addess: ${address}`);
+
+  if (!address) {
     return undefined;
   }
 
@@ -60,7 +64,8 @@ const getHueApi = async () => {
     // Create a new API instance that is authenticated with the new user we created
     const authenticatedApi = await api.createLocal(address).connect(username);
 
-    const bridgeConfig = await authenticatedApi.configuration.getConfiguration();
+    const bridgeConfig =
+      await authenticatedApi.configuration.getConfiguration();
     console.log(
       `Connected to Hue Bridge: ${bridgeConfig.name} :: ${bridgeConfig.ipaddress}`
     );

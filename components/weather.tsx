@@ -22,17 +22,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
   });
   const [showDays, setshowDays] = useState(false);
 
-  if (!data)
-    return (
-      <div className={classNames(className, styles.weather)}>
-        <div className={styles.weatherTop}>
-          <div className={styles.current}>
-            <Spinner />
-          </div>
-        </div>
-        <div className={styles.weatherBottom}></div>
-      </div>
-    );
+  if (!data) return <Spinner />;
 
   const weather = data.current.weather[0];
   const today = data.daily[0];

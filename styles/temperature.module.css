@@ -1,5 +1,17 @@
-.temperature {
+.temperature,
+.error,
+.wait {
   min-width: 200px;
+}
+
+.error,
+.wait {
+  display: flex;
+  justify-content: space-around;
+}
+
+.error {
+  color: tomato;
 }
 
 .temperatureTop {

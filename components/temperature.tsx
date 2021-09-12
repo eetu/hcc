@@ -1,23 +1,50 @@
 import { useState } from "react";
 import { Room } from "../pages/api/temperatures";
+import useSWR from "swr";
+import Spinner from "../components/spinner";
+
 import styles from "../styles/temperature.module.css";
 import classNames from "classnames";
 import Icon from "./icon";
+import { fetcher } from "../pages";
 
 type TemperatureProps = {
   className?: string;
-  temperature: number;
   title: React.ReactNode;
-  rooms: Room[];
+  type: "outside" | "inside";
 };
 
 const Temperature: React.FC<TemperatureProps> = ({
   className,
-  rooms,
   title,
-  temperature,
+  type,
 }) => {
   const [showRooms, setShowRooms] = useState(false);
+
+  const { data, error } = useSWR<Room[]>("/api/temperatures", fetcher, {
+    refreshInterval: 60000, // refresh once per minute
+    refreshWhenHidden: true,
+  });
+
+  if (error)
+    return (
+      <div className={styles.error}>
+        <Icon>error</Icon>
+      </div>
+    );
+  if (!data)
+    return (
+      <div className={styles.wait}>
+        <Spinner />
+      </div>
+    );
+
+  const rooms = data.filter((d) => d.type === type);
+
+  var temperature =
+    rooms.reduce((acc, room) => {
+      return acc + room.temperature;
+    }, 0) / rooms.length;
 
   return (
     <div

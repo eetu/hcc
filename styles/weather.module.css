@@ -2,6 +2,11 @@
   min-width: 400px;
 }
 
+.wait {
+  display: flex;
+  justify-content: space-around;
+}
+
 .weatherTop {
   display: flex;
   flex-direction: column;
@@ -10,6 +15,7 @@
   min-height: 160px;
   padding: 1.5em;
   box-shadow: var(--shadow);
+  border-bottom: 1px lightgray solid;
 }
 
 .collapsed .weatherTop {
@@ -98,7 +104,6 @@
 }
 
 .daysWrapper {
-  border-top: 1px lightgray solid;
   overflow-y: scroll;
   height: 200px;
   transition: height 0.25s ease-in-out;
@@ -136,6 +141,11 @@
 
 .days span:nth-child(2) {
   font-weight: bold;
+}
+
+.day {
+  border-left: 1px lightgray solid;
+  border-right: 1px lightgray solid;
 }
 
 .hourlyIcon {

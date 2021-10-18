@@ -22,7 +22,12 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
   });
   const [showDays, setshowDays] = useState(false);
 
-  if (!data) return <Spinner />;
+  if (!data)
+    return (
+      <div className={styles.wait}>
+        <Spinner />
+      </div>
+    );
 
   const weather = data.current.weather[0];
   const today = data.daily[0];
@@ -40,7 +45,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
           <div className={styles.currentTemp}>
             <div>
               <div className={styles.temp}>
-                {`${data.current.feels_like.toPrecision(2)}°`}
+                {`${data.current.feels_like.toFixed()}°`}
               </div>
             </div>
             <WeatherIcon
@@ -54,25 +59,25 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
           <div className={styles.section}>
             <span className={styles.sectionTitle}>aamu</span>
             <span className={styles.sectionTemp}>
-              {today.feels_like.morn.toPrecision(2)}°
+              {today.feels_like.morn.toFixed()}°
             </span>
           </div>
           <div className={styles.section}>
             <span className={styles.sectionTitle}>päivä</span>
             <span className={styles.sectionTemp}>
-              {today.feels_like.day.toPrecision(2)}°
+              {today.feels_like.day.toFixed()}°
             </span>
           </div>
           <div className={styles.section}>
             <span className={styles.sectionTitle}>ilta</span>
             <span className={styles.sectionTemp}>
-              {today.feels_like.eve.toPrecision(2)}°
+              {today.feels_like.eve.toFixed()}°
             </span>
           </div>
           <div className={styles.section}>
             <span className={styles.sectionTitle}>yö</span>
             <span className={styles.sectionTemp}>
-              {today.feels_like.night.toPrecision(2)}°
+              {today.feels_like.night.toFixed()}°
             </span>
           </div>
         </div>
@@ -81,11 +86,11 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
         <div className={styles.daysWrapper}>
           <div className={styles.days}>
             {data.hourly.slice(0, 24).map((w, idx) => (
-              <div key={idx}>
+              <div className={styles.day} key={idx}>
                 <span>{`${format(new Date(w.dt * 1000), "HH:mm EEEEEE", {
                   locale: fiLocale,
                 })}`}</span>
-                <span>{`${w.feels_like.toPrecision(2)}°`}</span>
+                <span>{`${w.feels_like.toFixed()}°`}</span>
                 <WeatherIcon
                   className={styles.hourlyIcon}
                   iconId={w.weather[0].id}

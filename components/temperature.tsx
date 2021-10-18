@@ -54,7 +54,7 @@ const Temperature: React.FC<TemperatureProps> = ({
       <div className={styles.temperatureTop}>
         <div className={styles.title}>{title}</div>
         <div className={styles.temp}>
-          {temperature.toPrecision(2)}
+          {temperature.toFixed()}
           <span className={styles.degree}>°</span>
         </div>
       </div>
@@ -67,7 +67,7 @@ const Temperature: React.FC<TemperatureProps> = ({
           {rooms.map((r) => (
             <div key={r.id}>
               <span>{r.name}</span>
-              <span>{r.temperature.toPrecision(2)}&nbsp;°</span>
+              <span>{r.temperature.toFixed()}°</span>
             </div>
           ))}
         </div>

@@ -18,7 +18,8 @@
   border-bottom: 1px lightgray solid;
 }
 
-.collapsed .weatherTop {
+.collapsed .weatherTop,
+.collapsed .weatherBottom {
   border: none;
 }
 
@@ -27,6 +28,7 @@
   height: 25px;
   background-color: var(--background-color);
   box-shadow: var(--shadow);
+  border-top: 1px lightgray solid;
 
   text-align: center;
   color: #d8d8d8;
@@ -81,10 +83,23 @@
   margin-top: 0.25em;
 }
 
+.temps {
+  display: flex;
+}
+
 .temp {
   display: flex;
   font-weight: regular;
   font-size: 50px;
+}
+
+.feelsLike {
+  display: flex;
+  align-items: flex-end;
+  font-size: 20px;
+  font-weight: lighter;
+  align-self: bottom;
+  margin-bottom: 5px;
 }
 
 .description {

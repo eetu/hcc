@@ -23,6 +23,7 @@
   justify-content: space-between;
   padding: 1.5em;
   box-shadow: var(--shadow);
+  border-bottom: 1px lightgray solid;
 }
 
 .temperatureBottom {
@@ -32,6 +33,12 @@
   box-shadow: var(--shadow);
   text-align: center;
   color: #d8d8d8;
+  border-top: 1px lightgray solid;
+}
+
+.collapsed .temperatureTop,
+.collapsed .temperatureBottom {
+  border: none;
 }
 
 .temperatureMiddle {
@@ -51,13 +58,12 @@
 }
 
 .rooms {
-  border: 1px lightgray solid;
   display: table;
   font-size: 18px;
   width: 100%;
 }
 
-.collapsed {
+.collapsed .rooms {
   display: none !important;
 }
 

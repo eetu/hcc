@@ -48,7 +48,9 @@ const Temperature: React.FC<TemperatureProps> = ({
 
   return (
     <div
-      className={classNames(className, styles.temperature)}
+      className={classNames(className, styles.temperature, {
+        [styles.collapsed]: !showRooms,
+      })}
       onClick={() => setShowRooms(!showRooms)}
     >
       <div className={styles.temperatureTop}>
@@ -59,11 +61,7 @@ const Temperature: React.FC<TemperatureProps> = ({
         </div>
       </div>
       <div className={styles.temperatureMiddle}>
-        <div
-          className={classNames(styles.rooms, {
-            [styles.collapsed]: !showRooms,
-          })}
-        >
+        <div className={classNames(styles.rooms)}>
           {rooms.map((r) => (
             <div key={r.id}>
               <span>{r.name}</span>

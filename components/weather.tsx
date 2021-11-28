@@ -4,12 +4,13 @@ import Icon from "./icon";
 import useSWR from "swr";
 import { fetcher } from "../pages";
 import Spinner from "./spinner";
-import "weather-react-icons/lib/css/weather-icons.css";
 import { WeatherIcon } from "weather-react-icons";
 import { WeatherReponse } from "../pages/api/weather";
 import { useState } from "react";
 import { format } from "date-fns";
 import fiLocale from "date-fns/locale/fi";
+
+import "weather-react-icons/lib/css/weather-icons.css";
 
 type WeatherProps = {
   className?: string;
@@ -43,10 +44,13 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
         <div className={styles.current}>
           <div className={styles.title}>{weather.description}</div>
           <div className={styles.currentTemp}>
-            <div>
+            <div className={styles.temps}>
               <div className={styles.temp}>
-                {`${data.current.feels_like.toFixed()}°`}
+                {`${data.current.temp.toFixed()}°`}
               </div>
+              <div
+                className={styles.feelsLike}
+              >{`${data.current.feels_like.toFixed()}°`}</div>
             </div>
             <WeatherIcon
               className={styles.weatherIcon}
@@ -59,25 +63,25 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
           <div className={styles.section}>
             <span className={styles.sectionTitle}>aamu</span>
             <span className={styles.sectionTemp}>
-              {today.feels_like.morn.toFixed()}°
+              {today.temp.morn.toFixed()}°
             </span>
           </div>
           <div className={styles.section}>
             <span className={styles.sectionTitle}>päivä</span>
             <span className={styles.sectionTemp}>
-              {today.feels_like.day.toFixed()}°
+              {today.temp.day.toFixed()}°
             </span>
           </div>
           <div className={styles.section}>
             <span className={styles.sectionTitle}>ilta</span>
             <span className={styles.sectionTemp}>
-              {today.feels_like.eve.toFixed()}°
+              {today.temp.eve.toFixed()}°
             </span>
           </div>
           <div className={styles.section}>
             <span className={styles.sectionTitle}>yö</span>
             <span className={styles.sectionTemp}>
-              {today.feels_like.night.toFixed()}°
+              {today.temp.night.toFixed()}°
             </span>
           </div>
         </div>
@@ -90,7 +94,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                 <span>{`${format(new Date(w.dt * 1000), "HH:mm EEEEEE", {
                   locale: fiLocale,
                 })}`}</span>
-                <span>{`${w.feels_like.toFixed()}°`}</span>
+                <span>{`${w.temp.toFixed()}°`}</span>
                 <WeatherIcon
                   className={styles.hourlyIcon}
                   iconId={w.weather[0].id}

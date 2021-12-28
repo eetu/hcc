@@ -34,12 +34,17 @@ function Temperatures(_props: any) {
         <Temperature
           className={styles.temperature}
           type="outside"
-          title={<Icon>park</Icon>}
+          title={<Icon size="big">park</Icon>}
         />
         <Temperature
           className={styles.temperature}
           type="inside"
-          title={<Icon>home</Icon>}
+          title={<Icon size="big">home</Icon>}
+        />
+        <Temperature
+          className={styles.temperature}
+          type="inside_cold"
+          title={<Icon size="big">deck</Icon>}
         />
       </div>
     </>

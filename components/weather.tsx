@@ -1,93 +1,35 @@
-import styles from "../styles/weather.module.css";
+import "weather-react-icons/lib/css/weather-icons.css";
+
 import classNames from "classnames";
-import Icon from "./icon";
-import useSWR from "swr";
-import { fetcher } from "../pages";
-import Spinner from "./spinner";
-import { WeatherIcon } from "weather-react-icons";
-import { WeatherReponse } from "../pages/api/weather";
-import { useState } from "react";
 import { format } from "date-fns";
 import fiLocale from "date-fns/locale/fi";
+import useSWR from "swr";
+import { WeatherIcon } from "weather-react-icons";
 
-import "weather-react-icons/lib/css/weather-icons.css";
+import { fetcher } from "../pages";
+import { WeatherReponse } from "../pages/api/weather";
+import styles from "../styles/weather.module.css";
+import Box from "./box";
 
 type WeatherProps = {
   className?: string;
 };
 
 const Weather: React.FC<WeatherProps> = ({ className }) => {
-  const { data, error } = useSWR<WeatherReponse>("/api/weather", fetcher, {
+  const { data } = useSWR<WeatherReponse>("/api/weather", fetcher, {
     refreshInterval: 3600000, // refresh once per hour
     refreshWhenHidden: true,
   });
-  const [showDays, setshowDays] = useState(false);
 
-  if (!data)
-    return (
-      <div className={styles.wait}>
-        <Spinner />
-      </div>
-    );
-
-  const weather = data.current.weather[0];
-  const today = data.daily[0];
+  const weather = data?.current.weather[0];
+  const today = data?.daily[0];
 
   return (
-    <div
-      className={classNames(className, styles.weather, {
-        [styles.collapsed]: !showDays,
-      })}
-      onClick={() => setshowDays(!showDays)}
-    >
-      <div className={styles.weatherTop}>
-        <div className={styles.current}>
-          <div className={styles.title}>{weather.description}</div>
-          <div className={styles.currentTemp}>
-            <div className={styles.temps}>
-              <div className={styles.temp}>
-                {`${data.current.temp.toFixed()}°`}
-              </div>
-              <div
-                className={styles.feelsLike}
-              >{`${data.current.feels_like.toFixed()}°`}</div>
-            </div>
-            <WeatherIcon
-              className={styles.weatherIcon}
-              iconId={weather.id}
-              name="owm"
-            ></WeatherIcon>
-          </div>
-        </div>
-        <div className={styles.daily}>
-          <div className={styles.section}>
-            <span className={styles.sectionTitle}>aamu</span>
-            <span className={styles.sectionTemp}>
-              {today.temp.morn.toFixed()}°
-            </span>
-          </div>
-          <div className={styles.section}>
-            <span className={styles.sectionTitle}>päivä</span>
-            <span className={styles.sectionTemp}>
-              {today.temp.day.toFixed()}°
-            </span>
-          </div>
-          <div className={styles.section}>
-            <span className={styles.sectionTitle}>ilta</span>
-            <span className={styles.sectionTemp}>
-              {today.temp.eve.toFixed()}°
-            </span>
-          </div>
-          <div className={styles.section}>
-            <span className={styles.sectionTitle}>yö</span>
-            <span className={styles.sectionTemp}>
-              {today.temp.night.toFixed()}°
-            </span>
-          </div>
-        </div>
-      </div>
-      <div className={styles.weatherMiddle}>
-        <div className={styles.daysWrapper}>
+    <Box
+      loading={!data}
+      className={classNames(className, styles.weather)}
+      drawer={
+        data && (
           <div className={styles.days}>
             {data.hourly.slice(0, 24).map((w, idx) => (
               <div className={styles.day} key={idx}>
@@ -104,12 +46,58 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-      <div className={styles.weatherBottom}>
-        <Icon>menu</Icon>
-      </div>
-    </div>
+        )
+      }
+    >
+      {weather && today && (
+        <>
+          <div className={styles.current}>
+            <div className={styles.title}>{weather.description}</div>
+            <div className={styles.currentTemp}>
+              <div className={styles.temps}>
+                <div className={styles.temp}>
+                  {`${data.current.temp.toFixed()}°`}
+                </div>
+                <div
+                  className={styles.feelsLike}
+                >{`${data.current.feels_like.toFixed()}°`}</div>
+              </div>
+              <WeatherIcon
+                className={styles.weatherIcon}
+                iconId={weather.id}
+                name="owm"
+              ></WeatherIcon>
+            </div>
+          </div>
+          <div className={styles.daily}>
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>aamu</span>
+              <span className={styles.sectionTemp}>
+                {today.temp.morn.toFixed()}°
+              </span>
+            </div>
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>päivä</span>
+              <span className={styles.sectionTemp}>
+                {today.temp.day.toFixed()}°
+              </span>
+            </div>
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>ilta</span>
+              <span className={styles.sectionTemp}>
+                {today.temp.eve.toFixed()}°
+              </span>
+            </div>
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>yö</span>
+              <span className={styles.sectionTemp}>
+                {today.temp.night.toFixed()}°
+              </span>
+            </div>
+          </div>
+        </>
+      )}
+    </Box>
   );
 };
 

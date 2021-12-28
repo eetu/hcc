@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { Room } from "../pages/api/temperatures";
-import useSWR from "swr";
-import Spinner from "../components/spinner";
-
-import styles from "../styles/temperature.module.css";
 import classNames from "classnames";
-import Icon from "./icon";
+import { useState } from "react";
+import useSWR from "swr";
+
+import Spinner from "../components/spinner";
 import { fetcher } from "../pages";
+import { Room } from "../pages/api/temperatures";
+import styles from "../styles/temperature.module.css";
+import Box from "./box";
+import Icon from "./icon";
 
 type TemperatureProps = {
   className?: string;
@@ -19,27 +20,12 @@ const Temperature: React.FC<TemperatureProps> = ({
   title,
   type,
 }) => {
-  const [showRooms, setShowRooms] = useState(false);
-
   const { data, error } = useSWR<Room[]>("/api/temperatures", fetcher, {
     refreshInterval: 60000, // refresh once per minute
     refreshWhenHidden: true,
   });
 
-  if (error)
-    return (
-      <div className={styles.error}>
-        <Icon>error</Icon>
-      </div>
-    );
-  if (!data)
-    return (
-      <div className={styles.wait}>
-        <Spinner />
-      </div>
-    );
-
-  const rooms = data.filter((d) => d.type === type);
+  const rooms = data ? data.filter((d) => d.type === type) : [];
 
   var temperature =
     rooms.reduce((acc, room) => {
@@ -47,34 +33,31 @@ const Temperature: React.FC<TemperatureProps> = ({
     }, 0) / rooms.length;
 
   return (
-    <div
-      className={classNames(className, styles.temperature, {
-        [styles.collapsed]: !showRooms,
-      })}
-      onClick={() => setShowRooms(!showRooms)}
+    <Box
+      className={classNames(className)}
+      loading={!data}
+      error={error}
+      drawer={
+        rooms && (
+          <div className={classNames(styles.rooms)}>
+            {rooms.map((r) => (
+              <div key={r.id}>
+                <span>{r.name}</span>
+                <span>{r.temperature.toFixed()}°</span>
+              </div>
+            ))}
+          </div>
+        )
+      }
     >
-      <div className={styles.temperatureTop}>
+      <div className={styles.temperature}>
         <div className={styles.title}>{title}</div>
         <div className={styles.temp}>
           {temperature.toFixed()}
           <span className={styles.degree}>°</span>
         </div>
       </div>
-      <div className={styles.temperatureMiddle}>
-        <div className={classNames(styles.rooms)}>
-          {rooms.map((r) => (
-            <div key={r.id}>
-              <span>{r.name}</span>
-              <span>{r.temperature.toFixed()}°</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className={styles.temperatureBottom}>
-        <Icon>menu</Icon>
-      </div>
-    </div>
+    </Box>
   );
 };
 

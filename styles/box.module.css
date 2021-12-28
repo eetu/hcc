@@ -1,0 +1,58 @@
+.error,
+.wait {
+  display: flex;
+  justify-content: space-around;
+  min-width: 200px;
+}
+
+.error {
+  color: tomato;
+}
+
+.wait,
+.error {
+  display: flex;
+  justify-content: space-around;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px 10px 0 0;
+  background-color: var(--background-color);
+  min-height: 160px;
+  padding: 1.5em;
+  box-shadow: var(--shadow);
+  border-bottom: 1px lightgray solid;
+}
+
+.collapsed .top,
+.collapsed .bottom {
+  border: none;
+}
+
+.bottom {
+  border-radius: 0 0 10px 10px;
+  height: 25px;
+  background-color: var(--background-color);
+  box-shadow: var(--shadow);
+  border-top: 1px lightgray solid;
+
+  text-align: center;
+  color: #d8d8d8;
+}
+
+.middle {
+  padding: 0 10px;
+}
+
+.collapsed .drawer {
+  height: 0;
+}
+
+.drawer {
+  overflow-y: scroll;
+  max-height: 200px;
+  border-left: 1px lightgray solid;
+  border-right: 1px lightgray solid;
+}

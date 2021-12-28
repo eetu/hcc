@@ -1,12 +1,13 @@
 //export const config = { amp: true };
-import styles from "../styles/temperatures.module.css";
-import Temperature from "../components/temperature";
-import Head from "next/head";
-import Icon from "../components/icon";
-import Weather from "../components/weather";
 import { format } from "date-fns";
-import useCurrentTime from "../components/useCurrentTime";
 import fiLocale from "date-fns/locale/fi";
+import Head from "next/head";
+
+import Icon from "../components/icon";
+import Temperature from "../components/temperature";
+import useCurrentTime from "../components/useCurrentTime";
+import Weather from "../components/weather";
+import styles from "../styles/temperatures.module.css";
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
 

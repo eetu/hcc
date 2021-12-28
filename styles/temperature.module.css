@@ -1,48 +1,8 @@
-.temperature,
-.error,
-.wait {
-  min-width: 200px;
-}
-
-.error,
-.wait {
-  display: flex;
-  justify-content: space-around;
-}
-
-.error {
-  color: tomato;
-}
-
-.temperatureTop {
-  border-radius: 10px 10px 0 0;
-  background-color: var(--background-color);
+.temperature {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5em;
-  box-shadow: var(--shadow);
-  border-bottom: 1px lightgray solid;
-}
-
-.temperatureBottom {
-  border-radius: 0 0 10px 10px;
-  height: 25px;
-  background-color: var(--background-color);
-  box-shadow: var(--shadow);
-  text-align: center;
-  color: #d8d8d8;
-  border-top: 1px lightgray solid;
-}
-
-.collapsed .temperatureTop,
-.collapsed .temperatureBottom {
-  border: none;
-}
-
-.temperatureMiddle {
-  padding: 0 10px;
 }
 
 .title {
@@ -52,6 +12,7 @@
 }
 
 .temp {
+  margin-top: 15px;
   display: flex;
   font-weight: regular;
   font-size: 50px;
@@ -61,10 +22,6 @@
   display: table;
   font-size: 18px;
   width: 100%;
-}
-
-.collapsed .rooms {
-  display: none !important;
 }
 
 .rooms div {

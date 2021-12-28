@@ -10,6 +10,7 @@ import { fetcher } from "../pages";
 import { WeatherReponse } from "../pages/api/weather";
 import styles from "../styles/weather.module.css";
 import Box from "./box";
+import Icon from "./icon";
 
 type WeatherProps = {
   className?: string;
@@ -23,6 +24,15 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
 
   const weather = data?.current.weather[0];
   const today = data?.daily[0];
+
+  const sections = today
+    ? [
+        { title: "aamu", temp: today.temp.morn.toFixed() },
+        { title: "päivä", temp: today.temp.day.toFixed() },
+        { title: "ilta", temp: today.temp.eve.toFixed() },
+        { title: "yö", temp: today.temp.night.toFixed() },
+      ]
+    : [];
 
   return (
     <Box
@@ -67,33 +77,30 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                 iconId={weather.id}
                 name="owm"
               ></WeatherIcon>
+              <div className={styles.info}>
+                <div className={styles.infoRow}>
+                  <Icon>opacity</Icon>
+                  <span>
+                    {today.rain?.toFixed() ?? 0} mm/h ({today.pop}%)
+                  </span>
+                </div>
+                <div className={styles.infoRow}>
+                  <Icon>air</Icon>
+                  <span>{today.wind_speed ?? 0} m/s</span>
+                  <Icon style={{ rotate: `${today.wind_deg}deg` }}>
+                    arrow_downward
+                  </Icon>
+                </div>
+              </div>
             </div>
           </div>
           <div className={styles.daily}>
-            <div className={styles.section}>
-              <span className={styles.sectionTitle}>aamu</span>
-              <span className={styles.sectionTemp}>
-                {today.temp.morn.toFixed()}°
-              </span>
-            </div>
-            <div className={styles.section}>
-              <span className={styles.sectionTitle}>päivä</span>
-              <span className={styles.sectionTemp}>
-                {today.temp.day.toFixed()}°
-              </span>
-            </div>
-            <div className={styles.section}>
-              <span className={styles.sectionTitle}>ilta</span>
-              <span className={styles.sectionTemp}>
-                {today.temp.eve.toFixed()}°
-              </span>
-            </div>
-            <div className={styles.section}>
-              <span className={styles.sectionTitle}>yö</span>
-              <span className={styles.sectionTemp}>
-                {today.temp.night.toFixed()}°
-              </span>
-            </div>
+            {sections.map((s) => (
+              <div key={s.title} className={styles.section}>
+                <span className={styles.sectionTitle}>{s.title}</span>
+                <span className={styles.sectionTemp}>{s.temp}°</span>
+              </div>
+            ))}
           </div>
         </>
       )}

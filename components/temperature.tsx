@@ -9,7 +9,7 @@ import Box from "./box";
 type TemperatureProps = {
   className?: string;
   title: React.ReactNode;
-  type: "outside" | "inside";
+  type: "outside" | "inside" | "inside_cold";
 };
 
 const Temperature: React.FC<TemperatureProps> = ({

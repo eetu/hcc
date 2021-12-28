@@ -23,7 +23,7 @@ const Box: React.FC<BoxProps> = ({
 
   if (loading) {
     return (
-      <div className={styles.wait}>
+      <div className={classNames(className, styles.wait)}>
         <Spinner />
       </div>
     );
@@ -31,7 +31,7 @@ const Box: React.FC<BoxProps> = ({
 
   if (error) {
     return (
-      <div className={styles.error}>
+      <div className={classNames(className, styles.error)}>
         <Icon>error</Icon>
       </div>
     );

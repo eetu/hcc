@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { cleanEnv, str } from "envalid";
 import dotenv from "dotenv";
+import { cleanEnv, str } from "envalid";
+import { NextApiRequest, NextApiResponse } from "next";
 
 dotenv.config();
 const env = cleanEnv(process.env, {

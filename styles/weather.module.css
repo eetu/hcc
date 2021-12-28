@@ -21,6 +21,22 @@
 .currentTemp {
   display: flex;
   margin-top: 15px;
+  align-items: center;
+}
+
+.info {
+  font-size: 13px;
+  margin-left: 25px;
+}
+
+.info span {
+  margin-left: 10px;
+}
+
+.infoRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .daily {

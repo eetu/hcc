@@ -27,6 +27,10 @@ class MyDocument extends Document {
             href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
             rel="stylesheet"
           ></link>
+          <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+          ></link>
         </Head>
         <body>
           <Main />

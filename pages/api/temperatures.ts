@@ -1,9 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
-import { discovery, api } from "node-hue-api";
-import { cleanEnv, str } from "envalid";
-import { Api } from "node-hue-api/dist/esm/api/Api";
 import dotenv from "dotenv";
+import { cleanEnv, str } from "envalid";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { api, discovery } from "node-hue-api";
+import { Api } from "node-hue-api/dist/esm/api/Api";
 
 dotenv.config();
 const env = cleanEnv(process.env, {

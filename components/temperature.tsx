@@ -1,13 +1,10 @@
 import classNames from "classnames";
-import { useState } from "react";
 import useSWR from "swr";
 
-import Spinner from "../components/spinner";
 import { fetcher } from "../pages";
 import { Room } from "../pages/api/temperatures";
 import styles from "../styles/temperature.module.css";
 import Box from "./box";
-import Icon from "./icon";
 
 type TemperatureProps = {
   className?: string;

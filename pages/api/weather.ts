@@ -3,6 +3,7 @@ import { cleanEnv, str } from "envalid";
 import { NextApiRequest, NextApiResponse } from "next";
 
 dotenv.config();
+
 const env = cleanEnv(process.env, {
   OPEN_WEATHER_API_KEY: str(),
   POSITION_LAT: str(),

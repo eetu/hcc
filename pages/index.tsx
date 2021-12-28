@@ -44,7 +44,7 @@ function Temperatures(_props: any) {
         <Temperature
           className={styles.temperature}
           type="inside_cold"
-          title={<Icon size="big">deck</Icon>}
+          title={<Icon size="big">ac_unit</Icon>}
         />
       </div>
     </>

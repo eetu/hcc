@@ -8,6 +8,9 @@
 }
 
 .title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   text-transform: capitalize;
 }
 
@@ -98,30 +101,46 @@
   align-self: center;
 }
 
-.days {
+.days,
+.alerts {
   display: table;
   font-weight: regular;
   font-size: 18px;
   width: 100%;
 }
 
-.days div {
+.days div,
+.alerts div {
   display: table-row;
 }
 
-.days div:nth-child(odd) {
+.days div:nth-child(odd),
+.alerts div:nth-child(odd) {
   background-color: var(--background-color);
 }
 
-.days div:nth-child(even) {
+.days div:nth-child(even),
+.alerts div:nth-child(odd) {
   background-color: var(--even-color);
 }
 
-.days span {
+.days span,
+.alert span {
   height: 42px;
   display: table-cell;
   padding: 5px;
   vertical-align: middle;
+}
+
+.alerts span {
+  text-align: center;
+}
+
+.alerts span:nth-child(2) {
+  color: darkorange;
+  inline-size: 400px;
+  overflow-wrap: break-word;
+  text-align: left;
 }
 
 .days span:nth-child(1) {
@@ -132,12 +151,19 @@
   font-weight: bold;
 }
 
-.day {
-  border-left: 1px lightgray solid;
-  border-right: 1px lightgray solid;
-}
-
 .hourlyIcon {
   margin-top: 5px;
   font-size: 24px;
+}
+
+.warning {
+  margin-left: 15px;
+  color: darkorange;
+}
+
+.alert /* row */ {
+  font-size: 13px;
+  height: 42px;
+  padding: 5px;
+  vertical-align: middle;
 }

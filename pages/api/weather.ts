@@ -94,6 +94,15 @@ export type WeatherDaily = {
   rain: number;
 };
 
+export type WeatherAlert = {
+  sender_name: string;
+  event: string;
+  start: number;
+  end: number;
+  description: string;
+  tags: Array<String>;
+};
+
 export type WeatherReponse = {
   lat: number;
   lon: number;
@@ -102,6 +111,7 @@ export type WeatherReponse = {
   current: WeatherCurrent;
   hourly: Array<WeatherHourly>;
   daily: Array<WeatherDaily>;
+  alerts: Array<WeatherAlert>;
 };
 
 const getWeather = async () => {

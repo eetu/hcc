@@ -24,6 +24,9 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
 
   const weather = data?.current.weather[0];
   const today = data?.daily[0];
+  const alerts = data?.alerts;
+
+  console.log(alerts);
 
   const sections = today
     ? [
@@ -39,30 +42,58 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
       loading={!data}
       className={classNames(className, styles.weather)}
       drawer={
-        data && (
-          <div className={styles.days}>
-            {data.hourly.slice(0, 24).map((w, idx) => (
-              <div className={styles.day} key={idx}>
-                <span>{`${format(new Date(w.dt * 1000), "HH:mm EEEEEE", {
-                  locale: fiLocale,
-                })}`}</span>
-                <span>{`${w.temp.toFixed()}°`}</span>
-                <WeatherIcon
-                  className={styles.hourlyIcon}
-                  iconId={w.weather[0].id}
-                  name="owm"
-                ></WeatherIcon>
-                <span>{w.weather[0].description}</span>
+        data &&
+        alerts && (
+          <>
+            {alerts.length > 0 && (
+              <div className={styles.alerts}>
+                {alerts?.map((alert) => (
+                  <div key={alert.event} className={styles.alert}>
+                    <span>
+                      {`${format(new Date(alert.start * 1000), "HH:mm EEEEEE", {
+                        locale: fiLocale,
+                      })}`}
+                      &nbsp;-&nbsp;
+                      {`${format(new Date(alert.end * 1000), "HH:mm EEEEEE", {
+                        locale: fiLocale,
+                      })}`}
+                    </span>
+                    <span>{alert.description}</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+            <div className={styles.days}>
+              {data.hourly.slice(0, 24).map((w, idx) => (
+                <div className={styles.day} key={idx}>
+                  <span>{`${format(new Date(w.dt * 1000), "HH:mm EEEEEE", {
+                    locale: fiLocale,
+                  })}`}</span>
+                  <span>{`${w.temp.toFixed()}°`}</span>
+                  <WeatherIcon
+                    className={styles.hourlyIcon}
+                    iconId={w.weather[0].id}
+                    name="owm"
+                  ></WeatherIcon>
+                  <span>{w.weather[0].description}</span>
+                </div>
+              ))}
+            </div>
+          </>
         )
       }
     >
-      {data && weather && today && (
+      {data && weather && today && alerts && (
         <>
           <div className={styles.current}>
-            <div className={styles.title}>{weather.description}</div>
+            <div className={styles.title}>
+              {weather.description}
+              {alerts.length > 0 && (
+                <Icon type="normal" className={styles.warning}>
+                  announcement
+                </Icon>
+              )}
+            </div>
             <div className={styles.currentTemp}>
               <div className={styles.temps}>
                 <div className={styles.temp}>

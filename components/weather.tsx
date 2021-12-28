@@ -59,7 +59,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
         )
       }
     >
-      {weather && today && (
+      {data && weather && today && (
         <>
           <div className={styles.current}>
             <div className={styles.title}>{weather.description}</div>

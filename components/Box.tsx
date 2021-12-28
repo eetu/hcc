@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React, { useState } from "react";
 
 import styles from "../styles/box.module.css";
-import Icon from "./icon";
+import Icon from "./Icon";
 import Spinner from "./spinner";
 
 type BoxProps = {

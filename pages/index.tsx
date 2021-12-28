@@ -1,10 +1,10 @@
 //export const config = { amp: true };
 import Head from "next/head";
 
-import CurrentTime from "../components/currentTime";
-import Icon from "../components/icon";
-import Temperature from "../components/temperature";
-import Weather from "../components/weather";
+import CurrentTime from "../components/CurrentTime";
+import Icon from "../components/Icon";
+import Temperature from "../components/Temperature";
+import Weather from "../components/Weather";
 import styles from "../styles/temperatures.module.css";
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());

@@ -4,7 +4,7 @@ import useSWR from "swr";
 import { fetcher } from "../pages";
 import { Room } from "../pages/api/temperatures";
 import styles from "../styles/temperature.module.css";
-import Box from "./box";
+import Box from "./Box";
 
 type TemperatureProps = {
   className?: string;

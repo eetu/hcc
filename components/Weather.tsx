@@ -9,8 +9,8 @@ import { WeatherIcon } from "weather-react-icons";
 import { fetcher } from "../pages";
 import { WeatherReponse } from "../pages/api/weather";
 import styles from "../styles/weather.module.css";
-import Box from "./box";
-import Icon from "./icon";
+import Box from "./Box";
+import Icon from "./Icon";
 
 type WeatherProps = {
   className?: string;

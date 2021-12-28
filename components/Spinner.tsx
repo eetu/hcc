@@ -1,7 +1,7 @@
 import React from "react";
 
 import styles from "../styles/spinner.module.css";
-import Icon from "./icon";
+import Icon from "./Icon";
 
 const Spinner: React.FC = () => {
   return (

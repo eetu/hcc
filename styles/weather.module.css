@@ -120,7 +120,7 @@
 }
 
 .days div:nth-child(even),
-.alerts div:nth-child(odd) {
+.alerts div:nth-child(even) {
   background-color: var(--even-color);
 }
 
@@ -137,7 +137,6 @@
 }
 
 .alerts span:nth-child(2) {
-  color: darkorange;
   inline-size: 400px;
   overflow-wrap: break-word;
   text-align: left;
@@ -156,14 +155,18 @@
   font-size: 24px;
 }
 
-.warning {
+.warningIcon {
   margin-left: 15px;
   color: darkorange;
 }
 
-.alert /* row */ {
+.alert {
   font-size: 13px;
   height: 42px;
   padding: 5px;
   vertical-align: middle;
+}
+
+.windArrow {
+  margin-left: 5px;
 }

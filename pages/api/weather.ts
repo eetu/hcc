@@ -91,7 +91,8 @@ export type WeatherDaily = {
     icon: string;
   }>;
   pop: number;
-  rain: number;
+  rain?: number;
+  snow?: number;
 };
 
 export type WeatherAlert = {

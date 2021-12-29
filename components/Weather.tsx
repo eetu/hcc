@@ -110,10 +110,10 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
               ></WeatherIcon>
               <div className={styles.info}>
                 <div className={styles.infoRow}>
-                  <Icon>opacity</Icon>
+                  <Icon>{today.snow ? "ac_unit" : "opacity"}</Icon>
                   <span>
-                    {today.rain?.toFixed() ?? 0} mm/h (
-                    {(today.pop * 100).toFixed()}%)
+                    {today.rain || today.snow} mm ({(today.pop * 100).toFixed()}
+                    %)
                   </span>
                 </div>
                 <div className={styles.infoRow}>

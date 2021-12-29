@@ -1,3 +1,7 @@
+.box {
+  cursor: pointer;
+}
+
 .error,
 .wait {
   display: flex;

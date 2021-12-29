@@ -1,0 +1,40 @@
+.up {
+  transform: rotate(0deg);
+}
+
+.right {
+  transform: rotate(90deg);
+}
+
+.down {
+  transform: rotate(180deg);
+}
+
+.left {
+  transform: rotate(270deg);
+}
+
+.arrow {
+  position: relative;
+  height: 24px;
+  width: 24px;
+}
+
+.circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 100%;
+  border: 2px solid var(--color);
+}
+
+.pointer {
+  position: absolute;
+  left: 0;
+  top: -2px;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 24px solid var(--color);
+}

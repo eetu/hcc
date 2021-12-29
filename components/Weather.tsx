@@ -9,6 +9,7 @@ import { WeatherIcon } from "weather-react-icons";
 import { fetcher } from "../pages";
 import { WeatherReponse } from "../pages/api/weather";
 import styles from "../styles/weather.module.css";
+import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
 
@@ -25,8 +26,6 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
   const weather = data?.current.weather[0];
   const today = data?.daily[0];
   const alerts = data?.alerts;
-
-  console.log(alerts);
 
   const sections = today
     ? [
@@ -47,8 +46,8 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
           <>
             {alerts.length > 0 && (
               <div className={styles.alerts}>
-                {alerts?.map((alert) => (
-                  <div key={alert.event} className={styles.alert}>
+                {alerts?.map((alert, idx) => (
+                  <div key={idx} className={styles.alert}>
                     <span>
                       {`${format(new Date(alert.start * 1000), "HH:mm EEEEEE", {
                         locale: fiLocale,
@@ -89,7 +88,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
             <div className={styles.title}>
               {weather.description}
               {alerts.length > 0 && (
-                <Icon type="normal" className={styles.warning}>
+                <Icon type="normal" className={styles.warningIcon}>
                   announcement
                 </Icon>
               )}
@@ -118,10 +117,12 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                 </div>
                 <div className={styles.infoRow}>
                   <Icon>air</Icon>
-                  <span>{today.wind_speed ?? 0} m/s</span>
-                  <Icon style={{ rotate: `${today.wind_deg}deg` }}>
-                    arrow_downward
-                  </Icon>
+                  <span>{today.wind_speed} m/s</span>
+                  <Arrow
+                    className={styles.windArrow}
+                    type="down"
+                    style={{ rotate: `${today.wind_deg}deg` }}
+                  />
                 </div>
               </div>
             </div>

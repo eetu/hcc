@@ -1,7 +1,6 @@
-/*
- .spinner {
+.spinner {
+  opacity: 0.75;
 }
-*/
 
 .sun {
   animation: spin 1s alternate infinite;

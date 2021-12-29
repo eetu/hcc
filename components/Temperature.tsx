@@ -47,7 +47,7 @@ const Temperature: React.FC<TemperatureProps> = ({
                 })}
               >
                 <span>{r.name}</span>
-                <span>{r.temperature.toFixed()}°</span>
+                <span>{Math.round(r.temperature)}°</span>
               </div>
             ))}
           </div>
@@ -57,7 +57,7 @@ const Temperature: React.FC<TemperatureProps> = ({
       <div className={styles.temperature}>
         <div className={styles.title}>{title}</div>
         <div className={styles.temp}>
-          {temperature.toFixed()}
+          {Math.round(temperature)}
           <span className={styles.degree}>°</span>
         </div>
       </div>

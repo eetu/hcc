@@ -29,10 +29,10 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
 
   const sections = today
     ? [
-        { title: "aamu", temp: today.temp.morn.toFixed() },
-        { title: "päivä", temp: today.temp.day.toFixed() },
-        { title: "ilta", temp: today.temp.eve.toFixed() },
-        { title: "yö", temp: today.temp.night.toFixed() },
+        { title: "aamu", temp: Math.round(today.temp.morn) },
+        { title: "päivä", temp: Math.round(today.temp.day) },
+        { title: "ilta", temp: Math.round(today.temp.eve) },
+        { title: "yö", temp: Math.round(today.temp.night) },
       ]
     : [];
 
@@ -68,7 +68,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                   <span>{`${format(new Date(w.dt * 1000), "HH:mm EEEEEE", {
                     locale: fiLocale,
                   })}`}</span>
-                  <span>{`${w.temp.toFixed()}°`}</span>
+                  <span>{`${Math.round(w.temp)}°`}</span>
                   <WeatherIcon
                     className={styles.hourlyIcon}
                     iconId={w.weather[0].id}
@@ -96,11 +96,11 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
             <div className={styles.currentTemp}>
               <div className={styles.temps}>
                 <div className={styles.temp}>
-                  {`${data.current.temp.toFixed()}°`}
+                  {`${Math.round(data.current.temp)}°`}
                 </div>
-                <div
-                  className={styles.feelsLike}
-                >{`${data.current.feels_like.toFixed()}°`}</div>
+                <div className={styles.feelsLike}>{`${Math.round(
+                  data.current.feels_like
+                )}°`}</div>
               </div>
               <WeatherIcon
                 className={styles.weatherIcon}
@@ -120,7 +120,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                 )}
                 <div className={styles.infoRow}>
                   <Icon>air</Icon>
-                  <span>{today.wind_speed} m/s</span>
+                  <span>{today.wind_speed.toFixed(1)} m/s</span>
                   <Arrow
                     className={styles.windArrow}
                     deg={today.wind_deg + 180} // meteorological degrees + 180°

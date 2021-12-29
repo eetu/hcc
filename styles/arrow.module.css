@@ -32,9 +32,9 @@
 
 .pointer {
   position: absolute;
-  left: 0;
-  top: -2px;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-bottom: 24px solid var(--color);
+  left: 7px;
+  top: 6px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 10px solid var(--color);
 }

@@ -114,14 +114,20 @@
   display: table-row;
 }
 
-.days div:nth-child(odd),
-.alerts div:nth-child(odd) {
+.days div:nth-child(odd) {
   background-color: var(--background-color);
 }
 
-.days div:nth-child(even),
-.alerts div:nth-child(even) {
+.days div:nth-child(even) {
   background-color: var(--even-color);
+}
+
+.alerts div:nth-child(odd) {
+  background-color: rgb(255, 219, 195);
+}
+
+.alerts div:nth-child(even) {
+  background-color: rgb(255, 201, 164);
 }
 
 .days span,

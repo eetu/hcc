@@ -5,23 +5,18 @@ import styles from "../styles/arrow.module.css";
 
 type ArrowProps = {
   className?: string;
-  type?: "up" | "down" | "left" | "right";
+  deg?: number;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const Arrow: React.FC<ArrowProps> = ({ className, style, type }) => {
+const Arrow: React.FC<ArrowProps> = ({ className, style, deg }) => {
   return (
-    <span
-      className={classNames(styles.arrow, className, {
-        [styles.up]: type === "up",
-        [styles.down]: type === "down",
-        [styles.left]: type === "left",
-        [styles.right]: type === "right",
-      })}
-      style={style}
+    <div
+      className={classNames(className, styles.arrow)}
+      style={{ transform: `rotate(${deg}deg)` }}
     >
       <div className={styles.circle} />
       <div className={styles.pointer} />
-    </span>
+    </div>
   );
 };
 

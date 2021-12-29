@@ -120,8 +120,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                   <span>{today.wind_speed} m/s</span>
                   <Arrow
                     className={styles.windArrow}
-                    type="down"
-                    style={{ rotate: `${today.wind_deg}deg` }}
+                    deg={today.wind_deg + 180} // meteorological degrees + 180°
                   />
                 </div>
               </div>

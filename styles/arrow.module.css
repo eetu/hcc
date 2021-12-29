@@ -24,10 +24,11 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: 100%;
-  width: 100%;
+  height: inherit;
+  width: inherit;
   border-radius: 100%;
-  border: 2px solid var(--color);
+  border: 1px solid var(--color);
+  opacity: 0.5;
 }
 
 .pointer {

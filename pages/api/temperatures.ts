@@ -89,6 +89,7 @@ export type Room = {
   name: string;
   temperature: number;
   type: RoomType;
+  enabled: boolean;
 };
 
 type SensorMapping = {
@@ -126,12 +127,14 @@ export default async function handler(
     const name = room.name;
     const type = room.type;
     const temperature = s.getStateAttributeValue("temperature") / 100;
+    const enabled = s.getConfigAttributeValue("on");
 
     return {
       id: uniqueid,
       name,
       temperature,
       type,
+      enabled,
     };
   });
 

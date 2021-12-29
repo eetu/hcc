@@ -24,24 +24,23 @@
   width: 100%;
 }
 
-.rooms div {
+.room {
   display: table-row;
 }
 
-.rooms div:nth-child(odd) {
+.room:nth-child(odd) {
   background-color: var(--background-color);
 }
 
-.rooms div:nth-child(even) {
+.room:nth-child(even) {
   background-color: var(--even-color);
 }
 
-.rooms span {
+.room span {
   display: table-cell;
   padding: 5px;
 }
 
-button.toggleRooms {
-  border: none;
-  background-color: transparent;
+.room.disabled span {
+  opacity: 0.25;
 }

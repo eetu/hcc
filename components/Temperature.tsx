@@ -24,10 +24,12 @@ const Temperature: React.FC<TemperatureProps> = ({
 
   const rooms = data ? data.filter((d) => d.type === type) : [];
 
+  const enabledRooms = rooms.filter((r) => r.enabled);
+
   var temperature =
-    rooms.reduce((acc, room) => {
+    enabledRooms.reduce((acc, room) => {
       return acc + room.temperature;
-    }, 0) / rooms.length;
+    }, 0) / enabledRooms.length;
 
   return (
     <Box
@@ -38,7 +40,12 @@ const Temperature: React.FC<TemperatureProps> = ({
         rooms && (
           <div className={classNames(styles.rooms)}>
             {rooms.map((r) => (
-              <div key={r.id}>
+              <div
+                key={r.id}
+                className={classNames(styles.room, {
+                  [styles.disabled]: !r.enabled,
+                })}
+              >
                 <span>{r.name}</span>
                 <span>{r.temperature.toFixed()}°</span>
               </div>

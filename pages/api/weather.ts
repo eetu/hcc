@@ -52,6 +52,12 @@ export type WeatherHourly = {
     icon: string;
   }>;
   pop: number;
+  rain?: {
+    "1h"?: number;
+  };
+  snow?: {
+    "1h"?: number;
+  };
 };
 
 export type WeatherDaily = {

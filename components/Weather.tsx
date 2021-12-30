@@ -75,6 +75,14 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                     name="owm"
                   ></WeatherIcon>
                   <span>{w.weather[0].description}</span>
+                  <span>
+                    {(w.rain?.["1h"] || w.snow?.["1h"]) && (
+                      <>
+                        {(w.rain?.["1h"] || w.snow?.["1h"] || 0).toFixed(1)} mm
+                        ({(w.pop * 100).toFixed()}%)
+                      </>
+                    )}
+                  </span>
                 </div>
               ))}
             </div>

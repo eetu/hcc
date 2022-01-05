@@ -9,9 +9,17 @@ dotenv.config();
 const env = cleanEnv(process.env, {
   HUE_BRIDGE_USER: str(),
   HUE_BRIDGE_USER_CLIENT_KEY: str(),
+  HUE_BRIDGE_ADDRESS: str({
+    default: undefined,
+  }),
 });
 
 const getBridgeAddress = async () => {
+  if (env.HUE_BRIDGE_ADDRESS) {
+    console.log("Bridge IP address provided with env");
+    return env.HUE_BRIDGE_ADDRESS;
+  }
+
   const results = await discovery.nupnpSearch();
 
   if (results.length === 0) {

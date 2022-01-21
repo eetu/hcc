@@ -90,12 +90,12 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
         )
       }
     >
-      {data && weather && today && alerts && (
+      {data && weather && today && (
         <>
           <div className={styles.current}>
             <div className={styles.title}>
               {weather.description}
-              {alerts.length > 0 && (
+              {alerts && alerts.length > 0 && (
                 <Icon type="normal" className={styles.warningIcon}>
                   announcement
                 </Icon>

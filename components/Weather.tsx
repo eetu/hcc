@@ -5,11 +5,9 @@ import { format } from "date-fns";
 import fiLocale from "date-fns/locale/fi";
 import {
   Bar,
-  CartesianAxis,
   CartesianGrid,
   ComposedChart,
   Line,
-  LineChart,
   ResponsiveContainer,
   XAxis,
   YAxis,
@@ -47,7 +45,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
     })}`,
   }));
 
-  const weatherLineColor = chartData[0].temp < 5 ? "#1a5276" : "#ff5733";
+  const weatherLineColor = chartData[0]?.temp < 5 ? "#1a5276" : "#ff5733";
 
   const sections = today
     ? [

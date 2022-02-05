@@ -83,7 +83,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
               ></YAxis>
               <Bar dataKey="rain" fill="#94daf7" yAxisId="rain"></Bar>
               <Line
-                type="linear"
+                type="monotone"
                 dataKey="temp"
                 stroke={weatherLineColor}
                 dot={false}

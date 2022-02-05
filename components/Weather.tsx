@@ -3,6 +3,17 @@ import "weather-react-icons/lib/css/weather-icons.css";
 import classNames from "classnames";
 import { format } from "date-fns";
 import fiLocale from "date-fns/locale/fi";
+import {
+  Bar,
+  CartesianAxis,
+  CartesianGrid,
+  ComposedChart,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from "recharts";
 import useSWR from "swr";
 import { WeatherIcon } from "weather-react-icons";
 
@@ -25,7 +36,18 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
 
   const weather = data?.current.weather[0];
   const today = data?.daily[0];
+  const rest = data?.daily.slice(1) || [];
   const alerts = data?.alerts;
+
+  const chartData = rest.map((d) => ({
+    temp: d.temp.day,
+    rain: d.snow ?? d.rain ?? 0,
+    label: `${format(new Date(d.dt * 1000), "EEEEEE", {
+      locale: fiLocale,
+    })}`,
+  }));
+
+  const weatherLineColor = chartData[0].temp < 5 ? "#1a5276" : "#ff5733";
 
   const sections = today
     ? [
@@ -41,52 +63,38 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
       loading={!data}
       className={classNames(className, styles.weather)}
       drawer={
-        data && (
-          <>
-            { alerts && alerts.length > 0 && (
-              <div className={styles.alerts}>
-                {alerts?.map((alert, idx) => (
-                  <div key={idx} className={styles.alert}>
-                    <span>
-                      {`${format(new Date(alert.start * 1000), "HH:mm EEEEEE", {
-                        locale: fiLocale,
-                      })}`}
-                      &nbsp;-&nbsp;
-                      {`${format(new Date(alert.end * 1000), "HH:mm EEEEEE", {
-                        locale: fiLocale,
-                      })}`}
-                    </span>
-                    <span>{alert.description}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className={styles.days}>
-              {data.hourly.slice(0, 24).map((w, idx) => (
-                <div className={styles.day} key={idx}>
-                  <span>{`${format(new Date(w.dt * 1000), "HH:mm EEEEEE", {
-                    locale: fiLocale,
-                  })}`}</span>
-                  <span>{`${Math.round(w.temp)}°`}</span>
-                  <WeatherIcon
-                    className={styles.hourlyIcon}
-                    iconId={w.weather[0].id}
-                    name="owm"
-                  ></WeatherIcon>
-                  <span>{w.weather[0].description}</span>
-                  <span>
-                    {(w.rain?.["1h"] || w.snow?.["1h"]) && (
-                      <>
-                        {(w.rain?.["1h"] || w.snow?.["1h"] || 0).toFixed(1)} mm
-                        ({(w.pop * 100).toFixed()}%)
-                      </>
-                    )}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </>
-        )
+        <div className={styles.days}>
+          <ResponsiveContainer height={200} width="100%">
+            <ComposedChart
+              data={chartData}
+              margin={{ top: 20, right: 30, bottom: 0, left: 0 }}
+            >
+              <CartesianGrid
+                stroke="lightgrey"
+                vertical={false}
+                strokeWidth={1}
+                strokeDasharray="2 4"
+              ></CartesianGrid>
+              <XAxis dataKey="label"></XAxis>
+              <YAxis yAxisId="temp" allowDecimals={false} unit="°"></YAxis>
+              <YAxis
+                yAxisId="rain"
+                orientation="right"
+                allowDecimals={false}
+                unit="mm"
+              ></YAxis>
+              <Bar dataKey="rain" fill="#94daf7" yAxisId="rain"></Bar>
+              <Line
+                type="linear"
+                dataKey="temp"
+                stroke={weatherLineColor}
+                dot={false}
+                strokeWidth={2}
+                yAxisId="temp"
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
       }
     >
       {data && weather && today && (

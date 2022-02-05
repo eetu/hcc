@@ -41,10 +41,9 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
       loading={!data}
       className={classNames(className, styles.weather)}
       drawer={
-        data &&
-        alerts && (
+        data && (
           <>
-            {alerts.length > 0 && (
+            { alerts && alerts.length > 0 && (
               <div className={styles.alerts}>
                 {alerts?.map((alert, idx) => (
                   <div key={idx} className={styles.alert}>

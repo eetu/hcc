@@ -56,7 +56,7 @@
 
 .drawer {
   overflow-y: scroll;
-  max-height: 200px;
+  /* max-height: 200px; */
   border-left: 1px lightgray solid;
   border-right: 1px lightgray solid;
 }

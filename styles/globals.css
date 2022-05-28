@@ -29,6 +29,8 @@ body {
   height: 100vh;
   background-color: var(--body-color);
   color: var(--color);
+
+  user-select: none;
 }
 
 a {

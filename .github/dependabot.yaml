@@ -6,10 +6,10 @@ updates:
       interval: "daily"
     ignore:
       - dependency-name: "react"
-        versions: ["18.x"]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "react-dom"
-        versions: ["18.x"]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "@types/react"
-        versions: ["18.x"]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "@types/node"
-        versions: ["17.x"]
+        update-types: ["version-update:semver-major"]

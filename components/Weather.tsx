@@ -1,8 +1,11 @@
 import "weather-react-icons/lib/css/weather-icons.css";
+import "tippy.js/dist/tippy.css"; // optional
 
+import Tippy from "@tippyjs/react";
 import classNames from "classnames";
 import { format } from "date-fns";
 import fiLocale from "date-fns/locale/fi";
+import { useState } from "react";
 import {
   Bar,
   CartesianGrid,
@@ -21,7 +24,6 @@ import styles from "../styles/weather.module.css";
 import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
-
 type WeatherProps = {
   className?: string;
 };
@@ -31,6 +33,8 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
     refreshInterval: 3600000, // refresh once per hour
     refreshWhenHidden: true,
   });
+
+  const [alertVisible, setAlertVisible] = useState<boolean>(false);
 
   const weather = data?.current.weather[0];
   const today = data?.daily[0];
@@ -101,9 +105,31 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
             <div className={styles.title}>
               {weather.description}
               {alerts && alerts.length > 0 && (
-                <Icon type="normal" className={styles.warningIcon}>
-                  announcement
-                </Icon>
+                <Tippy
+                  onClickOutside={() => setAlertVisible(false)}
+                  content={
+                    <div>
+                      {alerts.map((a) => (
+                        <div className={styles.warning} key={a.event}>
+                          {a.description}
+                        </div>
+                      ))}
+                    </div>
+                  }
+                  visible={alertVisible}
+                >
+                  <div
+                    className={styles.warningButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setAlertVisible(!alertVisible);
+                    }}
+                  >
+                    <Icon type="normal" className={styles.warningIcon}>
+                      announcement
+                    </Icon>
+                  </div>
+                </Tippy>
               )}
             </div>
             <div className={styles.currentTemp}>

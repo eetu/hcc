@@ -112,15 +112,16 @@
 }
 
 .warningIcon {
-  margin-left: 15px;
   color: lightcoral;
 }
 
-.alert {
+.warningButton {
+  margin-left: 15px;
+}
+
+.warning {
   font-size: 13px;
-  height: 42px;
   padding: 5px;
-  vertical-align: middle;
 }
 
 .windArrow {

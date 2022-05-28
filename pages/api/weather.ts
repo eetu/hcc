@@ -8,6 +8,7 @@ const env = cleanEnv(process.env, {
   OPEN_WEATHER_API_KEY: str(),
   POSITION_LAT: str(),
   POSITION_LON: str(),
+  LANGUAGE: str({ default: "fi" }),
 });
 
 export type WeatherCurrent = {
@@ -123,7 +124,7 @@ export type WeatherReponse = {
 
 const getWeather = async (): Promise<WeatherReponse> => {
   const res = await fetch(
-    `https://api.openweathermap.org/data/2.5/onecall?lat=${env.POSITION_LAT}&lon=${env.POSITION_LON}&exclude=minutely&units=metric&appId=${env.OPEN_WEATHER_API_KEY}&lang=fi`
+    `https://api.openweathermap.org/data/2.5/onecall?lat=${env.POSITION_LAT}&lon=${env.POSITION_LON}&exclude=minutely&units=metric&appId=${env.OPEN_WEATHER_API_KEY}&lang=${env.LANGUAGE}`
   );
   if (!res.ok) {
     console.error(

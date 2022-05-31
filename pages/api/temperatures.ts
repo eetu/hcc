@@ -27,7 +27,7 @@ const getBridgeAddress = async () => {
     return undefined;
   }
 
-  return results.find((b) => !b.error)?.ipaddress;
+  return results.find((b: any) => !b.error)?.ipaddress;
 };
 
 const getUsername = async (unauthenticatedApi: Api) => {
@@ -127,9 +127,11 @@ export default async function handler(
   }
 
   const sensors = await hueApi.sensors.getAll();
-  const temperatureSensors = sensors.filter((s) => s.type === "ZLLTemperature");
+  const temperatureSensors = sensors.filter(
+    (s: any) => s.type === "ZLLTemperature"
+  );
 
-  const temps = temperatureSensors.map((s) => {
+  const temps = temperatureSensors.map((s: any) => {
     const uniqueid = s.getAttributeValue("uniqueid");
     const room = rooms[uniqueid];
     const name = room.name;

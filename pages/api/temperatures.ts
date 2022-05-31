@@ -2,8 +2,8 @@
 import dotenv from "dotenv";
 import { cleanEnv, str } from "envalid";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { api, ApiError, discovery } from "node-hue-api";
 import { Api } from "node-hue-api/dist/esm/api/Api";
+const { api, discovery } = require("node-hue-api").v3;
 
 dotenv.config();
 const env = cleanEnv(process.env, {
@@ -79,13 +79,13 @@ const getHueApi = async () => {
     );
 
     return authenticatedApi;
-  } catch (err) {
-    if ((err as ApiError).getHueErrorType() === 101) {
+  } catch (err: any) {
+    if (err?.getHueErrorType() === 101) {
       console.error(
         "The Link button on the bridge was not pressed. Please press the Link button and try again."
       );
     } else {
-      console.error(`Unexpected Error: ${(err as ApiError).message}`);
+      console.error(`Unexpected Error: ${err?.message}`);
     }
   }
 };

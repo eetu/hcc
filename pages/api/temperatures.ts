@@ -3,7 +3,9 @@ import dotenv from "dotenv";
 import { cleanEnv, str } from "envalid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Api } from "node-hue-api/dist/esm/api/Api";
-const { api, discovery } = require("node-hue-api").v3;
+import { v3 } from "node-hue-api/dist/esm/v3";
+
+const { api, discovery }: typeof v3 = require("node-hue-api").v3;
 
 dotenv.config();
 const env = cleanEnv(process.env, {

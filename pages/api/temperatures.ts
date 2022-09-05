@@ -100,6 +100,7 @@ export type Room = {
   temperature: number;
   type: RoomType;
   enabled: boolean;
+  battery?: number;
 };
 
 type SensorMapping = {
@@ -107,6 +108,7 @@ type SensorMapping = {
   type: RoomType;
 };
 
+// TODO move to .env to improve configurability
 const rooms: Record<string, SensorMapping> = {
   "00:17:88:01:02:10:20:a1-02-0402": { name: "Keittiö", type: "inside" },
   "00:17:88:01:06:46:65:99-02-0402": { name: "Kuisti", type: "inside_cold" },
@@ -133,13 +135,14 @@ export default async function handler(
     (s: any) => s.type === "ZLLTemperature"
   );
 
-  const temps = temperatureSensors.map((s: any) => {
+  const temps = temperatureSensors.map((s) => {
     const uniqueid = s.getAttributeValue("uniqueid");
     const room = rooms[uniqueid];
     const name = room.name;
     const type = room.type;
     const temperature = s.getStateAttributeValue("temperature") / 100;
     const enabled = s.getConfigAttributeValue("on");
+    const battery = (s as any).populationData?.config?.battery;
 
     return {
       id: uniqueid,
@@ -147,6 +150,7 @@ export default async function handler(
       temperature,
       type,
       enabled,
+      battery,
     };
   });
 

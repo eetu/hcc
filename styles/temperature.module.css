@@ -1,4 +1,5 @@
 .temperature {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,11 +37,26 @@
   background-color: var(--even-color);
 }
 
-.room span {
+.room > span {
   display: table-cell;
+  vertical-align: middle;
   padding: 5px;
 }
 
 .room.disabled span {
   opacity: 0.25;
+}
+
+.batteryTitle {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.batteryIcon {
+  transform: rotate(-90deg);
+}
+
+.batteryWarning {
+  color: tomato;
 }

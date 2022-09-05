@@ -3,7 +3,7 @@ import React from "react";
 
 type IconProps = {
   children: string;
-  size?: "normal" | "big" | "bigger";
+  size?: "small" | "normal" | "big" | "bigger";
   type?: "normal" | "outlined";
 } & React.HTMLAttributes<HTMLDivElement>;
 
@@ -20,6 +20,7 @@ const Icon: React.FC<IconProps> = ({
       className={classNames(
         className,
         `material-icons${type === "outlined" ? "-outlined" : ""}`,
+        size === "small" && "md-18",
         size === "normal" && "md-24",
         size === "big" && "md-36",
         size === "bigger" && "md-48"

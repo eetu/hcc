@@ -54,9 +54,11 @@
 }
 
 .batteryIcon {
-  transform: rotate(-90deg);
+  transform: rotate(90deg);
+  opacity: 0.5;
 }
 
 .batteryWarning {
   color: tomato;
+  opacity: 1;
 }

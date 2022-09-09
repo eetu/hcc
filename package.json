@@ -14,7 +14,7 @@
     "date-fns": "^2.29.2",
     "dotenv": "^16.0.2",
     "envalid": "^7.3.1",
-    "next": "12.2.5",
+    "next": "12.3.0",
     "node-hue-api": "^5.0.0-beta.14",
     "react": "17.0.2",
     "react-dom": "17.0.2",

@@ -3,12 +3,12 @@ services:
   hcc:
     image: "ghcr.io/eetu/hcc:latest"
     environment:
-      - OPEN_WEATHER_API_KEY
-      - HUE_BRIDGE_ADDRESS
-      - HUE_BRIDGE_USER
-      - HUE_BRIDGE_USER_CLIENT_KEY
-      - POSITION_LAT
-      - POSITION_LON
-      - LANGUAGE
+      - OPEN_WEATHER_API_KEY=${OPEN_WEATHER_API_KEY}
+      - HUE_BRIDGE_ADDRESS=${HUE_BRIDGE_ADDRESS}
+      - HUE_BRIDGE_USER=${HUE_BRIDGE_USER}
+      - HUE_BRIDGE_USER_CLIENT_KEY=${HUE_BRIDGE_USER_CLIENT_KEY}
+      - POSITION_LAT=${POSITION_LAT}
+      - POSITION_LON=${POSITION_LON}
+      - LANGUAGE=${LANGUAGE}
     ports:
       - 3000:3000

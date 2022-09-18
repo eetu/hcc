@@ -2,6 +2,9 @@
   "name": "hcc",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "18"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -24,7 +27,7 @@
     "weather-react-icons": "^4.0.2"
   },
   "devDependencies": {
-    "@types/node": "16",
+    "@types/node": "18",
     "@types/react": "17.0.15",
     "eslint": "7.32.0",
     "eslint-config-next": "12.3.0",

@@ -1,19 +1,21 @@
 # syntax=docker/dockerfile:1
-FROM node:16-alpine AS deps
-RUN apk add --no-cache git openssh
+FROM node:18-slim AS deps
+RUN apt update
+RUN apt install git -y
+RUN apt clean
 WORKDIR /app
 ENV NODE_ENV development
 COPY ["package.json", "yarn.lock", "./"]
 RUN yarn install
 
-FROM node:16-alpine AS build
+FROM node:18-slim AS build
 WORKDIR /app
 ENV NODE_ENV production
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN yarn build
 
-FROM node:16-alpine AS runner
+FROM node:18-slim AS runner
 WORKDIR /app
 ENV NODE_ENV production
 ENV PORT 3000

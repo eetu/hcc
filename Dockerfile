@@ -17,8 +17,11 @@ RUN yarn build
 
 FROM node:18-alpine AS runner
 WORKDIR /app
+ARG HCC_IMAGE_TAG
+
 ENV NODE_ENV production
 ENV PORT 3000
+ENV HCC_IMAGE_TAG=$HCC_IMAGE_TAG
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

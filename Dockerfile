@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM node:18-slim AS deps
 RUN apt update
-RUN apt install git -y
+RUN apt install git libseccomp2 -y
 RUN apt clean
 WORKDIR /app
 ENV NODE_ENV development

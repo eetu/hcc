@@ -48,8 +48,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args:
-            - HCC_IMAGE_TAG=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+          build-args: |
+            HCC_IMAGE_TAG=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
           platforms: linux/arm64
 
       - name: Delete untagged images # to preserve disk space from free ghcr

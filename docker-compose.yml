@@ -2,6 +2,7 @@ version: '3'
 services:
   hcc:
     image: "ghcr.io/eetu/hcc:main"
+    container_name: hcc
     environment:
       - OPEN_WEATHER_API_KEY=${OPEN_WEATHER_API_KEY}
       - HUE_BRIDGE_ADDRESS=${HUE_BRIDGE_ADDRESS}
@@ -12,3 +13,9 @@ services:
       - LANGUAGE=${LANGUAGE}
     ports:
       - 3000:3000
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 600 hcc

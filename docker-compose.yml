@@ -1,7 +1,7 @@
 version: '3'
 services:
   hcc:
-    image: "ghcr.io/eetu/hcc:latest"
+    image: "ghcr.io/eetu/hcc:main"
     environment:
       - OPEN_WEATHER_API_KEY=${OPEN_WEATHER_API_KEY}
       - HUE_BRIDGE_ADDRESS=${HUE_BRIDGE_ADDRESS}

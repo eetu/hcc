@@ -6,7 +6,9 @@ RUN apt clean
 WORKDIR /app
 ENV NODE_ENV development
 COPY ["package.json", "yarn.lock", "./"]
-RUN yarn install
+# Something strange building linux/arm64 images and yarn timeout
+# https://github.com/docker/build-push-action/issues/471
+RUN yarn install --frozen-lockfile --network-timeout 1000000
 
 FROM node:18-slim AS build
 WORKDIR /app

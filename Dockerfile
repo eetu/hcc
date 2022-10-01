@@ -1,23 +1,21 @@
 # syntax=docker/dockerfile:1
-FROM node:18-slim AS deps
-RUN apt update
-RUN apt install git libseccomp2 -y
-RUN apt clean
+FROM node:18-alpine AS deps
+RUN apk add --no-cache git openssh
+
 WORKDIR /app
 ENV NODE_ENV development
 COPY ["package.json", "yarn.lock", "./"]
-# Something strange building linux/arm64 images and yarn timeout
-# https://github.com/docker/build-push-action/issues/471
+# Building linux/arm64 images with QEMU is 🐌
 RUN yarn install --frozen-lockfile --network-timeout 1000000
 
-FROM node:18-slim AS build
+FROM node:18-alpine AS build
 WORKDIR /app
 ENV NODE_ENV production
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN yarn build
 
-FROM node:18-slim AS runner
+FROM node:18-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV production
 ENV PORT 3000

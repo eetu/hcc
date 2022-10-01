@@ -49,3 +49,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/arm64
+
+      - name: Delete untagged images # to preserve disk space from free ghcr
+        uses: minish144/delete-untagged-action@v2
+        with:
+          github-token: ${{ secrets.CR_PAT }}
+          personal-account: true

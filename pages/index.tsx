@@ -1,20 +1,50 @@
 //export const config = { amp: true };
+import "tippy.js/dist/tippy.css"; // optional
+
+import Tippy from "@tippyjs/react";
+import dotenv from "dotenv";
+import { cleanEnv, str } from "envalid";
+import { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
 
 import CurrentTime from "../components/CurrentTime";
 import Icon from "../components/Icon";
 import Temperature from "../components/Temperature";
 import Weather from "../components/Weather";
-import styles from "../styles/temperatures.module.css";
+import styles from "../styles/main.module.css";
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-function Temperatures(_props: any) {
+export const getServerSideProps = async (_ctx: GetServerSidePropsContext) => {
+  dotenv.config();
+  const env = cleanEnv(process.env, {
+    HCC_IMAGE_TAG: str({ default: undefined }),
+  });
+
+  return {
+    props: { imageTag: env.HCC_IMAGE_TAG ?? null },
+  };
+};
+
+type MainProps = {
+  imageTag?: string;
+};
+
+const Main: NextPage<MainProps> = (props) => {
+  const { imageTag } = props;
+
   return (
     <>
       <Head>
         <title>Hue Control Center</title>
       </Head>
+      {imageTag && (
+        <Tippy content={<div>build: {imageTag}</div>}>
+          <span className={styles.buildTag}>
+            <Icon>info</Icon>
+          </span>
+        </Tippy>
+      )}
       <CurrentTime className={styles.title}></CurrentTime>
       <div className={styles.grid}>
         <Weather className={styles.weather} />
@@ -36,6 +66,6 @@ function Temperatures(_props: any) {
       </div>
     </>
   );
-}
+};
 
-export default Temperatures;
+export default Main;

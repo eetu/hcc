@@ -49,7 +49,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args:
-            - HCC_IMAGE_TAG=${{ steps.meta.outputs.labels['org.opencontainers.image.created'] }}
+            - HCC_IMAGE_TAG=${{ steps.meta.outputs.labels[org.opencontainers.image.created] }}
           platforms: linux/arm64
 
       - name: Delete untagged images # to preserve disk space from free ghcr

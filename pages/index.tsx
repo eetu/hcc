@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 import { cleanEnv, str } from "envalid";
 import { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
+import { useEffect, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
 
 import CurrentTime from "../components/CurrentTime";
 import Icon from "../components/Icon";
@@ -26,12 +28,26 @@ export const getServerSideProps = async (_ctx: GetServerSidePropsContext) => {
   };
 };
 
+type Theme = "light" | "dark";
+
 type MainProps = {
   imageTag?: string;
 };
 
 const Main: NextPage<MainProps> = (props) => {
   const { imageTag } = props;
+
+  const isDarkTheme = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const [theme, setTheme] = useState<Theme>(isDarkTheme ? "dark" : "light");
+
+  useEffect(() => {
+    setTheme(isDarkTheme ? "dark" : "light");
+  }, [isDarkTheme]);
+
+  useEffect(() => {
+    document.querySelector("body")?.setAttribute("data-theme", theme);
+  }, [theme]);
 
   return (
     <>

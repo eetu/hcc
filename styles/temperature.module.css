@@ -59,6 +59,6 @@
 }
 
 .batteryWarning {
-  color: tomato;
+  color: var(--error-color);
   opacity: 1;
 }

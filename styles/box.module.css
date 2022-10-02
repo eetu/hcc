@@ -10,7 +10,7 @@
 }
 
 .error {
-  color: tomato;
+  color: var(--error-color);
 }
 
 .wait,
@@ -27,7 +27,7 @@
   min-height: 160px;
   padding: 1.5em;
   box-shadow: var(--shadow);
-  border-bottom: 1px lightgray solid;
+  border-bottom: 1px var(--border-color) solid;
 }
 
 .collapsed .top,
@@ -40,7 +40,7 @@
   height: 25px;
   background-color: var(--background-color);
   box-shadow: var(--shadow);
-  border-top: 1px lightgray solid;
+  border-top: 1px var(--border-color) solid;
 
   text-align: center;
   color: #d8d8d8;
@@ -57,6 +57,6 @@
 .drawer {
   overflow-y: scroll;
   /* max-height: 200px; */
-  border-left: 1px lightgray solid;
-  border-right: 1px lightgray solid;
+  border-left: 1px var(--border-color) solid;
+  border-right: 1px var(--border-color) solid;
 }

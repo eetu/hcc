@@ -60,17 +60,17 @@ const Main: NextPage<MainProps> = (props) => {
         <Temperature
           className={styles.temperature}
           type="outside"
-          title={<Icon size="big">park</Icon>}
+          title="ulkona"
         />
         <Temperature
           className={styles.temperature}
           type="inside"
-          title={<Icon size="big">home</Icon>}
+          title="sisällä"
         />
         <Temperature
           className={styles.temperature}
           type="inside_cold"
-          title={<Icon size="big">door_back</Icon>}
+          title="kuisti"
         />
       </div>
     </>

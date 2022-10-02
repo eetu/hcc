@@ -37,7 +37,7 @@
   background-color: var(--even-color);
 }
 
-.room > span {
+.room > * {
   display: table-cell;
   vertical-align: middle;
   padding: 5px;
@@ -54,7 +54,7 @@
 }
 
 .batteryIcon {
-  transform: rotate(90deg);
+  display: block;
   opacity: 0.5;
 }
 

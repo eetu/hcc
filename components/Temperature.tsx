@@ -54,14 +54,12 @@ const Temperature: React.FC<TemperatureProps> = ({
                   })}
                 >
                   <span>{r.name}</span>
-                  <span className={styles.battery}>
-                    <Icon
-                      className={classNames(styles.batteryIcon, {
-                        [`${styles.batteryWarning}`]: isBatteryLow,
-                      })}
-                      size="normal"
-                    >{`battery_${getBatteryStr(r.battery)}`}</Icon>
-                  </span>
+                  <Icon
+                    className={classNames(styles.batteryIcon, {
+                      [`${styles.batteryWarning}`]: isBatteryLow,
+                    })}
+                    size="normal"
+                  >{`battery_${getBatteryStr(r.battery)}`}</Icon>
                   <span>{Math.round(r.temperature)}°</span>
                 </div>
               );

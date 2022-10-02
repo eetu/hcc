@@ -54,8 +54,8 @@ a {
   --body-color: #1f1f1f ;
   --color: #c9c9c9;
   --background-color: #0f0f0f;
-  --even-color: #171717;
-  --shadow: rgba(114, 114, 114, 0.15) 0px 1px 2px 0px,
-    rgba(127, 127, 127, 0.10) 0px 2px 6px 2px;
-  --border-color: rgb(53, 53, 53);
+  --even-color: #1f1f1f;
+  --shadow: rgba(114, 114, 114, 0.299) 0px 1px 2px 0px,
+    rgba(127, 127, 127, 0.153) 0px 2px 6px 2px;
+  --border-color: #242424;
 }

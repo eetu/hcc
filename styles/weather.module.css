@@ -54,7 +54,7 @@
 .daily .section {
   display: flex;
   flex-direction: column;
-  border-right: 1px lightgrey solid;
+  border-right: 1px var(--border-color) solid;
   width: 25%;
   text-align: center;
 }
@@ -112,7 +112,7 @@
 }
 
 .warningIcon {
-  color: lightcoral;
+  color: var(--error-color);
 }
 
 .warningButton {

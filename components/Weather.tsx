@@ -24,6 +24,7 @@ import styles from "../styles/weather.module.css";
 import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
+import useTheme from "./useTheme";
 type WeatherProps = {
   className?: string;
 };
@@ -33,6 +34,8 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
     refreshInterval: 3600000, // refresh once per hour
     refreshWhenHidden: true,
   });
+
+  const theme = useTheme();
 
   const [alertVisible, setAlertVisible] = useState<boolean>(false);
 
@@ -49,7 +52,12 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
     })}`,
   }));
 
-  const weatherLineColor = chartData[0]?.temp < 5 ? "#1a5276" : "#ff5733";
+  const weatherLineColor =
+    chartData[0]?.temp < 5
+      ? "#1a5276"
+      : theme === "dark"
+      ? "#c94022"
+      : "#ff5733";
 
   const sections = today
     ? [
@@ -85,7 +93,11 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                 allowDecimals={false}
                 unit="mm"
               ></YAxis>
-              <Bar dataKey="rain" fill="#94daf7" yAxisId="rain"></Bar>
+              <Bar
+                dataKey="rain"
+                fill={theme === "dark" ? "#43529c" : "#94daf7"}
+                yAxisId="rain"
+              ></Bar>
               <Line
                 type="monotone"
                 dataKey="temp"

@@ -12,6 +12,7 @@ import { useMediaQuery } from "usehooks-ts";
 import CurrentTime from "../components/CurrentTime";
 import Icon from "../components/Icon";
 import Temperature from "../components/Temperature";
+import useTheme from "../components/useTheme";
 import Weather from "../components/Weather";
 import styles from "../styles/main.module.css";
 
@@ -28,8 +29,6 @@ export const getServerSideProps = async (_ctx: GetServerSidePropsContext) => {
   };
 };
 
-type Theme = "light" | "dark";
-
 type MainProps = {
   imageTag?: string;
 };
@@ -37,13 +36,7 @@ type MainProps = {
 const Main: NextPage<MainProps> = (props) => {
   const { imageTag } = props;
 
-  const isDarkTheme = useMediaQuery("(prefers-color-scheme: dark)");
-
-  const [theme, setTheme] = useState<Theme>(isDarkTheme ? "dark" : "light");
-
-  useEffect(() => {
-    setTheme(isDarkTheme ? "dark" : "light");
-  }, [isDarkTheme]);
+  const theme = useTheme();
 
   useEffect(() => {
     document.querySelector("body")?.setAttribute("data-theme", theme);

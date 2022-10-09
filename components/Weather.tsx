@@ -6,15 +6,6 @@ import classNames from "classnames";
 import { format } from "date-fns";
 import fiLocale from "date-fns/locale/fi";
 import { useState } from "react";
-import {
-  Bar,
-  CartesianGrid,
-  ComposedChart,
-  Line,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
 import useSWR from "swr";
 import { WeatherIcon } from "weather-react-icons";
 
@@ -25,6 +16,8 @@ import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
 import useTheme from "./useTheme";
+import WeatherChart from "./WeatherChart";
+
 type WeatherProps = {
   className?: string;
 };
@@ -34,8 +27,6 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
     refreshInterval: 3600000, // refresh once per hour
     refreshWhenHidden: true,
   });
-
-  const theme = useTheme();
 
   const [alertVisible, setAlertVisible] = useState<boolean>(false);
 
@@ -52,13 +43,6 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
     })}`,
   }));
 
-  const weatherLineColor =
-    chartData[0]?.temp < 5
-      ? "#1a5276"
-      : theme === "dark"
-      ? "#c94022"
-      : "#ff5733";
-
   const sections = today
     ? [
         { title: "aamu", temp: Math.round(today.temp.morn) },
@@ -73,41 +57,8 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
       loading={!data}
       className={classNames(className, styles.weather)}
       drawer={
-        <div className={styles.days}>
-          <ResponsiveContainer height={200} width="100%">
-            <ComposedChart
-              data={chartData}
-              margin={{ top: 20, right: 30, bottom: 0, left: 0 }}
-            >
-              <CartesianGrid
-                stroke="lightgrey"
-                vertical={false}
-                strokeWidth={1}
-                strokeDasharray="2 4"
-              ></CartesianGrid>
-              <XAxis dataKey="label"></XAxis>
-              <YAxis yAxisId="temp" allowDecimals={false} unit="°"></YAxis>
-              <YAxis
-                yAxisId="rain"
-                orientation="right"
-                allowDecimals={false}
-                unit="mm"
-              ></YAxis>
-              <Bar
-                dataKey="rain"
-                fill={theme === "dark" ? "#43529c" : "#94daf7"}
-                yAxisId="rain"
-              ></Bar>
-              <Line
-                type="monotone"
-                dataKey="temp"
-                stroke={weatherLineColor}
-                dot={false}
-                strokeWidth={2}
-                yAxisId="temp"
-              />
-            </ComposedChart>
-          </ResponsiveContainer>
+        <div className={styles.chart}>
+          <WeatherChart data={chartData} />
         </div>
       }
     >

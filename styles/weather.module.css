@@ -101,9 +101,10 @@
   align-self: center;
 }
 
-.days {
+.chart {
   background-color: var(--background-color);
   font-weight: lighter;
+  padding: 5px;
 }
 
 .hourlyIcon {

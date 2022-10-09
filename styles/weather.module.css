@@ -102,9 +102,9 @@
 }
 
 .chart {
+  position: relative;
   background-color: var(--background-color);
-  font-weight: lighter;
-  padding: 5px;
+  height: 200px;
 }
 
 .hourlyIcon {

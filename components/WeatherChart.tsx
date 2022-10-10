@@ -5,6 +5,7 @@ import {
   ChartData,
   ChartOptions,
   LinearScale,
+  LineController,
   LineElement,
   PointElement,
 } from "chart.js";
@@ -12,11 +13,12 @@ import React from "react";
 import { Chart } from "react-chartjs-2";
 
 ChartJS.register(
+  BarElement,
   CategoryScale,
   LinearScale,
-  BarElement,
   PointElement,
-  LineElement
+  LineElement,
+  LineController
 );
 
 import useTheme from "./useTheme";

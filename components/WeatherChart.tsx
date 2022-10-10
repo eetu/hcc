@@ -1,4 +1,5 @@
 import {
+  BarController,
   BarElement,
   CategoryScale,
   Chart as ChartJS,
@@ -13,6 +14,7 @@ import React from "react";
 import { Chart } from "react-chartjs-2";
 
 ChartJS.register(
+  BarController,
   BarElement,
   CategoryScale,
   LinearScale,
@@ -96,8 +98,6 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
       },
     },
   };
-
-  console.log("c", chartData);
 
   return <Chart type="bar" options={options} data={chartData}></Chart>;
 };

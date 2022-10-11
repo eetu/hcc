@@ -51,11 +51,11 @@ a {
 }
 
 [data-theme="dark"] {
-  --body-color: #323232 ;
-  --color: #c9c9c9;
+  --body-color: #212121;
+  --color: #b2b2b2;
   --background-color: #0f0f0f;
   --even-color: #1f1f1f;
   --shadow: var(--body-color) 0px 1px 2px 0px,
     var(--background-color) 0px 2px 8px 1px;
-  --border-color: #2a2a2a;
+  --border-color: #1f1f1f;
 }

@@ -24,7 +24,6 @@
   flex-direction: column;
   border-radius: 10px 10px 0 0;
   background-color: var(--background-color);
-  min-height: 160px;
   padding: 1.5em;
   box-shadow: var(--shadow);
   border-bottom: 1px var(--border-color) solid;

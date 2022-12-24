@@ -79,7 +79,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
       yTemp: {
         position: "left",
         grid: {
-          borderDash: [2, 2],
+          tickBorderDash: [2, 2],
         },
         ticks: {
           precision: 0,

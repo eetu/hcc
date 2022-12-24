@@ -21,7 +21,7 @@
     "next": "12.3.1",
     "node-hue-api": "^5.0.0-beta.15",
     "react": "17.0.2",
-    "react-chartjs-2": "^4.3.1",
+    "react-chartjs-2": "^5.0.0",
     "react-dom": "17.0.2",
     "swr": "^2.0.0",
     "ts-node": "^10.9.1",

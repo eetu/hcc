@@ -4,7 +4,8 @@ RUN apk add --no-cache git openssh
 
 WORKDIR /app
 ENV NODE_ENV development
-COPY ["package.json", "yarn.lock", "./"]
+COPY .yarn .yarn
+COPY ["package.json", ".yarnrc.yml", "yarn.lock", "./"]
 # Building linux/arm64 images with QEMU is 🐌
 RUN yarn install --frozen-lockfile --network-timeout 1000000
 

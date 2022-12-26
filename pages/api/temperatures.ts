@@ -109,8 +109,6 @@ type SensorMapping = {
   type: RoomType;
 };
 
-// TODO move to .env to improve configurability
-
 export default async function handler(
   _req: NextApiRequest,
   res: NextApiResponse<Room[]>

@@ -11,6 +11,7 @@ services:
       - POSITION_LAT=${POSITION_LAT}
       - POSITION_LON=${POSITION_LON}
       - LANGUAGE=${LANGUAGE}
+      - ROOMS=${ROOMS}
     ports:
       - 3000:3000
   watchtower:

@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import dotenv from "dotenv";
-import { cleanEnv, str } from "envalid";
+import { cleanEnv, json, str } from "envalid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Api } from "node-hue-api/dist/esm/api/Api";
 import { v3 } from "node-hue-api/dist/esm/v3";
@@ -14,6 +14,7 @@ const env = cleanEnv(process.env, {
   HUE_BRIDGE_ADDRESS: str({
     default: undefined,
   }),
+  ROOMS: json(),
 });
 
 const getBridgeAddress = async () => {
@@ -109,16 +110,6 @@ type SensorMapping = {
 };
 
 // TODO move to .env to improve configurability
-const rooms: Record<string, SensorMapping> = {
-  "00:17:88:01:02:10:20:a1-02-0402": { name: "Keittiö", type: "inside" },
-  "00:17:88:01:06:46:65:99-02-0402": { name: "Kuisti", type: "inside_cold" },
-  "00:17:88:01:06:f7:e0:38-02-0402": { name: "Takkahuone", type: "inside" },
-  "00:17:88:01:06:f6:72:c0-02-0402": { name: "Baarihuone", type: "inside" },
-  "00:17:88:01:06:44:82:76-02-0402": { name: "Etuovi", type: "outside" },
-  "00:17:88:01:06:44:03:3c-02-0402": { name: "Autotalli", type: "outside" },
-  "00:17:88:01:08:67:21:2c-02-0402": { name: "Olohuone", type: "inside" },
-  "00:17:88:01:09:15:9b:6c-02-0402": { name: "Käytävä", type: "inside" },
-};
 
 export default async function handler(
   _req: NextApiRequest,
@@ -135,9 +126,17 @@ export default async function handler(
     (s: any) => s.type === "ZLLTemperature"
   );
 
+  console.log("temperature sensors:");
+  console.log(
+    temperatureSensors.map(
+      (t) =>
+        `${t.getAttributeValue("name")}: ${t.getAttributeValue("uniqueid")}`
+    )
+  );
+
   const temps = temperatureSensors.map((s) => {
     const uniqueid = s.getAttributeValue("uniqueid");
-    const room = rooms[uniqueid];
+    const room = env.ROOMS[uniqueid];
     const name = room.name;
     const type = room.type;
     const temperature = s.getStateAttributeValue("temperature") / 100;

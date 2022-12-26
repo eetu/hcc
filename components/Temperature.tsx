@@ -13,6 +13,9 @@ type TemperatureProps = {
   type: "outside" | "inside" | "inside_cold";
 };
 
+const isBatteryLow = (room: Room) =>
+  room.battery !== undefined && room.battery < 10;
+
 const Temperature: React.FC<TemperatureProps> = ({
   className,
   title,
@@ -32,9 +35,7 @@ const Temperature: React.FC<TemperatureProps> = ({
       return acc + room.temperature;
     }, 0) / enabledRooms.length;
 
-  const isBatteryLow = rooms.find(
-    (r) => r.battery !== undefined && r.battery < 10
-  );
+  const isAnyBatteryLow = !!rooms.find(isBatteryLow);
 
   return (
     <Box
@@ -45,7 +46,7 @@ const Temperature: React.FC<TemperatureProps> = ({
         rooms && (
           <div className={classNames(styles.rooms)}>
             {rooms.map((r) => {
-              const isBatteryLow = r.battery !== undefined && r.battery < 10;
+              const isRoomBatteryLow = isBatteryLow(r);
               return (
                 <div
                   key={r.id}
@@ -54,12 +55,16 @@ const Temperature: React.FC<TemperatureProps> = ({
                   })}
                 >
                   <span>{r.name}</span>
-                  <Icon
-                    className={classNames(styles.batteryIcon, {
-                      [`${styles.batteryWarning}`]: isBatteryLow,
-                    })}
-                    size="normal"
-                  >{`battery_${getBatteryStr(r.battery)}`}</Icon>
+                  {isRoomBatteryLow ? (
+                    <Icon
+                      className={classNames(styles.batteryIcon, {
+                        [`${styles.batteryWarning}`]: isRoomBatteryLow,
+                      })}
+                      size="normal"
+                    >{`battery_${getBatteryStr(r.battery)}`}</Icon>
+                  ) : (
+                    <>&nbsp;</>
+                  )}
                   <span>{Math.round(r.temperature)}°</span>
                 </div>
               );
@@ -69,7 +74,7 @@ const Temperature: React.FC<TemperatureProps> = ({
       }
     >
       <div className={styles.temperature}>
-        {isBatteryLow && (
+        {isAnyBatteryLow && (
           <Icon
             className={classNames(
               styles.batteryTitle,

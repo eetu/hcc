@@ -26,3 +26,28 @@
   right: 0.5em;
   opacity: 0.5;
 }
+
+@media only screen and (max-width: 600px) {
+  .grid {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1em;
+    align-items: center;
+  }
+
+  .grid .weather {
+    padding: 1em;
+  }
+
+  .grid .temperature {
+    padding: 1em;
+  }
+
+  .temperature {
+    width: 100%;
+  }
+
+  .title {
+    font-size: 12px;
+  }
+}

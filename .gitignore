@@ -26,9 +26,8 @@ yarn-error.log*
 .env*
 !.env.example
 
-# No Zero-installs
-.pnp.*
 .yarn/*
+!.yarn/cache
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases

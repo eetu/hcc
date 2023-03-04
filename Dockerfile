@@ -12,7 +12,7 @@ RUN yarn install --frozen-lockfile --network-timeout 1000000
 FROM node:18-alpine AS build
 WORKDIR /app
 ENV NODE_ENV production
-COPY --from=deps /app/node_modules ./node_modules
+#COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN yarn build
 

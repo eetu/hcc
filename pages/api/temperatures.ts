@@ -104,11 +104,6 @@ export type Room = {
   battery?: number;
 };
 
-type SensorMapping = {
-  name: string;
-  type: RoomType;
-};
-
 export default async function handler(
   _req: NextApiRequest,
   res: NextApiResponse<Room[]>
@@ -120,9 +115,7 @@ export default async function handler(
   }
 
   const sensors = await hueApi.sensors.getAll();
-  const temperatureSensors = sensors.filter(
-    (s: any) => s.type === "ZLLTemperature"
-  );
+  const temperatureSensors = sensors.filter((s) => s.type === "ZLLTemperature");
 
   console.log("temperature sensors:");
   console.log(

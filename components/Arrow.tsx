@@ -8,7 +8,7 @@ type ArrowProps = {
   deg?: number;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const Arrow: React.FC<ArrowProps> = ({ className, style, deg }) => {
+const Arrow: React.FC<ArrowProps> = ({ className, deg }) => {
   return (
     <div
       className={classNames(className, styles.arrow)}

@@ -21,9 +21,11 @@
 
 .buildTag {
   position: absolute;
-  font-size: 12px;
   top: 0.5em;
   right: 0.5em;
+}
+
+.buildTagIcon {
   opacity: 0.5;
 }
 

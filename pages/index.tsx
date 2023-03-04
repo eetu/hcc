@@ -1,17 +1,14 @@
 //export const config = { amp: true };
-import "tippy.js/dist/tippy.css"; // optional
-
-import Tippy from "@tippyjs/react";
 import dotenv from "dotenv";
 import { cleanEnv, str } from "envalid";
 import { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
-import { useEffect, useState } from "react";
-import { useMediaQuery } from "usehooks-ts";
+import { useEffect } from "react";
 
 import CurrentTime from "../components/CurrentTime";
 import Icon from "../components/Icon";
 import Temperature from "../components/Temperature";
+import Tooltip from "../components/Tooltip";
 import useTheme from "../components/useTheme";
 import Weather from "../components/Weather";
 import styles from "../styles/main.module.css";
@@ -48,11 +45,11 @@ const Main: NextPage<MainProps> = (props) => {
         <title>Hue Control Center</title>
       </Head>
       {imageTag && (
-        <Tippy content={<div>build: {imageTag}</div>}>
-          <span className={styles.buildTag}>
-            <Icon>info</Icon>
-          </span>
-        </Tippy>
+        <span className={styles.buildTag}>
+          <Tooltip content={<div>build:&nbsp;{imageTag}</div>}>
+            <Icon className={styles.buildTagIcon}>info</Icon>
+          </Tooltip>
+        </span>
       )}
       <CurrentTime className={styles.title}></CurrentTime>
       <div className={styles.grid}>

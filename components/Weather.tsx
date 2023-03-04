@@ -1,11 +1,8 @@
 import "weather-react-icons/lib/css/weather-icons.css";
-import "tippy.js/dist/tippy.css"; // optional
 
-import Tippy from "@tippyjs/react";
 import classNames from "classnames";
 import { format } from "date-fns";
 import fiLocale from "date-fns/locale/fi";
-import { useState } from "react";
 import useSWR from "swr";
 import { WeatherIcon } from "weather-react-icons";
 
@@ -15,7 +12,7 @@ import styles from "../styles/weather.module.css";
 import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
-import useTheme from "./useTheme";
+import Tooltip from "./Tooltip";
 import WeatherChart from "./WeatherChart";
 
 type WeatherProps = {
@@ -28,12 +25,16 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
     refreshWhenHidden: true,
   });
 
-  const [alertVisible, setAlertVisible] = useState<boolean>(false);
-
   const weather = data?.current.weather[0];
   const today = data?.daily[0];
   const rest = data?.daily.slice(1) || [];
-  const alerts = data?.alerts;
+  const alerts = data?.alerts ?? [
+    {
+      event: "foobar",
+      description:
+        "sgjfslkfgjldfgjdflgj dog jdfoigjdfoigjdfoigjdfoi gj öodfkgödfjgpodfj gpidfjpd jpd jgpodfj gpodfjgpodfjgperjgperogjeprogjeprogjerpogjerpogjerpg jerpog epr gper jper poer jgper gjoper pgoer jgper gjpe regjp",
+    },
+  ];
 
   const chartData = rest.map((d) => ({
     temp: d.temp.day,
@@ -68,8 +69,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
             <div className={styles.title}>
               {weather.description}
               {alerts && alerts.length > 0 && (
-                <Tippy
-                  onClickOutside={() => setAlertVisible(false)}
+                <Tooltip
                   content={
                     <div>
                       {alerts.map((a) => (
@@ -79,20 +79,13 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                       ))}
                     </div>
                   }
-                  visible={alertVisible}
                 >
-                  <div
-                    className={styles.warningButton}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setAlertVisible(!alertVisible);
-                    }}
-                  >
+                  <div className={styles.warningButton}>
                     <Icon type="normal" className={styles.warningIcon}>
                       announcement
                     </Icon>
                   </div>
-                </Tippy>
+                </Tooltip>
               )}
             </div>
             <div className={styles.currentTemp}>

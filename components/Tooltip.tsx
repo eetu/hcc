@@ -24,7 +24,7 @@ const Tooltip: React.FC<TooltipProps> = ({ children, content }) => {
   const { x, y, strategy, refs, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
-    middleware: [offset(10), flip(), shift()],
+    middleware: [offset(8), flip(), shift({ padding: 8 })],
     whileElementsMounted: autoUpdate,
   });
 

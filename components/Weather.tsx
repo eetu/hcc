@@ -28,13 +28,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
   const weather = data?.current.weather[0];
   const today = data?.daily[0];
   const rest = data?.daily.slice(1) || [];
-  const alerts = data?.alerts ?? [
-    {
-      event: "foobar",
-      description:
-        "sgjfslkfgjldfgjdflgj dog jdfoigjdfoigjdfoigjdfoi gj öodfkgödfjgpodfj gpidfjpd jpd jgpodfj gpodfjgpodfjgperjgperogjeprogjeprogjerpogjerpogjerpg jerpog epr gper jper poer jgper gjoper pgoer jgper gjpe regjp",
-    },
-  ];
+  const alerts = data?.alerts;
 
   const chartData = rest.map((d) => ({
     temp: d.temp.day,

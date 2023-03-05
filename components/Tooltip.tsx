@@ -10,16 +10,18 @@ import {
   useInteractions,
   useRole,
 } from "@floating-ui/react";
+import classNames from "classnames";
 import React, { useState } from "react";
 
 import styles from "../styles/tooltip.module.css";
 
 type TooltipProps = {
+  className?: string;
   children?: React.ReactNode;
   content?: React.ReactNode;
 };
 
-const Tooltip: React.FC<TooltipProps> = ({ children, content }) => {
+const Tooltip: React.FC<TooltipProps> = ({ className, children, content }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { x, y, strategy, refs, context } = useFloating({
     open: isOpen,
@@ -42,7 +44,11 @@ const Tooltip: React.FC<TooltipProps> = ({ children, content }) => {
 
   return (
     <>
-      <div ref={refs.setReference} {...getReferenceProps()}>
+      <div
+        className={classNames(className)}
+        ref={refs.setReference}
+        {...getReferenceProps()}
+      >
         {children}
       </div>
       {isOpen && (
@@ -54,7 +60,6 @@ const Tooltip: React.FC<TooltipProps> = ({ children, content }) => {
             top: y ?? 0,
             left: x ?? 0,
             visibility: x == null ? "hidden" : "visible",
-            maxWidth: 600,
           }}
           {...getFloatingProps()}
         >

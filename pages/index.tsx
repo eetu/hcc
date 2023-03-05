@@ -45,11 +45,12 @@ const Main: NextPage<MainProps> = (props) => {
         <title>Hue Control Center</title>
       </Head>
       {imageTag && (
-        <span className={styles.buildTag}>
-          <Tooltip content={<div>build:&nbsp;{imageTag}</div>}>
-            <Icon className={styles.buildTagIcon}>info</Icon>
-          </Tooltip>
-        </span>
+        <Tooltip
+          className={styles.buildTag}
+          content={<span>build:&nbsp;{imageTag}</span>}
+        >
+          <Icon className={styles.buildTagIcon}>info</Icon>
+        </Tooltip>
       )}
       <CurrentTime className={styles.title}></CurrentTime>
       <div className={styles.grid}>

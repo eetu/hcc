@@ -35,7 +35,7 @@ const Temperature: React.FC<TemperatureProps> = ({
       return acc + room.temperature;
     }, 0) / enabledRooms.length;
 
-  const isAnyBatteryLow = !!rooms.find(isBatteryLow);
+  const roomWithLowBattery = rooms.find(isBatteryLow);
 
   return (
     <Box
@@ -74,14 +74,14 @@ const Temperature: React.FC<TemperatureProps> = ({
       }
     >
       <div className={styles.temperature}>
-        {isAnyBatteryLow && (
+        {roomWithLowBattery && (
           <Icon
             className={classNames(
               styles.batteryTitle,
               styles.batteryIcon,
               styles.batteryWarning
             )}
-          >{`battery_${getBatteryStr(0)}`}</Icon>
+          >{`battery_${getBatteryStr(roomWithLowBattery.battery)}`}</Icon>
         )}
         <div className={styles.title}>{title}</div>
         <div className={styles.temp}>

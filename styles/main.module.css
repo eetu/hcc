@@ -21,8 +21,9 @@
 
 .buildTag {
   position: absolute;
-  top: 0.5em;
-  right: 0.5em;
+  top: 8px;
+  right: 8px;
+  white-space: nowrap;
 }
 
 .buildTagIcon {

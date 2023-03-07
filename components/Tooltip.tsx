@@ -1,6 +1,7 @@
 import {
   autoUpdate,
   flip,
+  FloatingPortal,
   offset,
   shift,
   useDismiss,
@@ -42,30 +43,37 @@ const Tooltip: React.FC<TooltipProps> = ({ className, children, content }) => {
     role,
   ]);
 
+  const refProps = getReferenceProps();
   return (
     <>
       <div
         className={classNames(className)}
         ref={refs.setReference}
-        {...getReferenceProps()}
+        {...refProps}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
         {children}
       </div>
-      {isOpen && (
-        <div
-          ref={refs.setFloating}
-          className={styles.tooltip}
-          style={{
-            position: strategy,
-            top: y ?? 0,
-            left: x ?? 0,
-            visibility: x == null ? "hidden" : "visible",
-          }}
-          {...getFloatingProps()}
-        >
-          {content}
-        </div>
-      )}
+      <FloatingPortal>
+        {isOpen && (
+          <div
+            ref={refs.setFloating}
+            className={styles.tooltip}
+            style={{
+              position: strategy,
+              top: y ?? 0,
+              left: x ?? 0,
+              visibility: x == null ? "hidden" : "visible",
+              maxWidth: 580,
+            }}
+            {...getFloatingProps()}
+          >
+            {content}
+          </div>
+        )}
+      </FloatingPortal>
     </>
   );
 };

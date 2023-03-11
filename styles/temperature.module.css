@@ -27,17 +27,10 @@
 
 .room {
   display: table-row;
-}
-
-.room:nth-child(odd) {
   background-color: var(--background-color);
 }
 
-.room:nth-child(even) {
-  background-color: var(--even-color);
-}
-
-.room > * {
+.room>* {
   display: table-cell;
   vertical-align: middle;
   padding: 5px;

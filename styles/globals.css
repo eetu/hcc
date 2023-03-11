@@ -52,9 +52,9 @@ a {
 }
 
 [data-theme="dark"] {
-  --body-color: #252525;
-  --color: #b2b2b2;
-  --background-color: #0f0f0f;
+  --body-color: #0f0f0f;
+  --background-color: #252525;
+  --color: #d6d6d6;
   --even-color: #0a0a0a;
   --shadow: none;
   --border-color: #1f1f1f;

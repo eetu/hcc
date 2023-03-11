@@ -75,6 +75,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
         grid: {
           display: false,
         },
+        ticks: { color: theme === "dark" ? "#d6d6d6" : "#525252" },
       },
       yTemp: {
         position: "left",
@@ -83,6 +84,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
         },
         ticks: {
           precision: 0,
+          color: theme === "dark" ? "#d6d6d6" : "#525252",
           callback: (v) => `${v} °`,
         },
       },
@@ -93,6 +95,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
         },
         ticks: {
           precision: 0,
+          color: theme === "dark" ? "#d6d6d6" : "#525252",
           callback: (v) => `${v} mm`,
         },
       },

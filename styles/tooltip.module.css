@@ -1,7 +1,17 @@
 .tooltip {
-  background-color: var(--background-color);
-  color: var(--color);
+  background-color: #4d4d4d;
+  color: #dddddd;
   padding: 8px;
   border-radius: 4px;
-  box-shadow: var(--shadow);
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }

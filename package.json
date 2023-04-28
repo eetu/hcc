@@ -14,7 +14,7 @@
   "dependencies": {
     "@floating-ui/react": "^0.23.1",
     "@next/font": "^13.3.1",
-    "chart.js": "^4.2.1",
+    "chart.js": "^4.3.0",
     "classnames": "^2.3.2",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",

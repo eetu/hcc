@@ -12,7 +12,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@floating-ui/react": "^0.23.1",
+    "@floating-ui/react": "^0.24.0",
     "@next/font": "^13.3.1",
     "chart.js": "^4.3.0",
     "classnames": "^2.3.2",

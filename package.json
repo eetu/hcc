@@ -32,7 +32,7 @@
   "devDependencies": {
     "@types/node": "^18.16.16",
     "@types/react": "18.2.8",
-    "eslint": "8.41.0",
+    "eslint": "8.42.0",
     "eslint-config-next": "13.4.4",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",

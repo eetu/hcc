@@ -27,10 +27,10 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
 
   const weather = data?.current.weather[0];
   const today = data?.daily[0];
-  const rest = data?.daily.slice(1) || [];
+  const daily = data?.daily || [];
   const alerts = data?.alerts;
 
-  const chartData = rest.map((d) => ({
+  const chartData = daily.map((d) => ({
     temp: d.temp.day,
     rain: d.snow ?? d.rain ?? 0,
     label: `${format(new Date(d.dt * 1000), "EEEEEE", {

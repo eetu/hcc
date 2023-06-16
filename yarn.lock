@@ -198,10 +198,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/font@npm:^13.4.5":
-  version: 13.4.5
-  resolution: "@next/font@npm:13.4.5"
-  checksum: e7f8af5e7d6d96e69e44bc67767b84e25f419e6088a225107bb4d0a097964d0c5683d07f6341559e4c4c96033bd4d92979e16f730e11d3649a5cff52d5779676
+"@next/font@npm:^13.4.6":
+  version: 13.4.6
+  resolution: "@next/font@npm:13.4.6"
+  checksum: 9c75c145d8002b4031335a6d8b868a329138f580f4ce70c71c8734f600ea2b7f3af99ccaede5e1ed57b019001fb1928b313f18b00bca97fcbacbef24c57b0151
   languageName: node
   linkType: hard
 
@@ -1618,7 +1618,7 @@ __metadata:
   resolution: "hcc@workspace:."
   dependencies:
     "@floating-ui/react": ^0.24.3
-    "@next/font": ^13.4.5
+    "@next/font": ^13.4.6
     "@types/node": ^18.16.18
     "@types/react": 18.2.12
     chart.js: ^4.3.0

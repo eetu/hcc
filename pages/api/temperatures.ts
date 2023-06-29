@@ -58,7 +58,14 @@ const getUsername = async (unauthenticatedApi: Api) => {
   return user.username;
 };
 
+let authenticatedApi: Api | null = null;
+
 const getHueApi = async () => {
+  if (authenticatedApi) {
+    console.log("Return pre-existing API instance");
+    return authenticatedApi;
+  }
+
   const address = await getBridgeAddress();
 
   console.log(`Tyring to connect bridge at addess: ${address}`);
@@ -73,7 +80,7 @@ const getHueApi = async () => {
     const username = await getUsername(unauthenticatedApi);
 
     // Create a new API instance that is authenticated with the new user we created
-    const authenticatedApi = await api.createLocal(address).connect(username);
+    authenticatedApi = await api.createLocal(address).connect(username);
 
     const bridgeConfig =
       await authenticatedApi.configuration.getConfiguration();

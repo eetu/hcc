@@ -198,13 +198,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/font@npm:^13.4.7":
-  version: 13.4.7
-  resolution: "@next/font@npm:13.4.7"
-  checksum: 87680e1c3f69cdad634e5b85904c2cf99bedea42b1127cb82152698fe71f97d5ca2b4625b17a6d7f7433bc19d96a5c2bb0b20ef95c816d232818eda9e65f7377
-  languageName: node
-  linkType: hard
-
 "@next/swc-darwin-arm64@npm:13.4.7":
   version: 13.4.7
   resolution: "@next/swc-darwin-arm64@npm:13.4.7"
@@ -1618,7 +1611,6 @@ __metadata:
   resolution: "hcc@workspace:."
   dependencies:
     "@floating-ui/react": ^0.24.3
-    "@next/font": ^13.4.7
     "@types/node": ^18.16.18
     "@types/react": 18.2.14
     chart.js: ^4.3.0

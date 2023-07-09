@@ -23,7 +23,7 @@ const Icon: React.FC<IconProps> = ({
         size === "small" && "md-18",
         size === "normal" && "md-24",
         size === "big" && "md-36",
-        size === "bigger" && "md-48"
+        size === "bigger" && "md-48",
       )}
     >
       {children}

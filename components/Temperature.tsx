@@ -79,7 +79,7 @@ const Temperature: React.FC<TemperatureProps> = ({
             className={classNames(
               styles.batteryTitle,
               styles.batteryIcon,
-              styles.batteryWarning
+              styles.batteryWarning,
             )}
           >{`battery_${getBatteryStr(roomWithLowBattery.battery)}`}</Icon>
         )}

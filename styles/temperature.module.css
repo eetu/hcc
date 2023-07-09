@@ -30,7 +30,7 @@
   background-color: var(--background-color);
 }
 
-.room>* {
+.room > * {
   display: table-cell;
   vertical-align: middle;
   padding: 5px;

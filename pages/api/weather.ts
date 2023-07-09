@@ -124,11 +124,11 @@ export type WeatherReponse = {
 
 const getWeather = async (): Promise<WeatherReponse> => {
   const res = await fetch(
-    `https://api.openweathermap.org/data/2.5/onecall?lat=${env.POSITION_LAT}&lon=${env.POSITION_LON}&exclude=minutely&units=metric&appId=${env.OPEN_WEATHER_API_KEY}&lang=${env.LANGUAGE}`
+    `https://api.openweathermap.org/data/2.5/onecall?lat=${env.POSITION_LAT}&lon=${env.POSITION_LON}&exclude=minutely&units=metric&appId=${env.OPEN_WEATHER_API_KEY}&lang=${env.LANGUAGE}`,
   );
   if (!res.ok) {
     console.error(
-      `Failed to fetch weather, with status: ${res.status} and body: ${res.body}`
+      `Failed to fetch weather, with status: ${res.status} and body: ${res.body}`,
     );
   }
   const weatherResponse: WeatherReponse = await res.json();
@@ -138,7 +138,7 @@ const getWeather = async (): Promise<WeatherReponse> => {
 
 export default async function handler(
   _req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const weather = await getWeather();
   res.json(weather);

@@ -88,7 +88,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                   {`${Math.round(data.current.temp)}°`}
                 </div>
                 <div className={styles.feelsLike}>{`${Math.round(
-                  data.current.feels_like
+                  data.current.feels_like,
                 )}°`}</div>
               </div>
               <WeatherIcon

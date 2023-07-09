@@ -20,7 +20,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  LineController
+  LineController,
 );
 
 import useTheme from "./useTheme";

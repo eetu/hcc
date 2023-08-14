@@ -29,7 +29,7 @@
     "weather-react-icons": "^4.0.2"
   },
   "devDependencies": {
-    "@types/node": "^18.17.4",
+    "@types/node": "^18.17.5",
     "@types/react": "18.2.20",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.13",

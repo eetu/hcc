@@ -12,13 +12,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@floating-ui/react": "^0.25.2",
+    "@floating-ui/react": "^0.25.4",
     "chart.js": "^4.4.0",
     "classnames": "^2.3.2",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "envalid": "^7.3.1",
-    "next": "13.4.19",
+    "next": "13.5.2",
     "node-hue-api": "^5.0.0-beta.16",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
@@ -29,13 +29,13 @@
     "weather-react-icons": "^4.0.2"
   },
   "devDependencies": {
-    "@types/node": "^18.17.12",
-    "@types/react": "18.2.21",
-    "eslint": "8.48.0",
-    "eslint-config-next": "13.4.19",
+    "@types/node": "^18.17.18",
+    "@types/react": "18.2.22",
+    "eslint": "8.49.0",
+    "eslint-config-next": "13.5.2",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
-    "eslint-plugin-unused-imports": "^2.0.0",
+    "eslint-plugin-unused-imports": "^3.0.0",
     "prettier": "^3.0.3",
     "prop-types": "^15.8.1",
     "typescript": "5.2.2"

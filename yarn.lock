@@ -1864,7 +1864,7 @@ __metadata:
     react: 18.2.0
     react-chartjs-2: ^5.2.0
     react-dom: 18.2.0
-    swr: ^2.2.2
+    swr: ^2.2.3
     ts-node: ^10.9.1
     typescript: 5.2.2
     usehooks-ts: ^2.9.1
@@ -3232,15 +3232,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "swr@npm:2.2.2"
+"swr@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "swr@npm:2.2.3"
   dependencies:
     client-only: ^0.0.1
     use-sync-external-store: ^1.2.0
   peerDependencies:
     react: ^16.11.0 || ^17.0.0 || ^18.0.0
-  checksum: afb3d4824f7631bc3a045483f4e4beb5ca9bfa82b64690b3d1133cdf0666ad8e4a9a879657fac5b34dbf19ea9a1503cf92c9bde972f3d40cefe434c73bd9627a
+  checksum: 6c644509c042417724d73d02744630004254781cb6ebf914c9a59fc8b7412d71dc669d80db810ee4065764c48026fcb7e89c95d416d0e5c7ece2f6c8960b4380
   languageName: node
   linkType: hard
 

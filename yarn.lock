@@ -976,12 +976,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"envalid@npm:^7.3.1":
-  version: 7.3.1
-  resolution: "envalid@npm:7.3.1"
+"envalid@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "envalid@npm:8.0.0"
   dependencies:
-    tslib: 2.3.1
-  checksum: dea10ada13e007f684318474a7dd1b528bbe4ed8ca702918e276d26505bd3807f1e93c4045b7acadd1a4639f207ae4c5375ca0afdff973efab9ea7ead655240f
+    tslib: 2.6.2
+  checksum: f8f9f06b6698f3e53ca07262f022a89b99e47ad9e4af35dff695a778f64027af3125e5ed4816c973a3ab325e0b772a519e6dea3a98903e23e81a771a162e5acd
   languageName: node
   linkType: hard
 
@@ -1851,7 +1851,7 @@ __metadata:
     classnames: ^2.3.2
     date-fns: ^2.30.0
     dotenv: ^16.3.1
-    envalid: ^7.3.1
+    envalid: ^8.0.0
     eslint: 8.49.0
     eslint-config-next: 13.5.2
     eslint-config-prettier: ^9.0.0
@@ -3360,10 +3360,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.3.1":
-  version: 2.3.1
-  resolution: "tslib@npm:2.3.1"
-  checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
+"tslib@npm:2.6.2":
+  version: 2.6.2
+  resolution: "tslib@npm:2.6.2"
+  checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
   languageName: node
   linkType: hard
 

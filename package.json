@@ -31,7 +31,7 @@
   "devDependencies": {
     "@types/node": "^18.18.3",
     "@types/react": "18.2.22",
-    "eslint": "8.49.0",
+    "eslint": "8.51.0",
     "eslint-config-next": "13.5.2",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",

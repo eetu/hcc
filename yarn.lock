@@ -100,29 +100,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/react-dom@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@floating-ui/react-dom@npm:2.0.2"
+"@floating-ui/react-dom@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@floating-ui/react-dom@npm:2.0.3"
   dependencies:
     "@floating-ui/dom": ^1.5.1
   peerDependencies:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 4797e1f7a19c1e531ed0d578ccdcbe58970743e5a480ba30424857fc953063f36d481f8c5d69248a8f1d521b739e94bf5e1ffb35506400dea3d914f166ed2f7f
+  checksum: 86212b9001b4ad20469798c66ec2d84ccf84f0c8bc33ab9bb9cf1b5cd74d7a7c897108ef3da76b44e4fffbafc170dc5abc84e1fe27b7d74d63e3e21fae026aaa
   languageName: node
   linkType: hard
 
-"@floating-ui/react@npm:^0.26.1":
-  version: 0.26.1
-  resolution: "@floating-ui/react@npm:0.26.1"
+"@floating-ui/react@npm:^0.26.2":
+  version: 0.26.2
+  resolution: "@floating-ui/react@npm:0.26.2"
   dependencies:
-    "@floating-ui/react-dom": ^2.0.2
+    "@floating-ui/react-dom": ^2.0.3
     "@floating-ui/utils": ^0.1.5
     tabbable: ^6.0.1
   peerDependencies:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: e89fda56735027dd635ca46baaec31c2c7abfbd772855db2f22dad9a320b67bb01cea8f75e1bdab8d82f8cb4a5dd3c60c608e1e242a23cdc781c8c5856634e4c
+  checksum: 52a9e5de72e276c8db30ef7f230cab9b1e891a8fcb96b182b7e604fb4b67f6ce997f3291cf60c72293548e9d007e2bfdb8677986660feb429d34f465bd15c2f7
   languageName: node
   linkType: hard
 
@@ -1861,7 +1861,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "hcc@workspace:."
   dependencies:
-    "@floating-ui/react": ^0.26.1
+    "@floating-ui/react": ^0.26.2
     "@types/node": ^18.18.9
     "@types/react": 18.2.37
     chart.js: ^4.4.0

@@ -2,10 +2,8 @@
 import dotenv from "dotenv";
 import { cleanEnv, json, str } from "envalid";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { api, discovery } from "node-hue-api";
 import { Api } from "node-hue-api/dist/esm/api/Api";
-import { v3 } from "node-hue-api/dist/esm/v3";
-
-const { api, discovery }: typeof v3 = require("node-hue-api").v3;
 
 dotenv.config();
 const env = cleanEnv(process.env, {
@@ -41,19 +39,19 @@ const getUsername = async (unauthenticatedApi: Api) => {
   const user = await unauthenticatedApi.users.createUser("node-hue-api", "hcc");
 
   console.log(
-    "*******************************************************************************\n",
+    "*******************************************************************************\n"
   );
 
   console.log(
     "User has been created on the Hue Bridge. The following username can be used to\n" +
       "authenticate with the Bridge and provide full local access to the Hue Bridge.\n" +
-      "YOU SHOULD TREAT THIS LIKE A PASSWORD\n",
+      "YOU SHOULD TREAT THIS LIKE A PASSWORD\n"
   );
 
   console.log(`Hue Bridge User: ${user.username}`);
   console.log(`Hue Bridge User Client Key: ${user.clientkey}`);
   console.log(
-    "*******************************************************************************\n",
+    "*******************************************************************************\n"
   );
   return user.username;
 };
@@ -85,14 +83,14 @@ const getHueApi = async () => {
     const bridgeConfig =
       await authenticatedApi.configuration.getConfiguration();
     console.log(
-      `Connected to Hue Bridge: ${bridgeConfig.name} :: ${bridgeConfig.ipaddress}`,
+      `Connected to Hue Bridge: ${bridgeConfig.name} :: ${bridgeConfig.ipaddress}`
     );
 
     return authenticatedApi;
   } catch (err: any) {
     if (err?.getHueErrorType() === 101) {
       console.error(
-        "The Link button on the bridge was not pressed. Please press the Link button and try again.",
+        "The Link button on the bridge was not pressed. Please press the Link button and try again."
       );
     } else {
       console.error(`Unexpected Error: ${err?.message}`);
@@ -113,7 +111,7 @@ export type Room = {
 
 export default async function handler(
   _req: NextApiRequest,
-  res: NextApiResponse<Room[]>,
+  res: NextApiResponse<Room[]>
 ) {
   const hueApi = await getHueApi();
 
@@ -128,8 +126,8 @@ export default async function handler(
   console.log(
     temperatureSensors.map(
       (t) =>
-        `${t.getAttributeValue("name")}: ${t.getAttributeValue("uniqueid")}`,
-    ),
+        `${t.getAttributeValue("name")}: ${t.getAttributeValue("uniqueid")}`
+    )
   );
 
   const temps = temperatureSensors.map((s) => {

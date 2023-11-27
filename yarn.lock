@@ -374,12 +374,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.9.4":
-  version: 20.9.4
-  resolution: "@types/node@npm:20.9.4"
+"@types/node@npm:20.10.0":
+  version: 20.10.0
+  resolution: "@types/node@npm:20.10.0"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: d567855b48e453b443499c17fc6c939d154732b54319a05b9b31db6e475e6458f053838635b201b1bb493d349d9b1af0aecc58b28fd6062e564e9fbf593199eb
+  checksum: c7d5ddbdbf3491e2363135c9611eb6bfae90eda2957279237fa232bcb29cd0df1cc3ee149d6de9915b754262a531ee2d57d33c9ecd58d763e8ad4856113822f3
   languageName: node
   linkType: hard
 
@@ -1862,7 +1862,7 @@ __metadata:
   resolution: "hcc@workspace:."
   dependencies:
     "@floating-ui/react": "npm:^0.26.3"
-    "@types/node": "npm:20.9.4"
+    "@types/node": "npm:20.10.0"
     "@types/react": "npm:18.2.38"
     chart.js: "npm:^4.4.0"
     classnames: "npm:^2.3.2"

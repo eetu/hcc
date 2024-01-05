@@ -6,11 +6,25 @@ import Icon from "./Icon";
 
 type LightGroupsProps = {
   groups: Group[];
-};
+} & React.HTMLAttributes<HTMLDivElement>;
 
-const LightGroups: FC<LightGroupsProps> = ({ groups }) => {
+const LightGroups: FC<LightGroupsProps> = ({ groups, className }) => {
+  const theme = useTheme();
+
   return (
-    <div>
+    <div
+      className={className}
+      css={{
+        backgroundColor: theme.colors.background.main,
+        boxShadow: theme.shadows.main,
+        padding: "1em",
+        display: "flex",
+        flexDirection: "row",
+        gap: 5,
+        flexWrap: "wrap",
+        borderRadius: 5,
+      }}
+    >
       {groups.map((g) => (
         <LightGroup key={g.id} group={g}></LightGroup>
       ))}
@@ -47,19 +61,32 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
         flexDirection: "row",
         alignItems: "center",
         gap: 5,
+        color:
+          theme.mode === "dark"
+            ? group.state.on
+              ? theme.colors.text.light
+              : theme.colors.text.main
+            : theme.colors.text.main,
+        padding: 2,
         marginTop: 10,
         cursor: "pointer",
+        width: 150,
+        borderRadius: 5,
+        border: "3px solid #f9a32f",
+        background: group.state.on
+          ? "linear-gradient(153deg, rgba(255,237,207,1) 0%, rgba(255,239,171,1) 56%)"
+          : theme.colors.background.light,
       }}
       onClick={handleClick(group.id)}
     >
       <Icon
-        css={{ color: innerState ? "orange" : theme.colors.text.main }}
-        size={42}
+        css={{ color: innerState ? "#f9a32f" : theme.colors.text.main }}
+        size={36}
         type="normal"
       >
         lightbulb
       </Icon>
-      <span css={{ fontSize: 14 }}>{group.name}</span>
+      <span css={{ fontSize: 14, flexGrow: 1 }}>{group.name}</span>
     </div>
   );
 };

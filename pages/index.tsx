@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { cleanEnv, str } from "envalid";
 import { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 import CurrentTime from "../components/CurrentTime";
@@ -34,13 +34,15 @@ type MainProps = {
 
 const breakpoints = [600];
 
-const mq = breakpoints.map((bp) => `@media (max-width: ${bp}px)`);
+export const mq = breakpoints.map((bp) => `@media (max-width: ${bp}px)`);
 
 const Main: NextPage<MainProps> = ({ imageTag }) => {
   const { data, error } = useSWR<Response>("/api/hue", fetcher, {
     refreshInterval: 60000, // refresh once per minute
     refreshWhenHidden: true,
   });
+
+  const [showLights, setShowLights] = useState<boolean>(false);
 
   const theme = useTheme();
 
@@ -50,10 +52,6 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
 
   const temperatureCss = css({
     gridRow: 2,
-    [mq[0]]: {
-      padding: "1em",
-      width: "100%",
-    },
   });
 
   const emptySensorsArray: Sensor[] = [];
@@ -98,17 +96,19 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
           </Icon>
         </Tooltip>
       )}
-      <CurrentTime
-        css={{
-          marginTop: "2em",
-          [mq[0]]: {
-            fontSize: "12px",
-          },
-        }}
-      />
-      <div css={{ display: "flex", flexDirection: "row", gap: 5 }}>
+      <div css={{ maxWidth: 820 }}>
+        <CurrentTime
+          css={{
+            marginTop: "2em",
+            [mq[0]]: {
+              fontSize: "12px",
+            },
+          }}
+        />
+
         <div
           css={{
+            position: "relative",
             display: "grid",
             gridTemplateColumns: "1fr 1fr 1fr",
             marginTop: "1em",
@@ -121,32 +121,49 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
             },
           }}
         >
-          <Weather
-            css={{
-              gridColumn: "1 / span 3",
-              gridRow: 1,
-            }}
-          />
-          <Temperature
-            css={temperatureCss}
-            sensors={outside}
-            title="ulkona"
-            error={error}
-          />
-          <Temperature
-            css={temperatureCss}
-            sensors={inside}
-            title="sisällä"
-            error={error}
-          />
-          <Temperature
-            css={temperatureCss}
-            sensors={insideCold}
-            title="kuisti"
-            error={error}
-          />
+          <div
+            css={{ position: "absolute", right: -36, cursor: "pointer" }}
+            onClick={() => setShowLights(!showLights)}
+          >
+            <Icon size={32}>{showLights ? "thermostat" : "lightbulb"}</Icon>
+          </div>
+          {!showLights ? (
+            <>
+              <Weather
+                css={{
+                  gridColumn: "1 / span 3",
+                  gridRow: 1,
+                }}
+              />
+              <Temperature
+                css={temperatureCss}
+                sensors={outside}
+                title="ulkona"
+                error={error}
+              />
+              <Temperature
+                css={temperatureCss}
+                sensors={inside}
+                title="sisällä"
+                error={error}
+              />
+              <Temperature
+                css={temperatureCss}
+                sensors={insideCold}
+                title="kuisti"
+                error={error}
+              />
+            </>
+          ) : (
+            <LightGroups
+              css={{
+                gridColumn: "1 / span 3",
+              }}
+              groups={data?.groups ?? []}
+              onClick={() => console.log("click")}
+            ></LightGroups>
+          )}
         </div>
-        <LightGroups groups={data?.groups ?? []}></LightGroups>
       </div>
     </>
   );

@@ -1,6 +1,7 @@
 import { useTheme } from "@emotion/react";
 import classNames from "classnames";
 
+import { mq } from "../pages";
 import { Sensor } from "../pages/api/hue";
 import Box from "./Box";
 import Icon from "./Icon";
@@ -39,50 +40,51 @@ const Temperature: React.FC<TemperatureProps> = ({
         position: "relative",
         display: "flex",
         flexDirection: "column",
+        [mq[0]]: {
+          width: "100%",
+        },
       }}
       loading={sensors.length === 0}
       error={error}
       drawer={
-        sensors && (
-          <div
-            css={{
-              display: "table",
-              fontSize: "18px",
-              width: "100%",
-            }}
-          >
-            {sensors.map((r) => {
-              const isSensorBatteryLow = isBatteryLow(r);
-              return (
-                <div
-                  key={r.id}
-                  css={{
-                    display: "table-row",
-                    backgroundColor: theme.colors.background.light,
-                    "& span": {
-                      display: "table-cell",
-                      padding: "5px",
-                      opacity: r.enabled ? 1 : 0.25,
-                    },
-                  }}
-                >
-                  <span>{r.name}</span>
-                  {isSensorBatteryLow ? (
-                    <Icon
-                      css={{
-                        display: "block",
-                        color: theme.colors.error,
-                      }}
-                    >{`battery_${getBatteryStr(r.battery)}`}</Icon>
-                  ) : (
-                    <>&nbsp;</>
-                  )}
-                  <span>{Math.round(r.temperature)}°</span>
-                </div>
-              );
-            })}
-          </div>
-        )
+        <div
+          css={{
+            display: "table",
+            fontSize: "18px",
+          }}
+        >
+          {sensors.map((r) => {
+            const isSensorBatteryLow = isBatteryLow(r);
+            return (
+              <div
+                key={r.id}
+                css={{
+                  display: "table-row",
+                  backgroundColor: theme.colors.background.light,
+                  "& span": {
+                    display: "table-cell",
+                    padding: "5px",
+                    opacity: r.enabled ? 1 : 0.25,
+                    width: "100%",
+                  },
+                }}
+              >
+                <span>{r.name}</span>
+                {isSensorBatteryLow ? (
+                  <Icon
+                    css={{
+                      display: "block",
+                      color: theme.colors.error,
+                    }}
+                  >{`battery_${getBatteryStr(r.battery)}`}</Icon>
+                ) : (
+                  <>&nbsp;</>
+                )}
+                <span>{Math.round(r.temperature)}°</span>
+              </div>
+            );
+          })}
+        </div>
       }
     >
       <div

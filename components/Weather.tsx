@@ -49,6 +49,9 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
       ]
     : [];
 
+  if (!(data && weather && today)) {
+    return null;
+  }
   return (
     <Box
       loading={!data}
@@ -66,154 +69,149 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
         </div>
       }
     >
-      {data && weather && today && (
-        <>
+      <div
+        css={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div
+          css={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            textTransform: "capitalize",
+          }}
+        >
+          {weather.description}
+          {alerts && alerts.length > 0 && (
+            <Tooltip
+              content={
+                <div>
+                  {alerts.map((a) => (
+                    <div css={{ fontSize: 13, padding: 5 }} key={a.event}>
+                      {a.description}
+                    </div>
+                  ))}
+                </div>
+              }
+            >
+              <div css={{ marginLeft: 15 }}>
+                <Icon type="normal" css={{ color: theme.colors.error }}>
+                  announcement
+                </Icon>
+              </div>
+            </Tooltip>
+          )}
+        </div>
+        <div
+          css={{
+            display: "flex",
+            marginTop: "15px",
+            alignItems: "center",
+          }}
+        >
+          <div css={{ display: "flex" }}>
+            <div
+              css={{
+                display: "flex",
+                fontWeight: "normal",
+                fontSize: "50px",
+              }}
+            >
+              {`${Math.round(data.current.temp)}°`}
+            </div>
+            <div
+              css={{
+                display: "flex",
+                alignItems: "flex-end",
+                fontSize: "20px",
+                fontWeight: "lighter",
+                alignSelf: "bottom",
+                marginBottom: "5px",
+              }}
+            >{`${Math.round(data.current.feels_like)}°`}</div>
+          </div>
+          <WeatherIcon
+            css={{
+              marginLeft: "25px",
+              fontSize: "52px",
+              alignSelf: "center",
+            }}
+            iconId={weather.id}
+            name="owm"
+          ></WeatherIcon>
           <div
             css={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "space-between",
+              fontSize: "13px",
+              marginLeft: "25px",
             }}
           >
+            {(!today.rain || today.snow) && (
+              <div
+                css={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Icon>{today.snow ? "ac_unit" : "opacity"}</Icon>
+                <span css={{ marginLeft: 10 }}>
+                  {(today.rain || today.snow)?.toFixed(1)} mm (
+                  {(today.pop * 100).toFixed()}
+                  %)
+                </span>
+              </div>
+            )}
             <div
               css={{
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
-                textTransform: "capitalize",
               }}
             >
-              {weather.description}
-              {alerts && alerts.length > 0 && (
-                <Tooltip
-                  content={
-                    <div>
-                      {alerts.map((a) => (
-                        <div css={{ fontSize: 13, padding: 5 }} key={a.event}>
-                          {a.description}
-                        </div>
-                      ))}
-                    </div>
-                  }
-                >
-                  <div css={{ marginLeft: 15 }}>
-                    <Icon type="normal" css={{ color: theme.colors.error }}>
-                      announcement
-                    </Icon>
-                  </div>
-                </Tooltip>
-              )}
-            </div>
-            <div
-              css={{
-                display: "flex",
-                marginTop: "15px",
-                alignItems: "center",
-              }}
-            >
-              <div css={{ display: "flex" }}>
-                <div
-                  css={{
-                    display: "flex",
-                    fontWeight: "normal",
-                    fontSize: "50px",
-                  }}
-                >
-                  {`${Math.round(data.current.temp)}°`}
-                </div>
-                <div
-                  css={{
-                    display: "flex",
-                    alignItems: "flex-end",
-                    fontSize: "20px",
-                    fontWeight: "lighter",
-                    alignSelf: "bottom",
-                    marginBottom: "5px",
-                  }}
-                >{`${Math.round(data.current.feels_like)}°`}</div>
-              </div>
-              <WeatherIcon
-                css={{
-                  marginLeft: "25px",
-                  fontSize: "52px",
-                  alignSelf: "center",
-                }}
-                iconId={weather.id}
-                name="owm"
-              ></WeatherIcon>
-              <div
-                css={{
-                  fontSize: "13px",
-                  marginLeft: "25px",
-                }}
-              >
-                {(!today.rain || today.snow) && (
-                  <div
-                    css={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Icon>{today.snow ? "ac_unit" : "opacity"}</Icon>
-                    <span css={{ marginLeft: 10 }}>
-                      {(today.rain || today.snow)?.toFixed(1)} mm (
-                      {(today.pop * 100).toFixed()}
-                      %)
-                    </span>
-                  </div>
-                )}
-                <div
-                  css={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <Icon>air</Icon>
-                  <span css={{ marginLeft: 10 }}>
-                    {today.wind_speed.toFixed(1)} m/s
-                  </span>
-                  <Arrow
-                    css={{ marginLeft: 5 }}
-                    deg={today.wind_deg + 180} // meteorological degrees + 180°
-                  />
-                </div>
-              </div>
+              <Icon>air</Icon>
+              <span css={{ marginLeft: 10 }}>
+                {today.wind_speed.toFixed(1)} m/s
+              </span>
+              <Arrow
+                css={{ marginLeft: 5 }}
+                deg={today.wind_deg + 180} // meteorological degrees + 180°
+              />
             </div>
           </div>
+        </div>
+      </div>
+      <div
+        css={{
+          position: "relative",
+          display: "flex",
+          marginTop: "1.5em",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        {sections.map((s) => (
           <div
+            key={s.title}
             css={{
-              position: "relative",
               display: "flex",
-              marginTop: "1.5em",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
+              flexDirection: "column",
+              borderRight: `1px ${theme.colors.border} solid`,
+              width: "25%",
+              textAlign: "center",
+              "&:last-of-type": {
+                borderRight: "none",
+              },
             }}
           >
-            {sections.map((s) => (
-              <div
-                key={s.title}
-                css={{
-                  display: "flex",
-                  flexDirection: "column",
-                  borderRight: `1px ${theme.colors.border} solid`,
-                  width: "25%",
-                  textAlign: "center",
-                  "&:last-of-type": {
-                    borderRight: "none",
-                  },
-                }}
-              >
-                <span css={{ fontWeight: "lighter" }}>{s.title}</span>
-                <span css={{ marginTop: 0.25 }}>{s.temp}°</span>
-              </div>
-            ))}
+            <span css={{ fontWeight: "lighter" }}>{s.title}</span>
+            <span css={{ marginTop: 0.25 }}>{s.temp}°</span>
           </div>
-        </>
-      )}
+        ))}
+      </div>
     </Box>
   );
 };

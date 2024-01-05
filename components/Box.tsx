@@ -27,8 +27,7 @@ const Box: React.FC<BoxProps> = ({
         className={className}
         css={{
           display: "flex",
-          justifyContent: "space-around",
-          minWidth: "200px",
+          justifyContent: "center",
         }}
       >
         <Spinner />
@@ -42,8 +41,7 @@ const Box: React.FC<BoxProps> = ({
         className={className}
         css={{
           display: "flex",
-          justifyContent: "space-around",
-          minWidth: "200px",
+          justifyContent: "center",
           color: theme.colors.error,
         }}
       >
@@ -73,7 +71,7 @@ const Box: React.FC<BoxProps> = ({
 
 export default Box;
 
-const BORDER_RADIUS = 3;
+const BORDER_RADIUS = 5;
 
 type BoxHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 

@@ -2,6 +2,7 @@ import { Theme } from "@emotion/react";
 
 declare module "@emotion/react" {
   export interface Theme {
+    mode: string;
     colors: {
       body: string;
       text: {
@@ -22,6 +23,7 @@ declare module "@emotion/react" {
 }
 
 export const lightTheme: Theme = {
+  mode: "light",
   colors: {
     body: "#f0f0f0",
     text: {
@@ -41,6 +43,7 @@ export const lightTheme: Theme = {
 };
 
 export const darkTheme: Theme = {
+  mode: "dark",
   colors: {
     body: "#0f0f0f",
     text: {

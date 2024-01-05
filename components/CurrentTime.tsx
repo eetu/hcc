@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { format } from "date-fns";
-import fiLocale from "date-fns/locale/fi";
+import { fi } from "date-fns/locale/fi";
 import React from "react";
 
 import styles from "../styles/current-time.module.css";
@@ -19,7 +19,7 @@ const CurrentTime: React.FC<CurrentTimeProps> = ({ className }) => {
         <span>{format(currentTime, "mm")}</span>
       </div>
       <div className={styles.date}>
-        {format(currentTime, "EEEE dd. MMMM yyyy", { locale: fiLocale })}
+        {format(currentTime, "EEEE dd. MMMM yyyy", { locale: fi })}
       </div>
     </div>
   );

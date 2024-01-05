@@ -2,7 +2,7 @@ import "weather-react-icons/lib/css/weather-icons.css";
 
 import classNames from "classnames";
 import { format } from "date-fns";
-import fiLocale from "date-fns/locale/fi";
+import { fi } from "date-fns/locale/fi";
 import useSWR from "swr";
 import { WeatherIcon } from "weather-react-icons";
 
@@ -34,7 +34,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
     temp: d.temp.day,
     rain: d.snow ?? d.rain ?? 0,
     label: `${format(new Date(d.dt * 1000), "EEEEEE", {
-      locale: fiLocale,
+      locale: fi,
     })}`,
   }));
 
@@ -88,7 +88,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                   {`${Math.round(data.current.temp)}°`}
                 </div>
                 <div className={styles.feelsLike}>{`${Math.round(
-                  data.current.feels_like,
+                  data.current.feels_like
                 )}°`}</div>
               </div>
               <WeatherIcon

@@ -3,7 +3,7 @@ import React from "react";
 
 type IconProps = {
   children: string;
-  size?: "small" | "normal" | "big" | "bigger";
+  size?: number;
   type?: "normal" | "outlined";
 } & React.HTMLAttributes<HTMLDivElement>;
 
@@ -11,7 +11,7 @@ const Icon: React.FC<IconProps> = ({
   children,
   style,
   className,
-  size = "normal",
+  size = 24,
   type = "outlined",
 }) => {
   return (
@@ -19,12 +19,11 @@ const Icon: React.FC<IconProps> = ({
       style={style}
       className={classNames(
         className,
-        `material-icons${type === "outlined" ? "-outlined" : ""}`,
-        size === "small" && "md-18",
-        size === "normal" && "md-24",
-        size === "big" && "md-36",
-        size === "bigger" && "md-48",
+        `material-icons${type === "outlined" ? "-outlined" : ""}`
       )}
+      css={{
+        fontSize: size,
+      }}
     >
       {children}
     </span>

@@ -4,13 +4,16 @@ import { cleanEnv, str } from "envalid";
 import { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
 import { useEffect } from "react";
+import useSWR from "swr";
 
 import CurrentTime from "../components/CurrentTime";
 import Icon from "../components/Icon";
+import LightGroups from "../components/LightGroups";
 import Temperature from "../components/Temperature";
 import Tooltip from "../components/Tooltip";
 import useTheme from "../components/useTheme";
 import Weather from "../components/Weather";
+import { Response, Sensor } from "./api/hue";
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -33,8 +36,11 @@ const breakpoints = [600];
 
 const mq = breakpoints.map((bp) => `@media (max-width: ${bp}px)`);
 
-const Main: NextPage<MainProps> = (props) => {
-  const { imageTag } = props;
+const Main: NextPage<MainProps> = ({ imageTag }) => {
+  const { data, error } = useSWR<Response>("/api/hue", fetcher, {
+    refreshInterval: 60000, // refresh once per minute
+    refreshWhenHidden: true,
+  });
 
   const theme = useTheme();
 
@@ -49,6 +55,24 @@ const Main: NextPage<MainProps> = (props) => {
       width: "100%",
     },
   });
+
+  const emptySensorsArray: Sensor[] = [];
+
+  const {
+    inside,
+    outside,
+    inside_cold: insideCold,
+  } = (data?.sensors ?? []).reduce(
+    (acc, s) => {
+      acc[s.type] = acc[s.type].concat(s);
+      return acc;
+    },
+    {
+      inside: emptySensorsArray,
+      outside: emptySensorsArray,
+      inside_cold: emptySensorsArray,
+    }
+  );
 
   return (
     <>
@@ -82,29 +106,47 @@ const Main: NextPage<MainProps> = (props) => {
           },
         }}
       />
-      <div
-        css={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          marginTop: "1em",
-          gap: 20,
-          [mq[0]]: {
-            display: "flex",
-            flexDirection: "column",
-            marginTop: "1em",
-            alignItems: "center",
-          },
-        }}
-      >
-        <Weather
+      <div css={{ display: "flex", flexDirection: "row", gap: 5 }}>
+        <div
           css={{
-            gridColumn: "1 / span 3",
-            gridRow: 1,
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            marginTop: "1em",
+            gap: 20,
+            [mq[0]]: {
+              display: "flex",
+              flexDirection: "column",
+              marginTop: "1em",
+              alignItems: "center",
+            },
           }}
-        />
-        <Temperature css={temperatureCss} type="outside" title="ulkona" />
-        <Temperature css={temperatureCss} type="inside" title="sisällä" />
-        <Temperature css={temperatureCss} type="inside_cold" title="kuisti" />
+        >
+          <Weather
+            css={{
+              gridColumn: "1 / span 3",
+              gridRow: 1,
+            }}
+          />
+          <Temperature
+            css={temperatureCss}
+            sensors={outside}
+            title="ulkona"
+            error={error}
+          />
+          <Temperature
+            css={temperatureCss}
+            sensors={inside}
+            title="sisällä"
+            error={error}
+          />
+          <Temperature
+            css={temperatureCss}
+            sensors={insideCold}
+            title="kuisti"
+            error={error}
+          />
+        </div>
+        <LightGroups groups={data?.groups ?? []}></LightGroups>
       </div>
     </>
   );

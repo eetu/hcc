@@ -1,14 +1,17 @@
 //import "../styles/globals.css";
 
-import { Global } from "@emotion/react";
+import { Global, ThemeProvider } from "@emotion/react";
 import type { AppProps } from "next/app";
+import { useMediaQuery } from "usehooks-ts";
 
-import useTheme from "../components/useTheme";
+import { darkTheme, lightTheme } from "../src/themes";
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const theme = useTheme();
+  const isDarkTheme = useMediaQuery("(prefers-color-scheme: dark)");
+  const theme = isDarkTheme ? darkTheme : lightTheme;
+
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Global
         styles={{
           html: {
@@ -20,10 +23,9 @@ const App = ({ Component, pageProps }: AppProps) => {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "var(--body-color)",
-            color: "var(--color)",
+            backgroundColor: theme.colors.body,
+            color: theme.colors.text.main,
             userSelect: "none",
-            "-webkit-tap-highlight-color": "transparent",
           },
           a: {
             color: "inherit",
@@ -32,30 +34,10 @@ const App = ({ Component, pageProps }: AppProps) => {
           ["*"]: {
             boxSizing: "border-box",
           },
-          ":root":
-            theme === "dark"
-              ? {
-                  "--body-color": "#0f0f0f",
-                  "--background-color": "#252525",
-                  "--color": "#d6d6d6",
-                  "--even-color": "#1c1c1c",
-                  "--shadow": "none",
-                  "--border-color": "#1f1f1f",
-                }
-              : {
-                  "--body-color": "#f0f0f0",
-                  "--color": "#525252",
-                  "--background-color": "#fff",
-                  "--even-color": "#fbfbfb",
-                  "--error-color": "tomato",
-                  "--shadow":
-                    "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
-                  "--border-color": "lightgray",
-                },
         }}
       ></Global>
       <Component {...pageProps} />
-    </>
+    </ThemeProvider>
   );
 };
 

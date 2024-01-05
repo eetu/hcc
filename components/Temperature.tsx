@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import classNames from "classnames";
 import useSWR from "swr";
 
@@ -24,6 +25,8 @@ const Temperature: React.FC<TemperatureProps> = ({
     refreshInterval: 60000, // refresh once per minute
     refreshWhenHidden: true,
   });
+
+  const theme = useTheme();
 
   const rooms = data ? data.filter((d) => d.type === type) : [];
 
@@ -62,7 +65,7 @@ const Temperature: React.FC<TemperatureProps> = ({
                   key={r.id}
                   css={{
                     display: "table-row",
-                    backgroundColor: "var(--even-color)",
+                    backgroundColor: theme.colors.background.light,
                     "& span": {
                       display: "table-cell",
                       padding: "5px",
@@ -75,7 +78,7 @@ const Temperature: React.FC<TemperatureProps> = ({
                     <Icon
                       css={{
                         display: "block",
-                        color: "var(--error-color)",
+                        color: theme.colors.error,
                       }}
                       size="normal"
                     >{`battery_${getBatteryStr(r.battery)}`}</Icon>
@@ -106,7 +109,7 @@ const Temperature: React.FC<TemperatureProps> = ({
               top: 0,
               right: 0,
               display: "block",
-              color: "var(--error-color)",
+              color: theme.colors.error,
             }}
           >{`battery_${getBatteryStr(roomWithLowBattery.battery)}`}</Icon>
         )}

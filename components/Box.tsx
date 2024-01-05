@@ -1,8 +1,8 @@
+import { useTheme } from "@emotion/react";
 import React, { useState } from "react";
 
 import Icon from "./Icon";
 import Spinner from "./Spinner";
-import useTheme from "./useTheme";
 
 type BoxProps = {
   className?: string;
@@ -19,6 +19,7 @@ const Box: React.FC<BoxProps> = ({
   error,
 }) => {
   const [collapsed, setCollapsed] = useState(true);
+  const theme = useTheme();
 
   if (loading) {
     return (
@@ -43,7 +44,7 @@ const Box: React.FC<BoxProps> = ({
           display: "flex",
           justifyContent: "space-around",
           minWidth: "200px",
-          color: "var(--error-color)",
+          color: theme.colors.error,
         }}
       >
         <Icon>error</Icon>
@@ -58,7 +59,7 @@ const Box: React.FC<BoxProps> = ({
         {
           cursor: "pointer",
           height: "fit-content",
-          boxShadow: "var(--shadow)",
+          boxShadow: theme.shadows.main,
         },
       ]}
       onClick={() => setCollapsed(!collapsed)}
@@ -76,44 +77,52 @@ const BORDER_RADIUS = 3;
 
 type BoxHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
-const BoxHeader: React.FC<BoxHeaderProps> = ({ children }) => (
-  <div
-    css={{
-      display: "flex",
-      flexDirection: "column",
-      borderTopLeftRadius: BORDER_RADIUS,
-      borderTopRightRadius: BORDER_RADIUS,
-      backgroundColor: "var(--background-color)",
-      padding: "1.5em",
-      borderBottom: "1px var(--border-color) solid",
-    }}
-  >
-    {children}
-  </div>
-);
+const BoxHeader: React.FC<BoxHeaderProps> = ({ children }) => {
+  const theme = useTheme();
+
+  return (
+    <div
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        borderTopLeftRadius: BORDER_RADIUS,
+        borderTopRightRadius: BORDER_RADIUS,
+        backgroundColor: theme.colors.background.main,
+        padding: "1.5em",
+        borderBottom: `1px ${theme.colors.border} solid`,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
 type BoxDrawerProps = {
   collapsed: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const BoxDrawer: React.FC<BoxDrawerProps> = ({ children, collapsed }) => (
-  <div
-    css={{
-      padding: 0,
-    }}
-  >
+const BoxDrawer: React.FC<BoxDrawerProps> = ({ children, collapsed }) => {
+  const theme = useTheme();
+
+  return (
     <div
       css={{
-        overflowY: "scroll",
-        borderLeft: "1px var(--border-color) solid",
-        borderRight: "1px var(--border-color) solid",
-        height: collapsed ? 0 : "initial",
+        padding: 0,
       }}
     >
-      {children}
+      <div
+        css={{
+          overflowY: "scroll",
+          borderLeft: `1px ${theme.colors.border} solid`,
+          borderRight: `1px ${theme.colors.border} solid`,
+          height: collapsed ? 0 : "initial",
+        }}
+      >
+        {children}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 type BoxFooterProps = {
   collapsed: boolean;
@@ -130,9 +139,9 @@ const BoxFooter: React.FC<BoxFooterProps> = ({ collapsed }) => {
         borderBottomRightRadius: BORDER_RADIUS,
         borderBottomLeftRadius: BORDER_RADIUS,
         height: "25px",
-        backgroundColor: "var(--background-color)",
-        borderTop: collapsed ? "none" : "1px var(--border-color) solid",
-        color: theme === "dark" ? "#646464" : "#e9e9e9",
+        backgroundColor: theme.colors.background.main,
+        borderTop: collapsed ? "none" : `1px ${theme.colors.border} solid`,
+        color: theme.colors.text.light,
       }}
     >
       <Icon>menu</Icon>

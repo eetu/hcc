@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import "weather-react-icons/lib/css/weather-icons.css";
 
+import { useTheme } from "@emotion/react";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
 import useSWR from "swr";
@@ -23,6 +24,8 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
     refreshInterval: 3600000, // refresh once per hour
     refreshWhenHidden: true,
   });
+
+  const theme = useTheme();
 
   const weather = data?.current.weather[0];
   const today = data?.daily[0];
@@ -54,7 +57,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
         <div
           css={{
             position: "relative",
-            backgroundColor: "var(--even-color)",
+            backgroundColor: theme.colors.background.light,
             height: "200px",
             padding: 10,
           }}
@@ -95,7 +98,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                   }
                 >
                   <div css={{ marginLeft: 15 }}>
-                    <Icon type="normal" css={{ color: "var(--error-color)" }}>
+                    <Icon type="normal" css={{ color: theme.colors.error }}>
                       announcement
                     </Icon>
                   </div>
@@ -196,7 +199,7 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
                 css={{
                   display: "flex",
                   flexDirection: "column",
-                  borderRight: "1px var(--border-color) solid",
+                  borderRight: `1px ${theme.colors.border} solid`,
                   width: "25%",
                   textAlign: "center",
                   "&:last-of-type": {

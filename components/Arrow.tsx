@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import React from "react";
 
 type ArrowProps = {
@@ -6,6 +7,8 @@ type ArrowProps = {
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const Arrow: React.FC<ArrowProps> = ({ className, deg }) => {
+  const theme = useTheme();
+
   return (
     <div
       className={className}
@@ -24,7 +27,7 @@ const Arrow: React.FC<ArrowProps> = ({ className, deg }) => {
           height: "inherit",
           width: "inherit",
           borderRadius: "100%",
-          border: "1px solid var(--color)",
+          border: `1px solid ${theme.colors.text.main}`,
           opacity: 0.5,
         }}
       />
@@ -35,7 +38,7 @@ const Arrow: React.FC<ArrowProps> = ({ className, deg }) => {
           top: 6,
           borderLeft: "5px solid transparent",
           borderRight: "5px solid transparent",
-          borderBottom: "10px solid var(--color)",
+          borderBottom: `10px solid ${theme.colors.text.main}`,
         }}
       />
     </div>

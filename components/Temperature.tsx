@@ -1,43 +1,36 @@
 import { useTheme } from "@emotion/react";
 import classNames from "classnames";
-import useSWR from "swr";
 
-import { fetcher } from "../pages";
-import { Room } from "../pages/api/temperatures";
+import { Sensor } from "../pages/api/hue";
 import Box from "./Box";
 import Icon from "./Icon";
 
 type TemperatureProps = {
   className?: string;
   title: React.ReactNode;
-  type: "outside" | "inside" | "inside_cold";
+  sensors?: Sensor[];
+  error?: any;
 };
 
-const isBatteryLow = (room: Room) =>
-  room.battery !== undefined && room.battery < 10;
+const isBatteryLow = (sensor: Sensor) =>
+  sensor.battery !== undefined && sensor.battery < 10;
 
 const Temperature: React.FC<TemperatureProps> = ({
   className,
   title,
-  type,
+  sensors = [],
+  error,
 }) => {
-  const { data, error } = useSWR<Room[]>("/api/temperatures", fetcher, {
-    refreshInterval: 60000, // refresh once per minute
-    refreshWhenHidden: true,
-  });
-
   const theme = useTheme();
 
-  const rooms = data ? data.filter((d) => d.type === type) : [];
-
-  const enabledRooms = rooms.filter((r) => r.enabled);
+  const enabledSensors = sensors?.filter((r) => r.enabled);
 
   var temperature =
-    enabledRooms.reduce((acc, room) => {
+    enabledSensors.reduce((acc, room) => {
       return acc + room.temperature;
-    }, 0) / enabledRooms.length;
+    }, 0) / enabledSensors.length;
 
-  const roomWithLowBattery = rooms.find(isBatteryLow);
+  const sensorWithLowBattery = sensors.find(isBatteryLow);
 
   return (
     <Box
@@ -47,10 +40,10 @@ const Temperature: React.FC<TemperatureProps> = ({
         display: "flex",
         flexDirection: "column",
       }}
-      loading={!data}
+      loading={sensors.length === 0}
       error={error}
       drawer={
-        rooms && (
+        sensors && (
           <div
             css={{
               display: "table",
@@ -58,8 +51,8 @@ const Temperature: React.FC<TemperatureProps> = ({
               width: "100%",
             }}
           >
-            {rooms.map((r) => {
-              const isRoomBatteryLow = isBatteryLow(r);
+            {sensors.map((r) => {
+              const isSensorBatteryLow = isBatteryLow(r);
               return (
                 <div
                   key={r.id}
@@ -74,13 +67,12 @@ const Temperature: React.FC<TemperatureProps> = ({
                   }}
                 >
                   <span>{r.name}</span>
-                  {isRoomBatteryLow ? (
+                  {isSensorBatteryLow ? (
                     <Icon
                       css={{
                         display: "block",
                         color: theme.colors.error,
                       }}
-                      size="normal"
                     >{`battery_${getBatteryStr(r.battery)}`}</Icon>
                   ) : (
                     <>&nbsp;</>
@@ -102,7 +94,7 @@ const Temperature: React.FC<TemperatureProps> = ({
           justifyContent: "space-between",
         }}
       >
-        {roomWithLowBattery && (
+        {sensorWithLowBattery && (
           <Icon
             css={{
               position: "absolute",
@@ -111,7 +103,7 @@ const Temperature: React.FC<TemperatureProps> = ({
               display: "block",
               color: theme.colors.error,
             }}
-          >{`battery_${getBatteryStr(roomWithLowBattery.battery)}`}</Icon>
+          >{`battery_${getBatteryStr(sensorWithLowBattery.battery)}`}</Icon>
         )}
         <div
           css={{

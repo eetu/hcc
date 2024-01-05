@@ -60,7 +60,7 @@ const getUsername = async (unauthenticatedApi: Api) => {
 
 let authenticatedApi: Api | null = null;
 
-const getHueApi = async () => {
+export const getHueApi = async () => {
   if (authenticatedApi) {
     console.log("Return pre-existing API instance");
     return authenticatedApi;
@@ -68,7 +68,7 @@ const getHueApi = async () => {
 
   const address = await getBridgeAddress();
 
-  console.log(`Tyring to connect bridge at addess: ${address}`);
+  console.log(`Trying to connect bridge at addess: ${address}`);
 
   if (!address) {
     return undefined;
@@ -102,7 +102,7 @@ const getHueApi = async () => {
 
 type RoomType = "inside" | "inside_cold" | "outside";
 
-export type Room = {
+export type Sensor = {
   id: string;
   name: string;
   temperature: number;
@@ -111,9 +111,22 @@ export type Room = {
   battery?: number;
 };
 
+export type Group = {
+  id: string;
+  name: string;
+  state: {
+    on: boolean;
+  };
+};
+
+export type Response = {
+  sensors: Sensor[];
+  groups: Group[];
+};
+
 export default async function handler(
-  _req: NextApiRequest,
-  res: NextApiResponse<Room[]>
+  req: NextApiRequest,
+  res: NextApiResponse<Response>
 ) {
   const hueApi = await getHueApi();
 
@@ -121,16 +134,20 @@ export default async function handler(
     throw Error("Failed to get hue API");
   }
 
+  const rooms = await hueApi.groups.getRooms();
+  const groups = rooms.map((r) => {
+    const state: { all_on: boolean; any_on: boolean } =
+      r.getAttributeValue("state");
+
+    return {
+      id: r.getAttributeValue("id"),
+      name: r.getAttributeValue("name"),
+      state: { on: state.any_on },
+    };
+  });
+
   const sensors = await hueApi.sensors.getAll();
   const temperatureSensors = sensors.filter((s) => s.type === "ZLLTemperature");
-
-  console.log("temperature sensors:");
-  console.log(
-    temperatureSensors.map(
-      (t) =>
-        `${t.getAttributeValue("name")}: ${t.getAttributeValue("uniqueid")}`
-    )
-  );
 
   const temps = temperatureSensors.map((s) => {
     const uniqueid = s.getAttributeValue("uniqueid");
@@ -151,5 +168,5 @@ export default async function handler(
     };
   });
 
-  res.status(200).json(temps);
+  res.status(200).json({ sensors: temps, groups });
 }

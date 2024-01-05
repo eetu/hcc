@@ -122,7 +122,7 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
           }}
         >
           <div
-            css={{ position: "absolute", right: -36, cursor: "pointer" }}
+            css={{ position: "absolute", right: 5, top: 5, cursor: "pointer" }}
             onClick={() => setShowLights(!showLights)}
           >
             <Icon size={32}>{showLights ? "thermostat" : "lightbulb"}</Icon>

@@ -12,6 +12,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
     "@floating-ui/react": "^0.26.4",
     "chart.js": "^4.4.1",
     "classnames": "^2.5.1",

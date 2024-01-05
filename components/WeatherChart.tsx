@@ -67,9 +67,6 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
   const options: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    layout: {
-      padding: 10,
-    },
     scales: {
       x: {
         beginAtZero: false,

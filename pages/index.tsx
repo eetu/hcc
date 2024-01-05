@@ -43,7 +43,6 @@ const Main: NextPage<MainProps> = (props) => {
   }, [theme]);
 
   const temperatureCss = css({
-    padding: "1em",
     gridRow: 2,
     [mq[0]]: {
       padding: "1em",
@@ -88,6 +87,7 @@ const Main: NextPage<MainProps> = (props) => {
           display: "grid",
           gridTemplateColumns: "1fr 1fr 1fr",
           marginTop: "1em",
+          gap: 20,
           [mq[0]]: {
             display: "flex",
             flexDirection: "column",
@@ -100,10 +100,6 @@ const Main: NextPage<MainProps> = (props) => {
           css={{
             gridColumn: "1 / span 3",
             gridRow: 1,
-            padding: "1em",
-            [mq[0]]: {
-              padding: "1em",
-            },
           }}
         />
         <Temperature css={temperatureCss} type="outside" title="ulkona" />

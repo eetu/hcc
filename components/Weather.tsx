@@ -54,8 +54,9 @@ const Weather: React.FC<WeatherProps> = ({ className }) => {
         <div
           css={{
             position: "relative",
-            backgroundColor: "var(--background-color)",
+            backgroundColor: "var(--even-color)",
             height: "200px",
+            padding: 10,
           }}
         >
           <WeatherChart data={chartData} />

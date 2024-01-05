@@ -38,7 +38,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                   "--body-color": "#0f0f0f",
                   "--background-color": "#252525",
                   "--color": "#d6d6d6",
-                  "--even-color": "#0a0a0a",
+                  "--even-color": "#1c1c1c",
                   "--shadow": "none",
                   "--border-color": "#1f1f1f",
                 }
@@ -46,7 +46,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                   "--body-color": "#f0f0f0",
                   "--color": "#525252",
                   "--background-color": "#fff",
-                  "--even-color": "#fafafa",
+                  "--even-color": "#fbfbfb",
                   "--error-color": "tomato",
                   "--shadow":
                     "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",

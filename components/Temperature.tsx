@@ -62,7 +62,7 @@ const Temperature: React.FC<TemperatureProps> = ({
                   key={r.id}
                   css={{
                     display: "table-row",
-                    backgroundColor: "var(--background-color)",
+                    backgroundColor: "var(--even-color)",
                     "& span": {
                       display: "table-cell",
                       padding: "5px",

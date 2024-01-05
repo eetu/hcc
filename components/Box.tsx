@@ -1,9 +1,8 @@
-import classNames from "classnames";
 import React, { useState } from "react";
 
-import styles from "../styles/box.module.css";
 import Icon from "./Icon";
 import Spinner from "./Spinner";
+import useTheme from "./useTheme";
 
 type BoxProps = {
   className?: string;
@@ -19,11 +18,19 @@ const Box: React.FC<BoxProps> = ({
   loading,
   error,
 }) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+  const theme = useTheme();
 
   if (loading) {
     return (
-      <div className={classNames(className, styles.wait)}>
+      <div
+        className={className}
+        css={{
+          display: "flex",
+          justifyContent: "space-around",
+          minWidth: "200px",
+        }}
+      >
         <Spinner />
       </div>
     );
@@ -31,7 +38,15 @@ const Box: React.FC<BoxProps> = ({
 
   if (error) {
     return (
-      <div className={classNames(className, styles.error)}>
+      <div
+        className={className}
+        css={{
+          display: "flex",
+          justifyContent: "space-around",
+          minWidth: "200px",
+          color: "var(--error-color)",
+        }}
+      >
         <Icon>error</Icon>
       </div>
     );
@@ -39,16 +54,55 @@ const Box: React.FC<BoxProps> = ({
 
   return (
     <div
-      className={classNames(styles.box, className, {
-        [styles.collapsed]: !collapsed,
-      })}
+      className={className}
+      css={[
+        {
+          cursor: "pointer",
+        },
+      ]}
       onClick={() => setCollapsed(!collapsed)}
     >
-      <div className={styles.top}>{children}</div>
-      <div className={styles.middle}>
-        <div className={styles.drawer}>{drawer}</div>
+      <div
+        css={{
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: "10px 10px 0 0",
+          backgroundColor: "var(--background-color)",
+          padding: "1.5em",
+          boxShadow: "var(--shadow)",
+          borderBottom: collapsed ? "none" : "1px var(--border-color) solid",
+        }}
+      >
+        {children}
       </div>
-      <div className={styles.bottom}>
+      <div
+        css={{
+          padding: "0 4px",
+        }}
+      >
+        <div
+          css={{
+            overflowY: "scroll",
+            borderLeft: "1px var(--border-color) solid",
+            borderRight: "1px var(--border-color) solid",
+            height: collapsed ? 0 : "initial",
+          }}
+        >
+          {drawer}
+        </div>
+      </div>
+      <div
+        css={{
+          display: "flex",
+          justifyContent: "center",
+          borderRadius: "0 0 10px 10px",
+          height: "25px",
+          backgroundColor: "var(--background-color)",
+          boxShadow: "var(--shadow)",
+          borderTop: collapsed ? "none" : "1px var(--border-color) solid",
+          color: theme === "dark" ? "#646464" : "#e9e9e9",
+        }}
+      >
         <Icon>menu</Icon>
       </div>
     </div>

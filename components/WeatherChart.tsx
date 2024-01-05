@@ -20,7 +20,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  LineController,
+  LineController
 );
 
 import useTheme from "./useTheme";
@@ -38,7 +38,8 @@ type WeatherChartProps = {
 const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
   const theme = useTheme();
 
-  const avgTemp = data.map((d) => d.temp).reduce((a, b) => a + b) / data.length;
+  const avgTemp =
+    data.map((d) => d.temp).reduce((a, b) => a + b, 0) / data.length;
 
   const weatherLineColor =
     avgTemp < 5 ? "#1a5276" : theme === "dark" ? "#c94022" : "#ff5733";

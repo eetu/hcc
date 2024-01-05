@@ -3,7 +3,6 @@ import useSWR from "swr";
 
 import { fetcher } from "../pages";
 import { Room } from "../pages/api/temperatures";
-import styles from "../styles/temperature.module.css";
 import Box from "./Box";
 import Icon from "./Icon";
 
@@ -40,26 +39,44 @@ const Temperature: React.FC<TemperatureProps> = ({
   return (
     <Box
       className={classNames(className)}
+      css={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+      }}
       loading={!data}
       error={error}
       drawer={
         rooms && (
-          <div className={classNames(styles.rooms)}>
+          <div
+            css={{
+              display: "table",
+              fontSize: "18px",
+              width: "100%",
+            }}
+          >
             {rooms.map((r) => {
               const isRoomBatteryLow = isBatteryLow(r);
               return (
                 <div
                   key={r.id}
-                  className={classNames(styles.room, {
-                    [styles.disabled]: !r.enabled,
-                  })}
+                  css={{
+                    display: "table-row",
+                    backgroundColor: "var(--background-color)",
+                    "& span": {
+                      display: "table-cell",
+                      padding: "5px",
+                      opacity: r.enabled ? 1 : 0.25,
+                    },
+                  }}
                 >
                   <span>{r.name}</span>
                   {isRoomBatteryLow ? (
                     <Icon
-                      className={classNames(styles.batteryIcon, {
-                        [`${styles.batteryWarning}`]: isRoomBatteryLow,
-                      })}
+                      css={{
+                        display: "block",
+                        color: "var(--error-color)",
+                      }}
                       size="normal"
                     >{`battery_${getBatteryStr(r.battery)}`}</Icon>
                   ) : (
@@ -73,20 +90,45 @@ const Temperature: React.FC<TemperatureProps> = ({
         )
       }
     >
-      <div className={styles.temperature}>
+      <div
+        css={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         {roomWithLowBattery && (
           <Icon
-            className={classNames(
-              styles.batteryTitle,
-              styles.batteryIcon,
-              styles.batteryWarning,
-            )}
+            css={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              display: "block",
+              color: "var(--error-color)",
+            }}
           >{`battery_${getBatteryStr(roomWithLowBattery.battery)}`}</Icon>
         )}
-        <div className={styles.title}>{title}</div>
-        <div className={styles.temp}>
+        <div
+          css={{
+            fontWeight: "normal",
+            fontSize: 18,
+            textTransform: "capitalize",
+          }}
+        >
+          {title}
+        </div>
+        <div
+          css={{
+            marginTop: "5px",
+            display: "flex",
+            fontWeight: "normal",
+            fontSize: "50px",
+          }}
+        >
           {Math.round(temperature)}
-          <span className={styles.degree}>°</span>
+          <span>°</span>
         </div>
       </div>
     </Box>

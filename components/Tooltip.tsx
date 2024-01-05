@@ -14,8 +14,6 @@ import {
 import classNames from "classnames";
 import React, { useState } from "react";
 
-import styles from "../styles/tooltip.module.css";
-
 type TooltipProps = {
   className?: string;
   children?: React.ReactNode;
@@ -60,7 +58,21 @@ const Tooltip: React.FC<TooltipProps> = ({ className, children, content }) => {
         {isOpen && (
           <div
             ref={refs.setFloating}
-            className={styles.tooltip}
+            css={{
+              backgroundColor: "#4d4d4d",
+              color: "#dddddd",
+              padding: "8px",
+              borderRadius: "4px",
+              animation: "fadeIn 0.5s",
+              "@keyframes fadeIn": {
+                "0%": {
+                  opacity: 0,
+                },
+                "100%": {
+                  opacity: 1,
+                },
+              },
+            }}
             style={{
               position: strategy,
               top: y ?? 0,

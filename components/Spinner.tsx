@@ -1,13 +1,38 @@
 import React from "react";
 
-import styles from "../styles/spinner.module.css";
 import Icon from "./Icon";
 
 const Spinner: React.FC = () => {
   return (
-    <div className={styles.spinner}>
-      <Icon className={styles.sun}>wb_sunny</Icon>
-      <Icon className={styles.cloud} type="normal">
+    <div
+      css={{
+        opacity: 0.75,
+      }}
+    >
+      <Icon
+        css={{
+          animation: "spin 1s alternate infinite",
+          "@keyframes spin": {
+            "100%": {
+              transform: "rotate(360deg)",
+            },
+          },
+        }}
+      >
+        wb_sunny
+      </Icon>
+      <Icon
+        css={{
+          marginLeft: -20,
+          animation: "move 1s alternate infinite",
+          "@keyframes move": {
+            "100%": {
+              transform: "translateX(10px)",
+            },
+          },
+        }}
+        type="normal"
+      >
         cloud
       </Icon>
     </div>

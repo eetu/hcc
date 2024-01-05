@@ -1,4 +1,4 @@
-//export const config = { amp: true };
+import { css } from "@emotion/react";
 import dotenv from "dotenv";
 import { cleanEnv, str } from "envalid";
 import { GetServerSidePropsContext, NextPage } from "next";
@@ -11,7 +11,6 @@ import Temperature from "../components/Temperature";
 import Tooltip from "../components/Tooltip";
 import useTheme from "../components/useTheme";
 import Weather from "../components/Weather";
-import styles from "../styles/main.module.css";
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -30,6 +29,10 @@ type MainProps = {
   imageTag?: string;
 };
 
+const breakpoints = [600];
+
+const mq = breakpoints.map((bp) => `@media (max-width: ${bp}px)`);
+
 const Main: NextPage<MainProps> = (props) => {
   const { imageTag } = props;
 
@@ -39,6 +42,14 @@ const Main: NextPage<MainProps> = (props) => {
     document.querySelector("body")?.setAttribute("data-theme", theme);
   }, [theme]);
 
+  const temperatureCss = css({
+    gridRow: 2,
+    [mq[0]]: {
+      padding: "1em",
+      width: "100%",
+    },
+  });
+
   return (
     <>
       <Head>
@@ -46,30 +57,54 @@ const Main: NextPage<MainProps> = (props) => {
       </Head>
       {imageTag && (
         <Tooltip
-          className={styles.buildTag}
+          css={{
+            position: "absolute",
+            top: "8px",
+            right: "8px",
+            whiteSpace: "nowrap",
+          }}
           content={<span>build:&nbsp;{imageTag}</span>}
         >
-          <Icon className={styles.buildTagIcon}>info</Icon>
+          <Icon
+            css={{
+              opacity: 0.5,
+            }}
+          >
+            info
+          </Icon>
         </Tooltip>
       )}
-      <CurrentTime className={styles.title}></CurrentTime>
-      <div className={styles.grid}>
-        <Weather className={styles.weather} />
-        <Temperature
-          className={styles.temperature}
-          type="outside"
-          title="ulkona"
+      <CurrentTime
+        css={{
+          marginTop: "2em",
+          [mq[0]]: {
+            fontSize: "12px",
+          },
+        }}
+      />
+      <div
+        css={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr",
+          marginTop: "1em",
+          gap: 20,
+          [mq[0]]: {
+            display: "flex",
+            flexDirection: "column",
+            marginTop: "1em",
+            alignItems: "center",
+          },
+        }}
+      >
+        <Weather
+          css={{
+            gridColumn: "1 / span 3",
+            gridRow: 1,
+          }}
         />
-        <Temperature
-          className={styles.temperature}
-          type="inside"
-          title="sisällä"
-        />
-        <Temperature
-          className={styles.temperature}
-          type="inside_cold"
-          title="kuisti"
-        />
+        <Temperature css={temperatureCss} type="outside" title="ulkona" />
+        <Temperature css={temperatureCss} type="inside" title="sisällä" />
+        <Temperature css={temperatureCss} type="inside_cold" title="kuisti" />
       </div>
     </>
   );

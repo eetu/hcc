@@ -23,6 +23,7 @@ const LightGroups: FC<LightGroupsProps> = ({ groups, className }) => {
         gap: 5,
         flexWrap: "wrap",
         borderRadius: 5,
+        paddingRight: "calc(1em + 20px)",
       }}
     >
       {groups.map((g) => (
@@ -63,29 +64,44 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
         gap: 5,
         color:
           theme.mode === "dark"
-            ? group.state.on
+            ? isOn
               ? theme.colors.text.light
               : theme.colors.text.main
             : theme.colors.text.main,
-        padding: 2,
-        marginTop: 10,
+        padding: "5px 2px",
         cursor: "pointer",
-        width: 150,
+        width: 152,
         borderRadius: 5,
-        border: "3px solid #f9a32f",
+        border: `3px solid ${isOn ? "#f78f08" : theme.colors.text.main}`,
         background: isOn
           ? "linear-gradient(153deg, rgba(255,237,207,1) 0%, rgba(255,239,171,1) 56%)"
-          : theme.colors.background.light,
+          : theme.mode === "dark"
+            ? "#404040"
+            : "#d9d9d9",
       }}
       onClick={handleClick(group.id, isOn)}
     >
-      <Icon
-        css={{ color: isOn ? "#f9a32f" : theme.colors.text.main }}
-        size={36}
-        type="normal"
+      <div
+        css={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: "100%",
+          backgroundColor: isOn
+            ? "rgba(247, 143, 8, 0.15)"
+            : "rgba(0,0,0, 0.15)",
+          height: 42,
+          width: 42,
+        }}
       >
-        lightbulb
-      </Icon>
+        <Icon
+          css={{ color: isOn ? "#f8a63a" : theme.colors.text.main }}
+          size={36}
+          type="normal"
+        >
+          lightbulb
+        </Icon>
+      </div>
       <span css={{ fontSize: 14, flexGrow: 1 }}>{group.name}</span>
     </div>
   );

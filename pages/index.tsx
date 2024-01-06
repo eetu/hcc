@@ -47,13 +47,14 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
     gridRow: 2,
   });
 
+  const sensors = data?.sensors ?? [];
   const emptySensorsArray: Sensor[] = [];
 
   const {
     inside,
     outside,
     inside_cold: insideCold,
-  } = (data?.sensors ?? []).reduce(
+  } = sensors.reduce(
     (acc, s) => {
       acc[s.type] = acc[s.type].concat(s);
       return acc;
@@ -64,6 +65,8 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
       inside_cold: emptySensorsArray,
     }
   );
+
+  const groups = data?.groups ?? [];
 
   return (
     <>
@@ -89,7 +92,7 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
           </Icon>
         </Tooltip>
       )}
-      <div css={{ maxWidth: 820 }}>
+      <div>
         <CurrentTime
           css={{
             marginTop: "2em",
@@ -106,6 +109,7 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
             gridTemplateColumns: "1fr 1fr 1fr",
             marginTop: "1em",
             gap: 20,
+            maxWidth: 520,
             [mq[0]]: {
               display: "flex",
               flexDirection: "column",
@@ -114,12 +118,19 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
             },
           }}
         >
-          <div
-            css={{ position: "absolute", right: 5, top: 5, cursor: "pointer" }}
-            onClick={() => setShowLights(!showLights)}
-          >
-            <Icon size={32}>{showLights ? "thermostat" : "lightbulb"}</Icon>
-          </div>
+          {groups.length > 0 && (
+            <div
+              css={{
+                position: "absolute",
+                right: 5,
+                top: 5,
+                cursor: "pointer",
+              }}
+              onClick={() => setShowLights(!showLights)}
+            >
+              <Icon size={32}>{showLights ? "thermostat" : "lightbulb"}</Icon>
+            </div>
+          )}
           {!showLights ? (
             <>
               <Weather
@@ -152,8 +163,7 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
               css={{
                 gridColumn: "1 / span 3",
               }}
-              groups={data?.groups ?? []}
-              onClick={() => console.log("click")}
+              groups={groups}
             ></LightGroups>
           )}
         </div>

@@ -39,17 +39,17 @@ type LightGroupProps = {
 };
 
 const LightGroup: FC<LightGroupProps> = ({ group }) => {
-  const [innerState, setInnerState] = useState(group.state.on);
+  const [isOn, setIsOn] = useState(group.state.on);
 
   const handleClick = useCallback(
-    (id: string) => () => {
+    (id: string, isOn: boolean) => () => {
       fetch(`/api/hue/toggleGroup/${id}`, { method: "POST" }).then((res) => {
         if (res.status === 200) {
-          setInnerState(!innerState);
+          setIsOn(!isOn);
         }
       });
     },
-    [innerState]
+    []
   );
 
   const theme = useTheme();
@@ -73,14 +73,14 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
         width: 150,
         borderRadius: 5,
         border: "3px solid #f9a32f",
-        background: group.state.on
+        background: isOn
           ? "linear-gradient(153deg, rgba(255,237,207,1) 0%, rgba(255,239,171,1) 56%)"
           : theme.colors.background.light,
       }}
-      onClick={handleClick(group.id)}
+      onClick={handleClick(group.id, isOn)}
     >
       <Icon
-        css={{ color: innerState ? "#f9a32f" : theme.colors.text.main }}
+        css={{ color: isOn ? "#f9a32f" : theme.colors.text.main }}
         size={36}
         type="normal"
       >

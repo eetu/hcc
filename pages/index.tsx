@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { cleanEnv, str } from "envalid";
 import { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 
 import CurrentTime from "../components/CurrentTime";
@@ -11,7 +11,6 @@ import Icon from "../components/Icon";
 import LightGroups from "../components/LightGroups";
 import Temperature from "../components/Temperature";
 import Tooltip from "../components/Tooltip";
-import useTheme from "../components/useTheme";
 import Weather from "../components/Weather";
 import { Response, Sensor } from "./api/hue";
 
@@ -43,12 +42,6 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
   });
 
   const [showLights, setShowLights] = useState<boolean>(false);
-
-  const theme = useTheme();
-
-  useEffect(() => {
-    document.querySelector("body")?.setAttribute("data-theme", theme);
-  }, [theme]);
 
   const temperatureCss = css({
     gridRow: 2,

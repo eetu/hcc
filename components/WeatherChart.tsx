@@ -1,3 +1,4 @@
+import { useTheme } from "@emotion/react";
 import {
   BarController,
   BarElement,
@@ -23,8 +24,6 @@ ChartJS.register(
   LineController
 );
 
-import useTheme from "./useTheme";
-
 type WeatherChartData = {
   temp: number;
   rain: number;
@@ -42,7 +41,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
     data.map((d) => d.temp).reduce((a, b) => a + b, 0) / data.length;
 
   const weatherLineColor =
-    avgTemp < 5 ? "#1a5276" : theme === "dark" ? "#c94022" : "#ff5733";
+    avgTemp < 5 ? "#1a5276" : theme.mode === "dark" ? "#c94022" : "#ff5733";
 
   const chartData: ChartData = {
     labels: data.map((d) => d.label),
@@ -59,7 +58,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
         type: "bar",
         yAxisID: "yRain",
         data: data.map((d) => d.rain),
-        backgroundColor: theme === "dark" ? "#43529c" : "#94daf7",
+        backgroundColor: theme.mode === "dark" ? "#43529c" : "#94daf7",
       },
     ],
   };
@@ -73,7 +72,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
         grid: {
           display: false,
         },
-        ticks: { color: theme === "dark" ? "#d6d6d6" : "#525252" },
+        ticks: { color: theme.mode === "dark" ? "#d6d6d6" : "#525252" },
       },
       yTemp: {
         position: "left",
@@ -82,7 +81,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
         },
         ticks: {
           precision: 0,
-          color: theme === "dark" ? "#d6d6d6" : "#525252",
+          color: theme.mode === "dark" ? "#d6d6d6" : "#525252",
           callback: (v) => `${v} °`,
         },
       },
@@ -93,7 +92,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
         },
         ticks: {
           precision: 0,
-          color: theme === "dark" ? "#d6d6d6" : "#525252",
+          color: theme.mode === "dark" ? "#d6d6d6" : "#525252",
           callback: (v) => `${v} mm`,
         },
       },

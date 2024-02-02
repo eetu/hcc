@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react";
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 
 import { Group } from "../pages/api/hue";
 import Icon from "./Icon";
@@ -41,6 +41,12 @@ type LightGroupProps = {
 
 const LightGroup: FC<LightGroupProps> = ({ group }) => {
   const [isOn, setIsOn] = useState(group.state.on);
+
+  useEffect(() => {
+    if (group.state.on !== isOn) {
+      setIsOn(group.state.on)
+    }
+  }, [group.state.on, isOn]);
 
   const handleClick = useCallback(
     (id: string, isOn: boolean) => () => {

@@ -37,7 +37,7 @@ export const mq = breakpoints.map((bp) => `@media (max-width: ${bp}px)`);
 
 const Main: NextPage<MainProps> = ({ imageTag }) => {
   const { data, error } = useSWR<Response>("/api/hue", fetcher, {
-    refreshInterval: 60000, // refresh once per minute
+    refreshInterval: 2000, // refresh once per second
     refreshWhenHidden: true,
   });
 

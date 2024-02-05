@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
-    "@floating-ui/react": "^0.26.8",
+    "@floating-ui/react": "^0.26.9",
     "chart.js": "^4.4.1",
     "classnames": "^2.5.1",
     "date-fns": "^3.3.1",

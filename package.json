@@ -26,7 +26,7 @@
     "react-dom": "18.2.0",
     "swr": "^2.2.5",
     "ts-node": "^10.9.2",
-    "usehooks-ts": "^2.15.0",
+    "usehooks-ts": "^2.15.1",
     "weather-react-icons": "^4.0.2"
   },
   "devDependencies": {

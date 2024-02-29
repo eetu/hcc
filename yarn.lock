@@ -1020,12 +1020,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chart.js@npm:^4.4.1":
-  version: 4.4.1
-  resolution: "chart.js@npm:4.4.1"
+"chart.js@npm:^4.4.2":
+  version: 4.4.2
+  resolution: "chart.js@npm:4.4.2"
   dependencies:
     "@kurkle/color": "npm:^0.3.0"
-  checksum: 10/bb58247349ed04b6a38c4c4b45d953d87dab40ecd70dd796da302cbcebf866dfc1ecf7bd32d95ecb44b89dccf9a4cfc6ff84f74ba69b024be9b5bd19b2930fbc
+  checksum: 10/609444dfc9e847e4c891884309d6083464333e39a7266996fa15f622a44d0c5202c20c86b3bfb1d72b3769096f71c80e131860270c39ce1291cac52b9f45dc6d
   languageName: node
   linkType: hard
 
@@ -2194,7 +2194,7 @@ __metadata:
     "@floating-ui/react": "npm:^0.26.9"
     "@types/node": "npm:20.11.22"
     "@types/react": "npm:18.2.60"
-    chart.js: "npm:^4.4.1"
+    chart.js: "npm:^4.4.2"
     classnames: "npm:^2.5.1"
     date-fns: "npm:^3.3.1"
     dotenv: "npm:^16.4.5"

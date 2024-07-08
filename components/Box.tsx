@@ -28,6 +28,7 @@ const Box: React.FC<BoxProps> = ({
         css={{
           display: "flex",
           justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <Spinner />

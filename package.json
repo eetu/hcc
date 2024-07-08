@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
-    "@floating-ui/react": "^0.26.13",
-    "chart.js": "^4.4.2",
+    "@floating-ui/react": "^0.26.17",
+    "chart.js": "^4.4.3",
     "classnames": "^2.5.1",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
@@ -30,7 +30,7 @@
     "weather-react-icons": "^4.0.2"
   },
   "devDependencies": {
-    "@types/node": "20.12.8",
+    "@types/node": "20.12.12",
     "@types/react": "18.2.79",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.3",

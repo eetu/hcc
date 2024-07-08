@@ -2215,7 +2215,7 @@ __metadata:
     swr: "npm:^2.2.5"
     ts-node: "npm:^10.9.2"
     typescript: "npm:5.4.5"
-    usehooks-ts: "npm:^2.16.0"
+    usehooks-ts: "npm:^3.1.0"
     weather-react-icons: "npm:^4.0.2"
   languageName: unknown
   linkType: soft
@@ -4033,14 +4033,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"usehooks-ts@npm:^2.16.0":
-  version: 2.16.0
-  resolution: "usehooks-ts@npm:2.16.0"
+"usehooks-ts@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "usehooks-ts@npm:3.1.0"
   dependencies:
     lodash.debounce: "npm:^4.0.8"
   peerDependencies:
     react: ^16.8.0  || ^17 || ^18
-  checksum: 10/64390b12a50700a23e756307875116cc4fc1a58ef3aa23062e59ba0dda7bd0224b59d91b73f5507318fbb4ead1c30be4a335946f0ca748bd15686c9022720486
+  checksum: 10/6aef8affd3c053a3040b7421816dab85eb21601c5203496a705bafc32eb973fb519a2b0ddda527962e361d248f3a1c49df130620efe871c8f89e897451ed1cc7
   languageName: node
   linkType: hard
 

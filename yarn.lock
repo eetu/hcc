@@ -1626,12 +1626,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-simple-import-sort@npm:10.0.0":
-  version: 10.0.0
-  resolution: "eslint-plugin-simple-import-sort@npm:10.0.0"
+"eslint-plugin-simple-import-sort@npm:12.1.1":
+  version: 12.1.1
+  resolution: "eslint-plugin-simple-import-sort@npm:12.1.1"
   peerDependencies:
     eslint: ">=5.0.0"
-  checksum: 10/462187d3c137ba0986586a4759fe57c1c3fc1850750cb785f335b9b235346a1d96ebfcfb558847fc1a3b319718f2736178a66a61a0c184c86d48b21c1e0df26b
+  checksum: 10/2a690cea9243fbefa70345687bca8952f5e185fa459b7a8db687a908cc31082435cfee236c619d5245548fa5f89a2f2c4f8499f80512e048d2bedc60e3662d5a
   languageName: node
   linkType: hard
 
@@ -2203,7 +2203,7 @@ __metadata:
     eslint: "npm:8.57.0"
     eslint-config-next: "npm:14.2.4"
     eslint-config-prettier: "npm:9.1.0"
-    eslint-plugin-simple-import-sort: "npm:10.0.0"
+    eslint-plugin-simple-import-sort: "npm:12.1.1"
     eslint-plugin-unused-imports: "npm:3.2.0"
     next: "npm:14.2.3"
     node-hue-api: "npm:^5.0.0-beta.16"
@@ -2215,7 +2215,7 @@ __metadata:
     swr: "npm:^2.2.5"
     ts-node: "npm:^10.9.2"
     typescript: "npm:5.4.5"
-    usehooks-ts: "npm:^2.16.0"
+    usehooks-ts: "npm:^3.1.0"
     weather-react-icons: "npm:^4.0.2"
   languageName: unknown
   linkType: soft
@@ -4033,14 +4033,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"usehooks-ts@npm:^2.16.0":
-  version: 2.16.0
-  resolution: "usehooks-ts@npm:2.16.0"
+"usehooks-ts@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "usehooks-ts@npm:3.1.0"
   dependencies:
     lodash.debounce: "npm:^4.0.8"
   peerDependencies:
     react: ^16.8.0  || ^17 || ^18
-  checksum: 10/64390b12a50700a23e756307875116cc4fc1a58ef3aa23062e59ba0dda7bd0224b59d91b73f5507318fbb4ead1c30be4a335946f0ca748bd15686c9022720486
+  checksum: 10/6aef8affd3c053a3040b7421816dab85eb21601c5203496a705bafc32eb973fb519a2b0ddda527962e361d248f3a1c49df130620efe871c8f89e897451ed1cc7
   languageName: node
   linkType: hard
 

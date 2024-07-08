@@ -7,7 +7,7 @@ ENV NODE_ENV development
 COPY .yarn .yarn
 COPY ["package.json", ".yarnrc.yml", "yarn.lock", "./"]
 # Building linux/arm64 images with QEMU is 🐌
-RUN yarn install --frozen-lockfile --network-timeout 1000000
+RUN yarn install --immutable --network-timeout 1000000
 
 FROM node:20-alpine AS build
 WORKDIR /app

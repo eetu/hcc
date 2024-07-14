@@ -2,9 +2,14 @@ import React from "react";
 
 import Icon from "./Icon";
 
-const Spinner: React.FC = () => {
+type SpinnerProps = {
+  className?: string;
+};
+
+const Spinner: React.FC<SpinnerProps> = ({ className }) => {
   return (
     <div
+      className={className}
       css={{
         opacity: 0.75,
       }}

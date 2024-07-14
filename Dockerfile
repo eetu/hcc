@@ -18,6 +18,8 @@ RUN yarn build
 
 FROM node:20-alpine AS runner
 WORKDIR /app
+LABEL org.opencontainers.image.description HCC for raspi
+
 ARG HCC_IMAGE_TAG
 
 ENV NODE_ENV=production

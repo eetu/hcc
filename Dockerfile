@@ -18,7 +18,8 @@ RUN yarn build
 
 FROM node:20-alpine AS runner
 WORKDIR /app
-LABEL org.opencontainers.image.description HCC for raspi
+LABEL org.opencontainers.image.description="HCC for raspi"
+LABEL org.opencontainers.image.source="https://github.com/eetu/hcc"
 
 ARG HCC_IMAGE_TAG
 

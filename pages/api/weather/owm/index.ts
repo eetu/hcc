@@ -5,13 +5,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 dotenv.config();
 
 const env = cleanEnv(process.env, {
-  OPEN_WEATHER_API_KEY: str(),
+  OPEN_WEATHER_API_KEY: str({ default: "" }),
+  TOMORROW_IO_API_KEY: str({ default: "" }),
   POSITION_LAT: str(),
   POSITION_LON: str(),
   LANGUAGE: str({ default: "fi" }),
 });
 
-export type WeatherCurrent = {
+export type OpenWeatherCurrent = {
   dt: number;
   sunrise: number;
   sunset: number;
@@ -33,7 +34,7 @@ export type WeatherCurrent = {
   }>;
 };
 
-export type WeatherHourly = {
+export type OpenWeatherHourly = {
   dt: number;
   temp: number;
   feels_like: number;
@@ -61,7 +62,7 @@ export type WeatherHourly = {
   };
 };
 
-export type WeatherDaily = {
+export type OpenWeatherDaily = {
   dt: number;
   sunrise: number;
   sunset: number;
@@ -102,7 +103,7 @@ export type WeatherDaily = {
   snow?: number;
 };
 
-export type WeatherAlert = {
+export type OpenWeatherAlert = {
   sender_name: string;
   event: string;
   start: number;
@@ -111,35 +112,34 @@ export type WeatherAlert = {
   tags: Array<String>;
 };
 
-export type WeatherReponse = {
+export type OpenWeatherReponse = {
   lat: number;
   lon: number;
   timezone: string;
   timezone_offset: number;
-  current: WeatherCurrent;
-  hourly: Array<WeatherHourly>;
-  daily: Array<WeatherDaily>;
-  alerts: Array<WeatherAlert>;
+  current: OpenWeatherCurrent;
+  hourly: Array<OpenWeatherHourly>;
+  daily: Array<OpenWeatherDaily>;
+  alerts: Array<OpenWeatherAlert>;
 };
 
-const getWeather = async (): Promise<WeatherReponse> => {
+const getOpenWeather = async (): Promise<OpenWeatherReponse> => {
   const res = await fetch(
-    `https://api.openweathermap.org/data/2.5/onecall?lat=${env.POSITION_LAT}&lon=${env.POSITION_LON}&exclude=minutely&units=metric&appId=${env.OPEN_WEATHER_API_KEY}&lang=${env.LANGUAGE}`,
+    `https://api.openweathermap.org/data/2.5/onecall?lat=${env.POSITION_LAT}&lon=${env.POSITION_LON}&exclude=minutely&units=metric&appId=${env.OPEN_WEATHER_API_KEY}&lang=${env.LANGUAGE}`
   );
   if (!res.ok) {
     console.error(
-      `Failed to fetch weather, with status: ${res.status} and body: ${res.body}`,
+      `Failed to fetch weather, with status: ${res.status} and body: ${res.body}`
     );
   }
-  const weatherResponse: WeatherReponse = await res.json();
+  const weatherResponse: OpenWeatherReponse = await res.json();
 
   return weatherResponse;
 };
 
 export default async function handler(
   _req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
-  const weather = await getWeather();
-  res.json(weather);
+  res.json(await getOpenWeather());
 }

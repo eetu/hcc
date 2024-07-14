@@ -10,8 +10,8 @@ import CurrentTime from "../components/CurrentTime";
 import Icon from "../components/Icon";
 import LightGroups from "../components/LightGroups";
 import Temperature from "../components/Temperature";
+import TomorrowWeather from "../components/TomorrowWeather";
 import Tooltip from "../components/Tooltip";
-import Weather from "../components/Weather";
 import { Response, Sensor } from "./api/hue";
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -133,7 +133,7 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
           )}
           {!showLights ? (
             <>
-              <Weather
+              <TomorrowWeather
                 css={{
                   gridColumn: "1 / span 3",
                   gridRow: 1,

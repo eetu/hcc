@@ -52,8 +52,8 @@ jobs:
             HCC_IMAGE_TAG=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
           platforms: linux/arm64
 
-      - name: Delete untagged images # to preserve disk space from free ghcr
-        uses: minish144/delete-untagged-action@v2
-        with:
-          github-token: ${{ secrets.CR_TOKEN }}
-          personal-account: true
+      # - name: Delete untagged images # to preserve disk space from free ghcr
+      #   uses: minish144/delete-untagged-action@v2
+      #   with:
+      #     github-token: ${{ secrets.CR_TOKEN }}
+      #     personal-account: true

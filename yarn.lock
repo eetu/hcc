@@ -595,12 +595,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.16.1":
-  version: 20.16.1
-  resolution: "@types/node@npm:20.16.1"
+"@types/node@npm:20.16.3":
+  version: 20.16.3
+  resolution: "@types/node@npm:20.16.3"
   dependencies:
     undici-types: "npm:~6.19.2"
-  checksum: 10/9bae1dffd2094694147a91ebec51dc89a60a607d16d47a0d770320f1a75d3ba58663708fd93c37954a63acb701a4e0fd64245139c57ae810d3ad524e75481d4e
+  checksum: 10/3b14b8b3cb92adc7db69f8cf351e7b6b5001e5c7cdb07470943215afeafc2952ae588c918543784e8f8e975d43d609ce0c7bced91f1b8745f1669d6137adaabc
   languageName: node
   linkType: hard
 
@@ -2211,7 +2211,7 @@ __metadata:
   dependencies:
     "@emotion/react": "npm:^11.13.3"
     "@floating-ui/react": "npm:^0.26.22"
-    "@types/node": "npm:20.16.1"
+    "@types/node": "npm:20.16.3"
     "@types/react": "npm:18.3.4"
     chart.js: "npm:^4.4.4"
     classnames: "npm:^2.5.1"

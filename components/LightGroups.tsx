@@ -44,7 +44,7 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
 
   useEffect(() => {
     if (group.state.on !== isOn) {
-      setIsOn(group.state.on)
+      setIsOn(group.state.on);
     }
   }, [group.state.on, isOn]);
 
@@ -108,7 +108,16 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
           lightbulb
         </Icon>
       </div>
-      <span css={{ fontSize: 14, flexGrow: 1 }}>{group.name}</span>
+      <span
+        css={{
+          fontSize: 14,
+          flexGrow: 1,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
+        {group.name}
+      </span>
     </div>
   );
 };

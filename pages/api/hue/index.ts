@@ -152,8 +152,11 @@ export default async function handler(
   const temps = temperatureSensors.map((s) => {
     const uniqueid = s.getAttributeValue("uniqueid");
     const room = env.ROOMS[uniqueid];
-    const name = room.name;
-    const type = room.type;
+    if (room === undefined) {
+      console.log("Unkown sensor", uniqueid);
+    }
+    const name = room?.name ?? "unknown";
+    const type = room?.type ?? "inside";
     const temperature = s.getStateAttributeValue("temperature") / 100;
     const enabled = s.getConfigAttributeValue("on");
     const battery = (s as any).populationData?.config?.battery;

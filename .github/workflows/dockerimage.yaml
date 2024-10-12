@@ -33,7 +33,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.CR_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -55,5 +55,5 @@ jobs:
       - name: Delete untagged images # to preserve disk space from free ghcr
         uses: minish144/delete-untagged-action@v2
         with:
-          github-token: ${{ secrets.CR_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           personal-account: true

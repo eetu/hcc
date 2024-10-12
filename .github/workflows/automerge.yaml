@@ -18,6 +18,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Wait for tests to succeed
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Run tests'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Merge dependabot PR
         run: |
           gh pr merge ${{ github.event.pull_request.number }} --squash --admin

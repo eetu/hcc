@@ -18,12 +18,31 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Wait for tests to succeed
-        uses: lewagon/wait-on-check-action@v1.3.4
-        with:
-          ref: ${{ github.ref }}
-          check-name: 'Run tests'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Wait for required status checks
+        run: |
+          pr_number=${{ github.event.pull_request.number }}
+          echo "Waiting for status checks to pass for PR #$pr_number..."
+
+          # Loop to check the status of required checks using `gh` CLI
+          while true; do
+            status=$(gh pr checks $pr_number --json conclusion,state)
+
+            conclusion=$(echo $status | jq -r '.conclusion')
+            state=$(echo $status | jq -r '.state')
+
+            echo "Current state: $state, conclusion: $conclusion"
+
+            if [[ "$state" == "COMPLETED" && "$conclusion" == "SUCCESS" ]]; then
+              echo "All required status checks have passed."
+              break
+            elif [[ "$conclusion" == "FAILURE" ]]; then
+              echo "A status check has failed. Exiting."
+              exit 1
+            else
+              echo "Status checks are still in progress. Waiting..."
+              sleep 30  # Wait for 30 seconds before checking again
+            fi
+          done
       - name: Merge dependabot PR
         run: |
           gh pr merge ${{ github.event.pull_request.number }} --squash --admin

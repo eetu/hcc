@@ -9,42 +9,51 @@ permissions:
   pull-requests: write
 
 jobs:
-  auto-merge:
+  automerge:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+
       - name: Wait for required status checks
         run: |
           pr_number=${{ github.event.pull_request.number }}
           echo "Waiting for status checks to pass for PR #$pr_number..."
 
-          # Loop to check the status of required checks using `gh` CLI
           while true; do
-            status=$(gh pr checks $pr_number --json conclusion,state)
+            # Fetch the status checks for the PR, excluding the 'automerge' check
+            status=$(gh pr checks $pr_number --json name,state,event,completedAt)
 
-            conclusion=$(echo $status | jq -r '.conclusion')
-            state=$(echo $status | jq -r '.state')
+            # Ignore the 'automerge' check in the output
+            filtered_status=$(echo $status | jq '[.[] | select(.name != "automerge")]')
 
-            echo "Current state: $state, conclusion: $conclusion"
+            # Check if any required checks have failed
+            failed=$(echo $filtered_status | jq -r '.[] | select(.state == "FAILURE")')
 
-            if [[ "$state" == "COMPLETED" && "$conclusion" == "SUCCESS" ]]; then
-              echo "All required status checks have passed."
-              break
-            elif [[ "$conclusion" == "FAILURE" ]]; then
+            # Check if there are any checks still in progress
+            pending=$(echo $filtered_status | jq -r '.[] | select(.state != "SUCCESS" and .state != "FAILURE")')
+
+            if [[ -n "$failed" ]]; then
               echo "A status check has failed. Exiting."
               exit 1
+            elif [[ -z "$pending" ]]; then
+              echo "All required status checks (excluding 'automerge') have passed."
+              break
             else
               echo "Status checks are still in progress. Waiting..."
-              sleep 30  # Wait for 30 seconds before checking again
+              sleep 10
             fi
           done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Merge dependabot PR
         run: |
           gh pr merge ${{ github.event.pull_request.number }} --squash --admin
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

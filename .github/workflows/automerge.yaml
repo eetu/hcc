@@ -23,14 +23,15 @@ jobs:
       - name: Wait for required status checks
         run: |
           pr_number=${{ github.event.pull_request.number }}
-          echo "Waiting for status checks to pass for PR #$pr_number..."
+          current_job_name="${{ github.job }}"
+          echo "Waiting for status checks to pass for PR #$pr_number (excluding checks for job '$current_job_name')..."
 
           while true; do
             # Fetch the status checks for the PR, excluding the 'automerge' check
             status=$(gh pr checks $pr_number --json name,state,event,completedAt)
 
-            # Ignore the 'automerge' check in the output
-            filtered_status=$(echo $status | jq '[.[] | select(.name != "automerge")]')
+            # Ignore the current job in the output
+            filtered_status=$(echo $status | jq --arg job_name "$current_job_name" '[.[] | select(.name != $job_name)]')
 
             # Check if any required checks have failed
             failed=$(echo $filtered_status | jq -r '.[] | select(.state == "FAILURE")')
@@ -42,7 +43,7 @@ jobs:
               echo "A status check has failed. Exiting."
               exit 1
             elif [[ -z "$pending" ]]; then
-              echo "All required status checks (excluding 'automerge') have passed."
+              echo "All required status checks (excluding '$current_job_name') have passed."
               break
             else
               echo "Status checks are still in progress. Waiting..."

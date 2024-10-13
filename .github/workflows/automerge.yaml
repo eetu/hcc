@@ -11,50 +11,10 @@ permissions:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
 
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - name: Automerge Dependabot PR
+        uses: eetu/action-automerge@v1
         with:
-          node-version: "20"
-
-      - name: Wait for required status checks
-        run: |
-          pr_number=${{ github.event.pull_request.number }}
-          current_job_name="${{ github.job }}"
-          echo "Waiting for status checks to pass for PR #$pr_number (excluding checks for job '$current_job_name')..."
-
-          while true; do
-            # Fetch the status checks for the PR, excluding the 'automerge' check
-            status=$(gh pr checks $pr_number --json name,state,event,completedAt)
-
-            # Ignore the current job in the output
-            filtered_status=$(echo $status | jq --arg job_name "$current_job_name" '[.[] | select(.name != $job_name)]')
-
-            # Check if any required checks have failed
-            failed=$(echo $filtered_status | jq -r '.[] | select(.state == "FAILURE")')
-
-            # Check if there are any checks still in progress
-            pending=$(echo $filtered_status | jq -r '.[] | select(.state != "SUCCESS" and .state != "FAILURE")')
-
-            if [[ -n "$failed" ]]; then
-              echo "A status check has failed. Exiting."
-              exit 1
-            elif [[ -z "$pending" ]]; then
-              echo "All required status checks (excluding '$current_job_name') have passed."
-              break
-            else
-              echo "Status checks are still in progress. Waiting..."
-              sleep 10
-            fi
-          done
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Merge dependabot PR
-        run: |
-          gh pr merge ${{ github.event.pull_request.number }} --squash --admin
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}

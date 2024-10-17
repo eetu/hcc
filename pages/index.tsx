@@ -1,4 +1,4 @@
-import { css } from "@emotion/react";
+import { css, useTheme } from "@emotion/react";
 import dotenv from "dotenv";
 import { cleanEnv, str } from "envalid";
 import { GetServerSidePropsContext, NextPage } from "next";
@@ -68,6 +68,7 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
 
   const groups = data?.groups ?? [];
 
+  const theme = useTheme();
   return (
     <>
       <Head>
@@ -119,17 +120,20 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
           }}
         >
           {groups.length > 0 && (
-            <div
+            <button
               css={{
                 position: "absolute",
                 right: 5,
                 top: 5,
                 cursor: "pointer",
+                backgroundColor: "transparent",
+                border: "none",
+                color: theme.colors.text.main,
               }}
               onClick={() => setShowLights(!showLights)}
             >
               <Icon size={32}>{showLights ? "thermostat" : "lightbulb"}</Icon>
-            </div>
+            </button>
           )}
           {!showLights ? (
             <>

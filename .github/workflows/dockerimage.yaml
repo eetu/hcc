@@ -53,7 +53,6 @@ jobs:
           platforms: linux/arm64
 
       - name: Delete untagged images # to preserve disk space from free ghcr
-        uses: minish144/delete-untagged-action@v2
+        uses: camargo/delete-untagged-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          personal-account: true

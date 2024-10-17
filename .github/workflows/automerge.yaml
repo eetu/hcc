@@ -4,12 +4,17 @@ on:
   pull_request:
     branches: [develop]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
-  auto-merge:
+  automerge:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - uses: ahmadnassri/action-dependabot-auto-merge@v2
+      - name: Automerge Dependabot PR
+        uses: eetu/action-automerge@v1
         with:
-          target: minor
-          github-token: ${{ secrets.AUTOMERGE_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -23,7 +23,7 @@ const LightGroups: FC<LightGroupsProps> = ({ groups, className }) => {
         gap: 5,
         flexWrap: "wrap",
         borderRadius: 5,
-        paddingRight: "calc(1em + 20px)",
+        paddingRight: "calc(1em + 30px)",
       }}
     >
       {groups.map((g) => (
@@ -62,7 +62,7 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
   const theme = useTheme();
 
   return (
-    <div
+    <button
       css={{
         display: "flex",
         flexDirection: "row",
@@ -76,7 +76,7 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
             : theme.colors.text.main,
         padding: "5px 2px",
         cursor: "pointer",
-        width: 152,
+        width: 148,
         borderRadius: 5,
         border: `3px solid ${isOn ? "#f78f08" : theme.colors.text.main}`,
         background: isOn
@@ -118,6 +118,6 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
       >
         {group.name}
       </span>
-    </div>
+    </button>
   );
 };

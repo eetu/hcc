@@ -1310,7 +1310,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"client-only@npm:0.0.1, client-only@npm:^0.0.1":
+"client-only@npm:0.0.1":
   version: 0.0.1
   resolution: "client-only@npm:0.0.1"
   checksum: 10/0c16bf660dadb90610553c1d8946a7fdfb81d624adea073b8440b7d795d5b5b08beb3c950c6a2cf16279365a3265158a236876d92bce16423c485c322d7dfaf8
@@ -1543,6 +1543,13 @@ __metadata:
     has-property-descriptors: "npm:^1.0.0"
     object-keys: "npm:^1.1.1"
   checksum: 10/b4ccd00597dd46cb2d4a379398f5b19fca84a16f3374e2249201992f36b30f6835949a9429669ee6b41b6e837205a163eadd745e472069e70dfc10f03e5fcc12
+  languageName: node
+  linkType: hard
+
+"dequal@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "dequal@npm:2.0.3"
+  checksum: 10/6ff05a7561f33603df87c45e389c9ac0a95e3c056be3da1a0c4702149e3a7f6fe5ffbb294478687ba51a9e95f3a60e8b6b9005993acd79c292c7d15f71964b6b
   languageName: node
   linkType: hard
 
@@ -2684,7 +2691,7 @@ __metadata:
     react: "npm:18.3.1"
     react-chartjs-2: "npm:^5.2.0"
     react-dom: "npm:18.3.1"
-    swr: "npm:^2.2.5"
+    swr: "npm:^2.3.0"
     ts-node: "npm:^10.9.2"
     typescript: "npm:5.7.2"
     usehooks-ts: "npm:^3.1.0"
@@ -4445,15 +4452,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:^2.2.5":
-  version: 2.2.5
-  resolution: "swr@npm:2.2.5"
+"swr@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "swr@npm:2.3.0"
   dependencies:
-    client-only: "npm:^0.0.1"
-    use-sync-external-store: "npm:^1.2.0"
+    dequal: "npm:^2.0.3"
+    use-sync-external-store: "npm:^1.4.0"
   peerDependencies:
-    react: ^16.11.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/f02b3bd5a198a0f62f9a53d7c0528c4a58aa61a43310bea169614b6e873dadb52599e856ef0775405b6aa7409835343da0cf328948aa892aa309bf4b7e7d6902
+    react: ^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10/9f09a68a0dcd354915c7098b000197190aa5faa39c6caec7b91c3b9b682de79173abd5b733cd07cc3e79ee8a1eb294f7d2162716c515d1e4d7c1283d4342fda8
   languageName: node
   linkType: hard
 
@@ -4764,12 +4771,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "use-sync-external-store@npm:1.2.0"
+"use-sync-external-store@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "use-sync-external-store@npm:1.4.0"
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/a676216affc203876bd47981103f201f28c2731361bb186367e12d287a7566763213a8816910c6eb88265eccd4c230426eb783d64c373c4a180905be8820ed8e
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10/08bf581a8a2effaefc355e9d18ed025d436230f4cc973db2f593166df357cf63e47b9097b6e5089b594758bde322e1737754ad64905e030d70f8ff7ee671fd01
   languageName: node
   linkType: hard
 

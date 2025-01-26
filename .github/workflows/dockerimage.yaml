@@ -54,8 +54,3 @@ jobs:
           build-args: |
             HCC_IMAGE_TAG=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
           platforms: linux/arm64
-
-      - name: Delete untagged images # to preserve disk space from free ghcr
-        uses: camargo/delete-untagged-action@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}

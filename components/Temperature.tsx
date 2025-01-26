@@ -50,7 +50,7 @@ const Temperature: React.FC<TemperatureProps> = ({
         <div
           css={{
             display: "table",
-            fontSize: "18px",
+            fontSize: "16px",
           }}
         >
           {sensors.map((r) => {
@@ -72,13 +72,14 @@ const Temperature: React.FC<TemperatureProps> = ({
                 <span>{r.name}</span>
                 {isSensorBatteryLow ? (
                   <Icon
+                    size={18}
                     css={{
-                      display: "block",
                       color: theme.colors.error,
+                      transform: "rotate(90deg)",
                     }}
                   >{`battery_${getBatteryStr(r.battery)}`}</Icon>
                 ) : (
-                  <>&nbsp;</>
+                  <span>&nbsp;</span>
                 )}
                 <span>{Math.round(r.temperature)}°</span>
               </div>

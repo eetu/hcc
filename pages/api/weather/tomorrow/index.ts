@@ -12,7 +12,7 @@ const env = cleanEnv(process.env, {
 });
 
 export type TomorrowWeatherData = {
-  data?: {
+  data: {
     timelines: Timeline[];
     warnings: Warning[];
   };

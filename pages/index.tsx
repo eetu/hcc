@@ -42,6 +42,17 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
   });
 
   const [showLights, setShowLights] = useState<boolean>(false);
+  const [fullscreen, setFullscreen] = useState<boolean>(false);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setFullscreen(true);
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen();
+      setFullscreen(false);
+    }
+  };
 
   const temperatureCss = css({
     gridRow: 2,
@@ -78,7 +89,7 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
         <Tooltip
           css={{
             position: "absolute",
-            top: "8px",
+            bottom: "8px",
             right: "8px",
             whiteSpace: "nowrap",
           }}
@@ -93,6 +104,20 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
           </Icon>
         </Tooltip>
       )}
+      <button
+        css={{
+          position: "absolute",
+          top: "8px",
+          right: "8px",
+          cursor: "pointer",
+          backgroundColor: "transparent",
+          border: "none",
+          color: theme.colors.text.main,
+        }}
+        onClick={toggleFullscreen}
+      >
+        <Icon>{!fullscreen ? "fullscreen" : "fullscreen_exit"}</Icon>
+      </button>
       <div>
         <CurrentTime
           css={{

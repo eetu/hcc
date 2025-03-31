@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import { cleanEnv, str } from "envalid";
 import { NextApiRequest, NextApiResponse } from "next";
 
-
 dotenv.config();
 
 const env = cleanEnv(process.env, {
@@ -13,7 +12,7 @@ const env = cleanEnv(process.env, {
 });
 
 export type TomorrowWeatherData = {
-  data: {
+  data?: {
     timelines: Timeline[];
     warnings: Warning[];
   };
@@ -63,7 +62,30 @@ type Meta = {
   timestep: string;
 };
 
+type WeatherCache = {
+  data: TomorrowWeatherData;
+  timestamp: number;
+  ttl: number;
+};
+
+const weatherCache: WeatherCache = {
+  data: {
+    data: {
+      timelines: [],
+      warnings: [],
+    },
+  },
+  timestamp: 0,
+  ttl: 30 * 60 * 1000, // 30 minutes
+};
+
 const getTomorrowWeather = async (): Promise<TomorrowWeatherData> => {
+  const now = Date.now();
+  if (weatherCache.data && now - weatherCache.timestamp < weatherCache.ttl) {
+    console.log("Return cached weather data");
+    return weatherCache.data;
+  }
+
   const fields = [
     "precipitationProbabilityAvg",
     "precipitationIntensity",
@@ -87,16 +109,23 @@ const getTomorrowWeather = async (): Promise<TomorrowWeatherData> => {
 
   const url = `https://api.tomorrow.io/v4/timelines?location=${env.POSITION_LAT},${env.POSITION_LON}&apikey=${env.TOMORROW_IO_API_KEY}&timesteps=${timesteps.join(",")}&fields=${fields.join(",")}&timezone=Europe/Helsinki`;
 
-  const res = await fetch(url);
+  try {
+    const res = await fetch(url);
 
-  if (!res.ok) {
-    console.error(
-      `Failed to fetch weather, with status: ${res.status} and body: ${res.body}`
-    );
+    if (!res.ok) {
+      throw new Error(`Failed to fetch weather, status: ${res.status}`);
+    }
+    const weatherResponse: TomorrowWeatherData = await res.json();
+
+    // Update cache
+    weatherCache.data = weatherResponse;
+    weatherCache.timestamp = now;
+
+    return weatherResponse;
+  } catch (error) {
+    console.error(error);
+    return weatherCache.data || Promise.reject("No cached data available");
   }
-  const weatherResponse: TomorrowWeatherData = await res.json();
-
-  return weatherResponse;
 };
 
 export default async function handler(

@@ -39,7 +39,7 @@
     "eslint-plugin-unused-imports": "4.1.4",
     "prettier": "3.5.3",
     "prop-types": "15.8.1",
-    "typescript": "5.8.2"
+    "typescript": "5.8.3"
   },
   "resolutions": {
     "react": "19.1.0",

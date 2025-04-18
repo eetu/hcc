@@ -6,6 +6,7 @@ WORKDIR /app
 ENV NODE_ENV=development
 COPY .yarn .yarn
 COPY ["package.json", ".yarnrc.yml", "yarn.lock", "./"]
+RUN corepack enable
 # Building linux/arm64 images with QEMU is 🐌
 RUN yarn install --immutable --network-timeout 1000000
 
@@ -14,6 +15,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN corepack enable
 RUN yarn build
 
 FROM node:22-alpine AS runner

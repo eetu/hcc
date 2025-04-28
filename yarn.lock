@@ -302,9 +302,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/react@npm:^0.27.6":
-  version: 0.27.6
-  resolution: "@floating-ui/react@npm:0.27.6"
+"@floating-ui/react@npm:^0.27.8":
+  version: 0.27.8
+  resolution: "@floating-ui/react@npm:0.27.8"
   dependencies:
     "@floating-ui/react-dom": "npm:^2.1.2"
     "@floating-ui/utils": "npm:^0.2.9"
@@ -312,7 +312,7 @@ __metadata:
   peerDependencies:
     react: ">=17.0.0"
     react-dom: ">=17.0.0"
-  checksum: 10/04d05ba6906ab765f17ecd6763ec04e0e1f23e39be371932bd05ff8a4de3507da454b17b926368c05324195ca428789f39069bdaaa66ba0b25a3042f65d3483e
+  checksum: 10/9423e3b7d6298918cb14ad3cfa36ba7b88ef86f18c4c47f7870b367716e918757dc0cf9842ef4995ee784b68aebe725c28c2ae143ecfe16380d3ccfd05cacb43
   languageName: node
   linkType: hard
 
@@ -2670,7 +2670,7 @@ __metadata:
   resolution: "hcc@workspace:."
   dependencies:
     "@emotion/react": "npm:^11.14.0"
-    "@floating-ui/react": "npm:^0.27.6"
+    "@floating-ui/react": "npm:^0.27.8"
     "@types/node": "npm:22.14.1"
     "@types/react": "npm:19.1.2"
     chart.js: "npm:^4.4.8"

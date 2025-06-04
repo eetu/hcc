@@ -4,7 +4,6 @@ RUN apk add --no-cache git openssh
 
 WORKDIR /app
 ENV NODE_ENV=development
-COPY .yarn .yarn
 COPY ["package.json", ".yarnrc.yml", "yarn.lock", "./"]
 RUN corepack enable
 # Building linux/arm64 images with QEMU is 🐌

@@ -134,7 +134,7 @@ export type Response = {
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Response>
-) {
+): Promise<void> {
   const hueApi = await getHueApi();
 
   if (!hueApi) {

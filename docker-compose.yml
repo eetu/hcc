@@ -20,5 +20,5 @@ services:
     container_name: watchtower
     restart: on-failure
     volumes:
-      - /run/user/1000/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 900 hcc

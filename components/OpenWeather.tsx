@@ -1,13 +1,11 @@
-import "weather-react-icons/lib/css/weather-icons.css";
-
 import { useTheme } from "@emotion/react";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
 import useSWR from "swr";
-import { WeatherIcon } from "weather-react-icons";
 
 import { fetcher } from "../pages";
 import { OpenWeatherReponse } from "../pages/api/weather/owm";
+import { getOwmWeatherIcon } from "../src/weatherIcons";
 import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
@@ -133,15 +131,19 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
               }}
             >{`${Math.round(data.current.feels_like)}°`}</div>
           </div>
-          <WeatherIcon
-            css={{
-              marginLeft: "25px",
-              fontSize: "52px",
-              alignSelf: "center",
-            }}
-            iconId={weather.id}
-            name="owm"
-          />
+          {(() => {
+            const IconComponent = getOwmWeatherIcon(weather.id);
+            return (
+              // eslint-disable-next-line react-hooks/static-components
+              <IconComponent
+                css={{
+                  marginLeft: "25px",
+                  alignSelf: "center",
+                }}
+                size={52}
+              />
+            );
+          })()}
           <div
             css={{
               fontSize: "13px",

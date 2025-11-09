@@ -9,8 +9,12 @@ const { api, discovery }: typeof v3 = require("node-hue-api").v3;
 
 dotenv.config();
 const env = cleanEnv(process.env, {
-  HUE_BRIDGE_USER: str(),
-  HUE_BRIDGE_USER_CLIENT_KEY: str(),
+  HUE_BRIDGE_USER: str({
+    default: undefined,
+  }),
+  HUE_BRIDGE_USER_CLIENT_KEY: str({
+    default: undefined,
+  }),
   HUE_BRIDGE_ADDRESS: str({
     default: undefined,
   }),
@@ -37,6 +41,8 @@ const getUsername = async (unauthenticatedApi: Api) => {
   if (env.HUE_BRIDGE_USER) {
     return env.HUE_BRIDGE_USER;
   }
+
+  console.log("Create new user to hub bridge: hcc");
 
   const user = await unauthenticatedApi.users.createUser("node-hue-api", "hcc");
 
@@ -77,6 +83,7 @@ export const getHueApi = async () => {
   const unauthenticatedApi = await api.createLocal(address).connect();
 
   try {
+    console.log("Trying to authenticate with newly created user");
     const username = await getUsername(unauthenticatedApi);
 
     // Create a new API instance that is authenticated with the new user we created
@@ -127,7 +134,7 @@ export type Response = {
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Response>
-) {
+): Promise<void> {
   const hueApi = await getHueApi();
 
   if (!hueApi) {

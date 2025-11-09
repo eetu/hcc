@@ -57,6 +57,7 @@ const Tooltip: React.FC<TooltipProps> = ({ className, children, content }) => {
       <FloatingPortal>
         {isOpen && (
           <div
+            // eslint-disable-next-line react-hooks/refs
             ref={refs.setFloating}
             css={{
               backgroundColor: "#4d4d4d",

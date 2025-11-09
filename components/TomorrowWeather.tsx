@@ -1,50 +1,18 @@
-import "weather-react-icons/lib/css/weather-icons.css";
-
 import { useTheme } from "@emotion/react";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
 import useSWR from "swr";
-import { WeatherIcon } from "weather-react-icons";
 
 import { fetcher } from "../pages";
 import { TomorrowWeatherData } from "../pages/api/weather/tomorrow";
 import { getTemperatureSegments } from "../src/utils";
+import { getWeatherIcon } from "../src/weatherIcons";
 import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
 import RaindropIcon from "./RaindropIcon";
 import Tooltip from "./Tooltip";
 import WeatherChart from "./WeatherChart";
-
-// Tomorrow weather code to owm weather id
-const weatherCodeMap: { [key: number]: number } = {
-  1000: 800,
-  1100: 801,
-  1101: 802,
-  1102: 803,
-  1001: 804,
-  2000: 741,
-  2100: 701,
-  3000: 771,
-  3001: 771,
-  3002: 771,
-  4000: 300,
-  4001: 501,
-  4200: 500,
-  4201: 502,
-  5000: 601,
-  5001: 621,
-  5100: 600,
-  5101: 602,
-  6000: 611,
-  6001: 511,
-  6200: 615,
-  6201: 616,
-  7000: 611,
-  7101: 611,
-  7102: 611,
-  8000: 200,
-};
 
 const weatherCode: Record<number, string> = {
   1000: "Selkeä, Aurinkoinen",
@@ -110,7 +78,6 @@ const TomorrowWeather: React.FC<TomorrowWeatherProps> = ({ className }) => {
     return null;
   }
 
-  const iconId = weatherCodeMap[weather.values.weatherCode];
   const title = weatherCode[weather.values.weatherCode];
 
   return (
@@ -194,15 +161,19 @@ const TomorrowWeather: React.FC<TomorrowWeatherProps> = ({ className }) => {
               }}
             >{`${Math.round(weather.values.temperatureApparent)}°`}</div>
           </div>
-          <WeatherIcon
-            css={{
-              marginLeft: "25px",
-              fontSize: "52px",
-              alignSelf: "center",
-            }}
-            iconId={iconId}
-            name="owm"
-          />
+          {(() => {
+            const IconComponent = getWeatherIcon(weather.values.weatherCode);
+            return (
+              // eslint-disable-next-line react-hooks/static-components
+              <IconComponent
+                css={{
+                  marginLeft: "25px",
+                  alignSelf: "center",
+                }}
+                size={52}
+              />
+            );
+          })()}
           <div
             css={{
               fontSize: "13px",

@@ -12,10 +12,11 @@ jobs:
   automerge:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    if: github.actor == 'dependabot[bot]'
 
     steps:
       - uses: actions/checkout@v4
       - name: Automerge Dependabot PR
-        uses: eetu/action-automerge@v2
+        uses: eetu/action-automerge@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

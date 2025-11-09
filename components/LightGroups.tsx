@@ -42,11 +42,11 @@ type LightGroupProps = {
 const LightGroup: FC<LightGroupProps> = ({ group }) => {
   const [isOn, setIsOn] = useState(group.state.on);
 
+  // Sync external state changes to local state
   useEffect(() => {
-    if (group.state.on !== isOn) {
-      setIsOn(group.state.on);
-    }
-  }, [group.state.on, isOn]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsOn(group.state.on);
+  }, [group.state.on]);
 
   const handleClick = useCallback(
     (id: string, isOn: boolean) => () => {

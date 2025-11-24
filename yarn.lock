@@ -1067,12 +1067,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:19.2.5":
-  version: 19.2.5
-  resolution: "@types/react@npm:19.2.5"
+"@types/react@npm:19.2.7":
+  version: 19.2.7
+  resolution: "@types/react@npm:19.2.7"
   dependencies:
-    csstype: "npm:^3.0.2"
-  checksum: 10/31067648e1380f6ddade8f586c7ff54db89c1b11e23cb307fb69e5bfceae22105721568e2eec15be2af03e63bf5fb6da4284b8621447d20ade7b7afab043b945
+    csstype: "npm:^3.2.2"
+  checksum: 10/dc0b756eee2c9782d282ae47eaa8d537b2a569eb889a6808c4b172d70fb690b2b1d8fe6239db451aa1c90d2a947cc21c9b537ce177ba9e6121468e403e4079c5
   languageName: node
   linkType: hard
 
@@ -1854,6 +1854,13 @@ __metadata:
   version: 3.1.1
   resolution: "csstype@npm:3.1.1"
   checksum: 10/a945162578fe5a90d40950646ab289cec8966dfacc7e5220be832d87773684c969d91920e0d5f9a0c4503aca1f9fa91134a822ebc9c2f9e01e3836ebc6369b25
+  languageName: node
+  linkType: hard
+
+"csstype@npm:^3.2.2":
+  version: 3.2.3
+  resolution: "csstype@npm:3.2.3"
+  checksum: 10/ad41baf7e2ffac65ab544d79107bf7cd1a4bb9bab9ac3302f59ab4ba655d5e30942a8ae46e10ba160c6f4ecea464cc95b975ca2fefbdeeacd6ac63f12f99fe1f
   languageName: node
   linkType: hard
 
@@ -3354,7 +3361,7 @@ __metadata:
     "@emotion/react": "npm:^11.14.0"
     "@floating-ui/react": "npm:^0.27.16"
     "@types/node": "npm:24.10.1"
-    "@types/react": "npm:19.2.5"
+    "@types/react": "npm:19.2.7"
     chart.js: "npm:^4.5.1"
     classnames: "npm:^2.5.1"
     date-fns: "npm:^4.1.0"

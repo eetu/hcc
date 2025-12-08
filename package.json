@@ -24,7 +24,7 @@
     "node-hue-api": "^5.0.0-beta.16",
     "react": "19.2.0",
     "react-chartjs-2": "^5.3.1",
-    "react-dom": "19.2.0",
+    "react-dom": "19.2.1",
     "swr": "^2.3.7",
     "ts-node": "^10.9.2",
     "usehooks-ts": "^3.1.1"

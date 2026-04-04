@@ -2,8 +2,9 @@
 import dotenv from "dotenv";
 import { cleanEnv, json, str } from "envalid";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Api } from "node-hue-api/dist/esm/api/Api";
-import { v3 } from "node-hue-api/dist/esm/v3";
+import { v3 } from "node-hue-api";
+
+type HueApi = Awaited<ReturnType<ReturnType<(typeof v3)["api"]["createLocal"]>["connect"]>>;
 
 const { api, discovery }: typeof v3 = require("node-hue-api").v3;
 
@@ -37,7 +38,7 @@ const getBridgeAddress = async () => {
   return results.find((b: any) => !b.error)?.ipaddress;
 };
 
-const getUsername = async (unauthenticatedApi: Api) => {
+const getUsername = async (unauthenticatedApi: HueApi) => {
   if (env.HUE_BRIDGE_USER) {
     return env.HUE_BRIDGE_USER;
   }
@@ -64,7 +65,7 @@ const getUsername = async (unauthenticatedApi: Api) => {
   return user.username;
 };
 
-let authenticatedApi: Api | null = null;
+let authenticatedApi: HueApi | null = null;
 
 export const getHueApi = async () => {
   if (authenticatedApi) {

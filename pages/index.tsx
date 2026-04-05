@@ -3,15 +3,16 @@ import dotenv from "dotenv";
 import { cleanEnv, str } from "envalid";
 import { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
-import useSWR from "swr";
+import { useEffect, useState } from "react";
 
 import CurrentTime from "../components/CurrentTime";
 import Icon from "../components/Icon";
 import LightGroups from "../components/LightGroups";
+import Motion from "../components/Motion";
 import Temperature from "../components/Temperature";
 import TomorrowWeather from "../components/TomorrowWeather";
 import Tooltip from "../components/Tooltip";
+import { type HueLiveEvent } from "../lib/hue-events";
 import { Response, Sensor } from "./api/hue";
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -35,14 +36,84 @@ const breakpoints = [600];
 
 export const mq = breakpoints.map((bp) => `@media (max-width: ${bp}px)`);
 
-const Main: NextPage<MainProps> = ({ imageTag }) => {
-  const { data, error } = useSWR<Response>("/api/hue", fetcher, {
-    refreshInterval: 30000,
-    refreshWhenHidden: true,
-  });
+type View = "temperature" | "lights" | "motion" | "settings";
 
-  const [showLights, setShowLights] = useState<boolean>(false);
+const VIEWS: { id: View; icon: string }[] = [
+  { id: "temperature", icon: "thermostat" },
+  { id: "lights", icon: "lightbulb" },
+  { id: "motion", icon: "directions_run" },
+  { id: "settings", icon: "settings" },
+];
+
+const applyEvent = (data: Response, event: HueLiveEvent): Response => {
+  switch (event.type) {
+    case "grouped_light":
+      return {
+        ...data,
+        groups: data.groups.map((g) =>
+          g.id === event.id ? { ...g, state: { on: event.on } } : g,
+        ),
+      };
+    case "temperature":
+      return {
+        ...data,
+        sensors: data.sensors.map((s) =>
+          s.id === event.id ? { ...s, temperature: event.temperature } : s,
+        ),
+      };
+    case "device_power":
+      return {
+        ...data,
+        sensors: data.sensors.map((s) =>
+          s.deviceId === event.deviceId ? { ...s, battery: event.battery } : s,
+        ),
+      };
+    case "motion":
+      return {
+        ...data,
+        sensors: data.sensors.map((s) =>
+          s.deviceId === event.deviceId
+            ? { ...s, motion: event.motion, motionUpdatedAt: event.updatedAt }
+            : s,
+        ),
+      };
+    case "connectivity":
+      return {
+        ...data,
+        sensors: data.sensors.map((s) =>
+          s.deviceId === event.deviceId
+            ? { ...s, connected: event.connected }
+            : s,
+        ),
+      };
+  }
+};
+
+const Main: NextPage<MainProps> = ({ imageTag }) => {
+  const [data, setData] = useState<Response | undefined>(undefined);
+  const [error, setError] = useState(false);
+  const [view, setView] = useState<View>("temperature");
   const [fullscreen, setFullscreen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const syncData = () => {
+      fetch("/api/hue")
+        .then((r) => r.json())
+        .then((d: Response) => {
+          setData(d);
+          setError(false);
+        })
+        .catch(() => setError(true));
+    };
+
+    const es = new EventSource("/api/hue/events");
+    es.onopen = syncData; // full sync on connect and every reconnect
+    es.onmessage = (e: MessageEvent) => {
+      const event = JSON.parse(e.data as string) as HueLiveEvent;
+      setData((prev) => (prev ? applyEvent(prev, event) : prev));
+    };
+    return () => es.close();
+  }, []);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -54,9 +125,7 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
     }
   };
 
-  const temperatureCss = css({
-    gridRow: 2,
-  });
+  const temperatureCss = css({ gridRow: 2 });
 
   const sensors = data?.sensors ?? [];
   const emptySensorsArray: Sensor[] = [];

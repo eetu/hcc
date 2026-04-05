@@ -261,8 +261,20 @@ const fetchHueData = async (): Promise<Response> => {
     }
   }
 
-  const deviceNameById = new Map(
-    devicesRes.data.map((d) => [d.id, d.metadata.name]),
+  const deviceNameById = new Map(devicesRes.data.map((d) => [d.id, d.metadata.name]));
+
+  const motionByDevice = new Map(
+    motionRes.data.map((m) => [
+      m.owner.rid,
+      {
+        motion: m.motion.motion_report?.motion ?? m.motion.motion,
+        updatedAt: m.motion.motion_report?.changed,
+      },
+    ]),
+  );
+
+  const connectedByDevice = new Map(
+    connectivityRes.data.map((c) => [c.owner.rid, c.status === "connected"]),
   );
 
   const sensors: Sensor[] = tempsRes.data.map((temp) => {
@@ -274,14 +286,19 @@ const fetchHueData = async (): Promise<Response> => {
       temp.temperature.temperature_report?.temperature ??
       temp.temperature.temperature;
     const battery = batteryByDevice.get(temp.owner.rid);
+    const motionData = motionByDevice.get(temp.owner.rid);
 
     return {
       id: temp.id,
+      deviceId: temp.owner.rid,
       name,
       temperature,
       type,
       enabled: temp.enabled,
       battery,
+      motion: motionData?.motion,
+      motionUpdatedAt: motionData?.updatedAt,
+      connected: connectedByDevice.get(temp.owner.rid) ?? true,
     };
   });
 

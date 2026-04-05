@@ -18,7 +18,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             fontFamily: '"Open Sans", sans-serif',
           },
           body: {
-            padding: "0 0.5rem",
+            padding: "0 0.25rem",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",

@@ -58,6 +58,8 @@ const Box: React.FC<BoxProps> = ({
         {
           cursor: "pointer",
           height: "fit-content",
+          minWidth: 0,
+          overflow: "hidden",
           boxShadow: theme.shadows.main,
         },
       ]}

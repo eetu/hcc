@@ -128,9 +128,13 @@ const getTomorrowWeather = async (): Promise<TomorrowWeatherData> => {
   }
 };
 
+export const getStatus = () => {
+  return weatherCache.timestamp !== 0;
+};
+
 export default async function handler(
   _req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   res.json(await getTomorrowWeather());
 }

@@ -28,6 +28,7 @@ const Temperature: React.FC<TemperatureProps> = ({
 
   var temperature =
     enabledSensors.reduce((acc, room) => {
+      if (room.temperature === undefined) return acc;
       return acc + room.temperature;
     }, 0) / enabledSensors.length;
 
@@ -64,7 +65,7 @@ const Temperature: React.FC<TemperatureProps> = ({
                   "& span": {
                     display: "table-cell",
                     padding: "5px",
-                    opacity: r.enabled ? 1 : 0.25,
+                    opacity: r.enabled && r.connected ? 1 : 0.25,
                     width: "100%",
                   },
                 }}
@@ -81,7 +82,11 @@ const Temperature: React.FC<TemperatureProps> = ({
                 ) : (
                   <span>&nbsp;</span>
                 )}
-                <span>{Math.round(r.temperature)}°</span>
+                <span>
+                  {r.temperature !== undefined
+                    ? `${Math.round(r.temperature)}°`
+                    : ""}
+                </span>
               </div>
             );
           })}

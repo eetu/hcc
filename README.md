@@ -1,4 +1,4 @@
-Control center for home hue bridge
+Control center for home Hue bridge
 
 ## Roadmap
 
@@ -11,30 +11,30 @@ Control center for home hue bridge
 ### Environment
 
 ```bash
-OPEN_WEATHER_API_KEY=get your api key to open weathe all api
-HUE_BRIDGE_ADDRESS=can be seen on console when doing initial load / connecting to hub
-HUE_BRIDGE_USER=same
-HUE_BRIDGE_USER_CLIENT_KEY=same
-POSITION_LAT=where you at?
-POSITION_LON=
+OPEN_WEATHER_API_KEY=       # tomorrow.io API key
+HUE_BRIDGE_ADDRESS=         # optional — auto-discovered via meethue.com if omitted
+HUE_BRIDGE_USER=            # obtained via the pairing flow below
+POSITION_LAT=               # your latitude
+POSITION_LON=               # your longitude
 LANGUAGE=fi
-HCC_IMAGE_TAG=version seen on front page
-ROOMS={"sensorId": { "name": "Room name", "type": "inside/inside_cold/outside" }}
+HCC_IMAGE_TAG=              # version label shown on the front page
+
+# Maps room types to lists of room names as configured in the Hue app.
+# Rooms not listed default to "inside".
+HUE_ROOM_TYPES={"inside": ["Keittiö", "Olohuone"], "inside_cold": ["Kuisti"], "outside": ["Ulkona"]}
 ```
 
-To show sensors in correct categories you need to figure out your rooms by checking console for temperature sensors. Seems sensor only provides official name and not frindlyname given in HUE app. There might be a way to get friendly name. Figure it out and contribute
+### Pairing with the Hue bridge
 
-```bash
-temperature sensors:
-[
-  'Hue temperature sensor 1: xx:xx:...',
-]
+1. Press the link button on the bridge
+2. POST to `/api/hue/pair` (optionally pass `{"bridgeIp": "x.x.x.x"}` in the body if discovery fails)
+3. Copy the returned `HUE_BRIDGE_ADDRESS` and `HUE_BRIDGE_USER` values into `.env`
 
-# might become in .env
-ROOMS={"xx:xx:...": { "name": "I am a teapot", "type": "inside" }}
-```
+### Sensor display names
 
-First, run the development server:
+Sensor names are taken directly from the device names set in the Hue app. To differentiate multiple sensors in the same room (e.g. sun vs. shadow), rename the devices in the Hue app.
+
+### Run
 
 ```bash
 yarn dev

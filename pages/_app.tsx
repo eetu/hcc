@@ -18,7 +18,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             fontFamily: '"Open Sans", sans-serif',
           },
           body: {
-            padding: "0 0.25rem",
+            padding: 0,
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -33,6 +33,12 @@ const App = ({ Component, pageProps }: AppProps) => {
           },
           ["*"]: {
             boxSizing: "border-box",
+          },
+          ["#__next"]: {
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           },
         }}
       ></Global>

@@ -23,7 +23,10 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
         width: "100%",
         fontSize: 16,
         color: error ? theme.colors.error : theme.colors.text.main,
-        borderCollapse: "collapse",
+        backgroundColor: theme.colors.background.main,
+        boxShadow: theme.shadows.main,
+        borderRadius: 6,
+        padding: "1.5em",
       }}
     >
       {motionSensors.map((s) => (
@@ -43,21 +46,6 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
               verticalAlign: "middle",
             }}
           >
-            <span
-              css={{
-                display: "inline-block",
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                backgroundColor: s.connected
-                  ? theme.colors.connected
-                  : theme.colors.disconnected,
-                marginRight: 8,
-                verticalAlign: "middle",
-                flexShrink: 0,
-              }}
-              title={s.connected ? "Yhdistetty" : "Yhteysvirhe"}
-            />
             <span css={{ fontWeight: s.motion ? "bold" : "normal" }}>
               {s.name}
             </span>
@@ -67,7 +55,9 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
               display: "table-cell",
               padding: "8px 4px",
               verticalAlign: "middle",
-              color: s.motion ? theme.colors.activity.on : theme.colors.text.light,
+              color: s.motion
+                ? theme.colors.activity.on
+                : theme.colors.text.muted,
               fontWeight: s.motion ? "bold" : "normal",
               textAlign: "right",
               whiteSpace: "nowrap",
@@ -80,7 +70,7 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
               display: "table-cell",
               padding: "8px 4px",
               verticalAlign: "middle",
-              color: theme.colors.text.light,
+              color: theme.colors.text.muted,
               fontSize: 13,
               textAlign: "right",
               whiteSpace: "nowrap",
@@ -100,7 +90,7 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
           <span
             css={{
               display: "table-cell",
-              color: theme.colors.text.light,
+              color: theme.colors.text.muted,
               padding: "8px 4px",
             }}
           >

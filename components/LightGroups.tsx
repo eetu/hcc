@@ -1,6 +1,7 @@
 import { useTheme } from "@emotion/react";
 import { FC, useCallback, useEffect, useState } from "react";
 
+import { mq } from "../pages";
 import { Group } from "../pages/api/hue";
 import Icon from "./Icon";
 
@@ -23,6 +24,9 @@ const LightGroups: FC<LightGroupsProps> = ({ groups, className }) => {
         gap: 5,
         flexWrap: "wrap",
         borderRadius: 5,
+        [mq[0]]: {
+          flexDirection: "column",
+        },
       }}
     >
       {groups.map((g) => (
@@ -67,11 +71,17 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
         flexDirection: "row",
         alignItems: "center",
         gap: 5,
+        [mq[0]]: {
+          gap: 10,
+        },
         color: theme.colors.text.main,
         padding: "5px 2px",
         cursor: "pointer",
         width: 148,
         borderRadius: 5,
+        [mq[0]]: {
+          width: "100%",
+        },
         border: `3px solid ${isOn ? theme.colors.activity.on : theme.colors.text.main}`,
         background: isOn
           ? theme.colors.activity.onBackground
@@ -103,7 +113,9 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
       <span
         css={{
           fontSize: 14,
-          flexGrow: 1,
+          [mq[0]]: {
+            fontSize: 18,
+          },
           overflow: "hidden",
           textOverflow: "ellipsis",
         }}

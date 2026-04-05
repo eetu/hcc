@@ -11,7 +11,6 @@ import LightGroups from "../components/LightGroups";
 import Motion from "../components/Motion";
 import Temperature from "../components/Temperature";
 import TomorrowWeather from "../components/TomorrowWeather";
-import Tooltip from "../components/Tooltip";
 import { type HueLiveEvent } from "../lib/hue-events";
 import { Response, Sensor } from "./api/hue";
 

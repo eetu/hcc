@@ -172,7 +172,12 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
         css={{
           width: 580,
           flexShrink: 0,
-          [mq[0]]: { width: "100%", flexShrink: 1 },
+          [mq[0]]: {
+            width: "100%",
+            flexShrink: 1,
+            padding: "0 12px",
+            boxSizing: "border-box",
+          },
         }}
       >
         <CurrentTime
@@ -187,6 +192,7 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
             flexDirection: "row",
             alignItems: "flex-start",
             width: "100%",
+            marginTop: "1em",
             [mq[0]]: { flexDirection: "column" },
           }}
         >
@@ -214,25 +220,12 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
                   cursor: "pointer",
                   backgroundColor: "transparent",
                   border: "none",
-                  borderLeft:
-                    view === id
-                      ? `2px solid ${theme.colors.text.main}`
-                      : "2px solid transparent",
-                  borderBottom: "2px solid transparent",
                   color:
                     view === id
                       ? theme.colors.text.main
                       : theme.colors.text.muted,
                   padding: "4px 6px",
                   transition: "color 0.15s, border-color 0.15s",
-                  [mq[0]]: {
-                    borderLeft: "2px solid transparent",
-                    borderBottom:
-                      view === id
-                        ? `2px solid ${theme.colors.text.main}`
-                        : "2px solid transparent",
-                    padding: "4px 10px",
-                  },
                 }}
               >
                 <Icon size={28}>{icon}</Icon>
@@ -251,6 +244,7 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "stretch",
+                width: "100%",
               },
             }}
           >
@@ -295,17 +289,28 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
             {view === "settings" && (
               <div
                 css={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 1,
+                  gridColumn: "1 / span 3",
+                  backgroundColor: theme.colors.background.main,
+                  boxShadow: theme.shadows.main,
+                  borderRadius: 6,
+                  padding: "1.5em",
+                  minHeight: 250,
                 }}
               >
-                <Icon css={{ opacity: 1 }} size={16}>
-                  local_offer
-                </Icon>
-                &nbsp;
-                <span>{imageTag}</span>
+                <div
+                  css={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  <Icon css={{ opacity: 1 }} size={16}>
+                    local_offer
+                  </Icon>
+                  &nbsp;
+                  <span>{imageTag}</span>
+                </div>
               </div>
             )}
           </div>

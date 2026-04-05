@@ -23,7 +23,6 @@ const LightGroups: FC<LightGroupsProps> = ({ groups, className }) => {
         gap: 5,
         flexWrap: "wrap",
         borderRadius: 5,
-        paddingRight: "calc(1em + 30px)",
       }}
     >
       {groups.map((g) => (
@@ -56,7 +55,7 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
         }
       });
     },
-    []
+    [],
   );
 
   const theme = useTheme();

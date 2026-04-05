@@ -326,6 +326,12 @@ export const toggleGroup = async (groupId: string): Promise<void> => {
   });
 };
 
+export const getConnectionInfo = async () => ({
+  address: await getBridgeAddress(),
+  user: env.HUE_BRIDGE_USER,
+  agent: tlsAgent,
+});
+
 export const checkConnection = async (): Promise<boolean> => {
   try {
     await hueFetch("/clip/v2/resource/bridge");

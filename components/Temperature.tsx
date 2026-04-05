@@ -28,6 +28,7 @@ const Temperature: React.FC<TemperatureProps> = ({
 
   var temperature =
     enabledSensors.reduce((acc, room) => {
+      if (room.temperature === undefined) return acc;
       return acc + room.temperature;
     }, 0) / enabledSensors.length;
 
@@ -81,7 +82,11 @@ const Temperature: React.FC<TemperatureProps> = ({
                 ) : (
                   <span>&nbsp;</span>
                 )}
-                <span>{Math.round(r.temperature)}°</span>
+                <span>
+                  {r.temperature !== undefined
+                    ? `${Math.round(r.temperature)}°`
+                    : ""}
+                </span>
               </div>
             );
           })}

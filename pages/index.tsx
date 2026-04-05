@@ -37,7 +37,7 @@ export const mq = breakpoints.map((bp) => `@media (max-width: ${bp}px)`);
 
 const Main: NextPage<MainProps> = ({ imageTag }) => {
   const { data, error } = useSWR<Response>("/api/hue", fetcher, {
-    refreshInterval: 2000, // refresh once per second
+    refreshInterval: 30000,
     refreshWhenHidden: true,
   });
 
@@ -74,7 +74,7 @@ const Main: NextPage<MainProps> = ({ imageTag }) => {
       inside: emptySensorsArray,
       outside: emptySensorsArray,
       inside_cold: emptySensorsArray,
-    }
+    },
   );
 
   const groups = data?.groups ?? [];

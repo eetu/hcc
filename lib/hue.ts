@@ -148,15 +148,38 @@ interface DevicePowerResource {
   type: "device_power";
 }
 
+interface MotionResource {
+  id: string;
+  owner: { rid: string; rtype: "device" };
+  enabled: boolean;
+  motion: {
+    motion: boolean;
+    motion_valid: boolean;
+    motion_report?: { changed: string; motion: boolean };
+  };
+  type: "motion";
+}
+
+interface ZigbeeConnectivityResource {
+  id: string;
+  owner: { rid: string; rtype: "device" };
+  status: "connected" | "disconnected" | "connectivity_issue" | "unidirectional_incoming";
+  type: "zigbee_connectivity";
+}
+
 // ---- Public response types (same shape as /api/hue) ----
 
 export type Sensor = {
-  id: string;
+  id: string;         // temperature resource UUID
+  deviceId: string;   // device UUID — used for matching motion/power/connectivity events
   name: string;
   temperature?: number;
   type: RoomType;
   enabled: boolean;
   battery?: number;
+  motion?: boolean;
+  motionUpdatedAt?: string;
+  connected: boolean;
 };
 
 export type Group = {
@@ -172,18 +195,52 @@ export type Response = {
 
 // ---- Data functions ----
 
+const DATA_CACHE_TTL = 10_000; // 10 seconds — absorbs HMR reconnect bursts; SSE keeps UI live
+
+// Anchored to `global` so the cache survives Next.js module re-evaluation during HMR.
+// Without this, saving any file resets the module-level variables and every reconnecting
+// EventSource triggers a fresh 7-request burst to the bridge.
+declare global {
+  var _hueDataCache: { data: Response; timestamp: number } | null | undefined;
+  var _hueDataFetchPromise: Promise<Response> | null | undefined;
+}
+global._hueDataCache ??= null;
+global._hueDataFetchPromise ??= null;
+
 export const getHueData = async (): Promise<Response> => {
+  if (
+    global._hueDataCache &&
+    Date.now() - global._hueDataCache.timestamp < DATA_CACHE_TTL
+  ) {
+    return global._hueDataCache.data;
+  }
+
+  if (global._hueDataFetchPromise) return global._hueDataFetchPromise;
+
+  global._hueDataFetchPromise = fetchHueData()
+    .then((data) => {
+      global._hueDataCache = { data, timestamp: Date.now() };
+      return data;
+    })
+    .finally(() => {
+      global._hueDataFetchPromise = null;
+    });
+
+  return global._hueDataFetchPromise;
+};
+
+const fetchHueData = async (): Promise<Response> => {
   const roomTypeMap = buildRoomTypeMap();
 
-  const [roomsRes, tempsRes, groupedLightsRes, devicePowersRes, devicesRes] =
+  const [roomsRes, tempsRes, groupedLightsRes, devicePowersRes, devicesRes, motionRes, connectivityRes] =
     await Promise.all([
       hueFetch<HueList<RoomResource>>("/clip/v2/resource/room"),
       hueFetch<HueList<TemperatureResource>>("/clip/v2/resource/temperature"),
-      hueFetch<HueList<GroupedLightResource>>(
-        "/clip/v2/resource/grouped_light",
-      ),
+      hueFetch<HueList<GroupedLightResource>>("/clip/v2/resource/grouped_light"),
       hueFetch<HueList<DevicePowerResource>>("/clip/v2/resource/device_power"),
       hueFetch<HueList<DeviceResource>>("/clip/v2/resource/device"),
+      hueFetch<HueList<MotionResource>>("/clip/v2/resource/motion"),
+      hueFetch<HueList<ZigbeeConnectivityResource>>("/clip/v2/resource/zigbee_connectivity"),
     ]);
 
   // device ID → battery level

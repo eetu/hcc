@@ -148,15 +148,38 @@ interface DevicePowerResource {
   type: "device_power";
 }
 
+interface MotionResource {
+  id: string;
+  owner: { rid: string; rtype: "device" };
+  enabled: boolean;
+  motion: {
+    motion: boolean;
+    motion_valid: boolean;
+    motion_report?: { changed: string; motion: boolean };
+  };
+  type: "motion";
+}
+
+interface ZigbeeConnectivityResource {
+  id: string;
+  owner: { rid: string; rtype: "device" };
+  status: "connected" | "disconnected" | "connectivity_issue" | "unidirectional_incoming";
+  type: "zigbee_connectivity";
+}
+
 // ---- Public response types (same shape as /api/hue) ----
 
 export type Sensor = {
-  id: string;
+  id: string;         // temperature resource UUID
+  deviceId: string;   // device UUID — used for matching motion/power/connectivity events
   name: string;
   temperature?: number;
   type: RoomType;
   enabled: boolean;
   battery?: number;
+  motion?: boolean;
+  motionUpdatedAt?: string;
+  connected: boolean;
 };
 
 export type Group = {
@@ -172,18 +195,52 @@ export type Response = {
 
 // ---- Data functions ----
 
+const DATA_CACHE_TTL = 10_000; // 10 seconds — absorbs HMR reconnect bursts; SSE keeps UI live
+
+// Anchored to `global` so the cache survives Next.js module re-evaluation during HMR.
+// Without this, saving any file resets the module-level variables and every reconnecting
+// EventSource triggers a fresh 7-request burst to the bridge.
+declare global {
+  var _hueDataCache: { data: Response; timestamp: number } | null | undefined;
+  var _hueDataFetchPromise: Promise<Response> | null | undefined;
+}
+global._hueDataCache ??= null;
+global._hueDataFetchPromise ??= null;
+
 export const getHueData = async (): Promise<Response> => {
+  if (
+    global._hueDataCache &&
+    Date.now() - global._hueDataCache.timestamp < DATA_CACHE_TTL
+  ) {
+    return global._hueDataCache.data;
+  }
+
+  if (global._hueDataFetchPromise) return global._hueDataFetchPromise;
+
+  global._hueDataFetchPromise = fetchHueData()
+    .then((data) => {
+      global._hueDataCache = { data, timestamp: Date.now() };
+      return data;
+    })
+    .finally(() => {
+      global._hueDataFetchPromise = null;
+    });
+
+  return global._hueDataFetchPromise;
+};
+
+const fetchHueData = async (): Promise<Response> => {
   const roomTypeMap = buildRoomTypeMap();
 
-  const [roomsRes, tempsRes, groupedLightsRes, devicePowersRes, devicesRes] =
+  const [roomsRes, tempsRes, groupedLightsRes, devicePowersRes, devicesRes, motionRes, connectivityRes] =
     await Promise.all([
       hueFetch<HueList<RoomResource>>("/clip/v2/resource/room"),
       hueFetch<HueList<TemperatureResource>>("/clip/v2/resource/temperature"),
-      hueFetch<HueList<GroupedLightResource>>(
-        "/clip/v2/resource/grouped_light",
-      ),
+      hueFetch<HueList<GroupedLightResource>>("/clip/v2/resource/grouped_light"),
       hueFetch<HueList<DevicePowerResource>>("/clip/v2/resource/device_power"),
       hueFetch<HueList<DeviceResource>>("/clip/v2/resource/device"),
+      hueFetch<HueList<MotionResource>>("/clip/v2/resource/motion"),
+      hueFetch<HueList<ZigbeeConnectivityResource>>("/clip/v2/resource/zigbee_connectivity"),
     ]);
 
   // device ID → battery level
@@ -204,8 +261,20 @@ export const getHueData = async (): Promise<Response> => {
     }
   }
 
-  const deviceNameById = new Map(
-    devicesRes.data.map((d) => [d.id, d.metadata.name]),
+  const deviceNameById = new Map(devicesRes.data.map((d) => [d.id, d.metadata.name]));
+
+  const motionByDevice = new Map(
+    motionRes.data.map((m) => [
+      m.owner.rid,
+      {
+        motion: m.motion.motion_report?.motion ?? m.motion.motion,
+        updatedAt: m.motion.motion_report?.changed,
+      },
+    ]),
+  );
+
+  const connectedByDevice = new Map(
+    connectivityRes.data.map((c) => [c.owner.rid, c.status === "connected"]),
   );
 
   const sensors: Sensor[] = tempsRes.data.map((temp) => {
@@ -217,14 +286,19 @@ export const getHueData = async (): Promise<Response> => {
       temp.temperature.temperature_report?.temperature ??
       temp.temperature.temperature;
     const battery = batteryByDevice.get(temp.owner.rid);
+    const motionData = motionByDevice.get(temp.owner.rid);
 
     return {
       id: temp.id,
+      deviceId: temp.owner.rid,
       name,
       temperature,
       type,
       enabled: temp.enabled,
       battery,
+      motion: motionData?.motion,
+      motionUpdatedAt: motionData?.updatedAt,
+      connected: connectedByDevice.get(temp.owner.rid) ?? true,
     };
   });
 
@@ -251,6 +325,12 @@ export const toggleGroup = async (groupId: string): Promise<void> => {
     body: JSON.stringify({ on: { on: !current.on.on } }),
   });
 };
+
+export const getConnectionInfo = async () => ({
+  address: await getBridgeAddress(),
+  user: env.HUE_BRIDGE_USER,
+  agent: tlsAgent,
+});
 
 export const checkConnection = async (): Promise<boolean> => {
   try {

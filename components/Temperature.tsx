@@ -65,7 +65,7 @@ const Temperature: React.FC<TemperatureProps> = ({
                   "& span": {
                     display: "table-cell",
                     padding: "5px",
-                    opacity: r.enabled ? 1 : 0.25,
+                    opacity: r.enabled && r.connected ? 1 : 0.25,
                     width: "100%",
                   },
                 }}

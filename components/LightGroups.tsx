@@ -68,22 +68,15 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
         flexDirection: "row",
         alignItems: "center",
         gap: 5,
-        color:
-          theme.mode === "dark"
-            ? isOn
-              ? theme.colors.text.light
-              : theme.colors.text.main
-            : theme.colors.text.main,
+        color: theme.colors.text.main,
         padding: "5px 2px",
         cursor: "pointer",
         width: 148,
         borderRadius: 5,
-        border: `3px solid ${isOn ? "#f78f08" : theme.colors.text.main}`,
+        border: `3px solid ${isOn ? theme.colors.activity.on : theme.colors.text.main}`,
         background: isOn
-          ? "linear-gradient(153deg, rgba(255,237,207,1) 0%, rgba(255,239,171,1) 56%)"
-          : theme.mode === "dark"
-            ? "#404040"
-            : "#d9d9d9",
+          ? theme.colors.activity.onBackground
+          : theme.colors.activity.offBackground,
       }}
       onClick={handleClick(group.id, isOn)}
     >

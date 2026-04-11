@@ -24,7 +24,7 @@ pub async fn hue_fetch<T: serde::de::DeserializeOwned>(
     }
 
     let address = get_bridge_address(state).await?;
-    let url = format!("https://{address}{path}");
+    let url = format!("{address}{path}");
 
     let res = state
         .hue_client
@@ -48,7 +48,7 @@ pub async fn hue_put(
     body: &serde_json::Value,
 ) -> Result<(), HueError> {
     let address = get_bridge_address(state).await?;
-    let url = format!("https://{address}{path}");
+    let url = format!("{address}{path}");
 
     let res = state
         .hue_client

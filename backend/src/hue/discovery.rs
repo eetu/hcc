@@ -13,9 +13,13 @@ const FILE_CACHE_TTL: Duration = Duration::from_secs(3600);
 static DISCOVERED_ADDRESS: OnceCell<String> = OnceCell::const_new();
 
 pub async fn get_bridge_address(state: &Arc<AppState>) -> Result<String, HueError> {
-    // 1. From env
+    // 1. From env / config (may already include scheme for testing)
     if !state.settings.hue_bridge_address.is_empty() {
-        return Ok(state.settings.hue_bridge_address.clone());
+        let addr = &state.settings.hue_bridge_address;
+        if addr.starts_with("http://") || addr.starts_with("https://") {
+            return Ok(addr.clone());
+        }
+        return Ok(format!("https://{addr}"));
     }
 
     // 2. From OnceCell (already discovered this process)
@@ -25,6 +29,7 @@ pub async fn get_bridge_address(state: &Arc<AppState>) -> Result<String, HueErro
 
     // 3. From file cache
     if let Some(addr) = read_file_cache() {
+        let addr = format!("https://{addr}");
         // Store in OnceCell too (ignore if already set by concurrent call)
         let _ = DISCOVERED_ADDRESS.set(addr.clone());
         return Ok(addr);
@@ -79,5 +84,5 @@ async fn discover_bridge(client: reqwest::Client) -> Result<String, reqwest::Err
 
     tracing::info!("Discovered Hue bridge at {address}");
     write_file_cache(&address);
-    Ok(address)
+    Ok(format!("https://{address}"))
 }

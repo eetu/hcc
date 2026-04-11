@@ -58,7 +58,7 @@ async fn stream_events(state: &Arc<AppState>) -> Result<(), Box<dyn std::error::
     }
 
     let address = get_bridge_address(state).await?;
-    let url = format!("https://{address}/eventstream/clip/v2");
+    let url = format!("{address}/eventstream/clip/v2");
 
     let res = state
         .hue_client

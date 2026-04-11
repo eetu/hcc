@@ -275,12 +275,13 @@ const App = () => {
                     display: "flex",
                     flexDirection: "row",
                     alignItems: "center",
-                    gap: 1,
+                    gap: "0.5em",
                   }}
                 >
                   <Icon css={{ opacity: 1 }} size={16}>
                     local_offer
                   </Icon>
+                  {import.meta.env.VITE_HCC_IMAGE_TAG}
                 </div>
               </div>
             )}

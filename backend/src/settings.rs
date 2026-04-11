@@ -8,6 +8,7 @@ pub struct Settings {
     pub hue_bridge_address: String,
     pub hue_bridge_user: String,
     pub hue_room_types: String,
+    pub static_dir: String,
     pub port: u16,
 }
 
@@ -20,11 +21,16 @@ impl Settings {
             language: env::var("LANGUAGE").unwrap_or_else(|_| "fi".into()),
             hue_bridge_address: env::var("HUE_BRIDGE_ADDRESS").unwrap_or_default(),
             hue_bridge_user: env::var("HUE_BRIDGE_USER").unwrap_or_default(),
-            hue_room_types: env::var("HUE_ROOM_TYPES").unwrap_or_else(|_| "{}".into()),
+            hue_room_types: env::var("HUE_ROOM_TYPES")
+                .unwrap_or_else(|_| "{}".into())
+                .trim_matches('\'')
+                .trim_matches('"')
+                .to_string(),
+            static_dir: env::var("STATIC_DIR").unwrap_or_else(|_| "./dist".into()),
             port: env::var("PORT")
                 .ok()
                 .and_then(|p| p.parse().ok())
-                .unwrap_or(3001),
+                .unwrap_or(3000),
         }
     }
 }

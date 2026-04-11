@@ -4,15 +4,13 @@ services:
     container_name: hcc
     restart: always
     environment:
-      - OPEN_WEATHER_API_KEY=${OPEN_WEATHER_API_KEY}
       - TOMORROW_IO_API_KEY=${TOMORROW_IO_API_KEY}
       - HUE_BRIDGE_ADDRESS=${HUE_BRIDGE_ADDRESS}
       - HUE_BRIDGE_USER=${HUE_BRIDGE_USER}
-      - HUE_BRIDGE_USER_CLIENT_KEY=${HUE_BRIDGE_USER_CLIENT_KEY}
+      - HUE_ROOM_TYPES=${HUE_ROOM_TYPES}
       - POSITION_LAT=${POSITION_LAT}
       - POSITION_LON=${POSITION_LON}
       - LANGUAGE=${LANGUAGE}
-      - ROOMS=${ROOMS}
     ports:
       - 3000:3000
   watchtower:

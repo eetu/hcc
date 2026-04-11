@@ -20,6 +20,7 @@ yarn-error.log*
 test-results
 playwright-report
 __screenshots__
+.vitest-attachments
 
 # local env files
 .env*

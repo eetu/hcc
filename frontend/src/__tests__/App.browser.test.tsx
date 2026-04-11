@@ -1,11 +1,13 @@
 import { render } from "vitest-browser-react";
 
-import App from "../App.tsx";
+import Root from "../Root";
 
 describe("App", () => {
-  test("renders hello world", async () => {
-    const screen = await render(<App />);
+  test("renders without crashing", async () => {
+    const screen = await render(<Root />);
 
-    await expect.element(screen.getByText("Hello World!")).toBeVisible();
+    await expect
+      .element(screen.getByRole("button", { name: "fullscreen" }))
+      .toBeVisible();
   });
 });

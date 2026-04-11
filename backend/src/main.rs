@@ -6,6 +6,7 @@ mod weather;
 use std::sync::Arc;
 
 use actix_cors::Cors;
+use actix_files::Files;
 use actix_web::{middleware, web, App, HttpResponse, HttpServer};
 use tokio::sync::broadcast;
 use utoipa::OpenApi;
@@ -79,6 +80,7 @@ async fn main() -> std::io::Result<()> {
 
     let settings = Settings::from_env();
     let port = settings.port;
+    let static_dir = settings.static_dir.clone();
 
     let hue_client = reqwest::Client::builder()
         .danger_accept_invalid_certs(true)
@@ -126,7 +128,23 @@ async fn main() -> std::io::Result<()> {
                             ),
                     ),
             )
-            .service(SwaggerUi::new("/swagger-ui/{_:.*}").url("/api-doc/openapi.json", openapi.clone()))
+            .service(SwaggerUi::new("/docs/{_:.*}").url("/api-doc/openapi.json", openapi.clone()))
+            .service({
+                let index_path = format!("{static_dir}/index.html");
+                Files::new("/", &static_dir)
+                    .index_file("index.html")
+                    .default_handler(
+                        actix_web::dev::fn_service(move |req: actix_web::dev::ServiceRequest| {
+                            let index_path = index_path.clone();
+                            async move {
+                                let (req, _) = req.into_parts();
+                                let file = actix_files::NamedFile::open_async(&index_path).await?;
+                                let res = file.into_response(&req);
+                                Ok(actix_web::dev::ServiceResponse::new(req, res))
+                            }
+                        }),
+                    )
+            })
     })
     .bind(("0.0.0.0", port))?
     .run()

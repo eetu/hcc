@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -7,16 +7,37 @@ on:
     branches: [develop]
 
 jobs:
-  build:
-    name: "Run tests"
+  frontend:
+    name: "Frontend"
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
       - run: corepack enable
-      - run: yarn install
+      - run: yarn install --immutable
+      - run: yarn playwright install chromium
       - run: yarn lint
+      - run: yarn test
       - run: yarn build
+
+  backend:
+    name: "Backend"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: backend
+      - run: cargo clippy -- -D warnings
+      - run: cargo build

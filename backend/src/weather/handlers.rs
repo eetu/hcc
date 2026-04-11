@@ -42,7 +42,8 @@ pub async fn tomorrow(state: web::Data<Arc<AppState>>) -> HttpResponse {
     let timesteps = "current,1d,1h";
 
     let url = format!(
-        "https://api.tomorrow.io/v4/timelines?location={},{}&apikey={}&timesteps={}&fields={}&timezone=Europe/Helsinki",
+        "{}/v4/timelines?location={},{}&apikey={}&timesteps={}&fields={}&timezone=Europe/Helsinki",
+        settings.tomorrow_io_base_url,
         settings.position_lat,
         settings.position_lon,
         settings.tomorrow_io_api_key,

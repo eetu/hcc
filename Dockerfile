@@ -2,6 +2,8 @@
 
 # --- Stage 1: Build frontend ---
 FROM node:24-alpine AS frontend-build
+ARG HCC_IMAGE_TAG
+ENV VITE_HCC_IMAGE_TAG=$HCC_IMAGE_TAG
 WORKDIR /app
 COPY frontend/package.json frontend/yarn.lock frontend/.yarnrc.yml* ./
 RUN corepack enable && yarn install --immutable --network-timeout 1000000
@@ -25,9 +27,6 @@ FROM scratch AS runner
 WORKDIR /app
 LABEL org.opencontainers.image.description="HCC for raspi"
 LABEL org.opencontainers.image.source="https://github.com/eetu/hcc"
-
-ARG HCC_IMAGE_TAG
-ENV HCC_IMAGE_TAG=$HCC_IMAGE_TAG
 
 COPY --from=backend-build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=backend-build /app/target/release/hcc-backend ./hcc-backend

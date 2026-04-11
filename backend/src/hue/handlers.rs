@@ -101,7 +101,11 @@ pub async fn pair(
             .json(serde_json::json!({"error": "bridgeIp required (or set HUE_BRIDGE_ADDRESS)"}));
     }
 
-    let url = format!("https://{bridge_ip}/api");
+    let url = if bridge_ip.starts_with("http://") || bridge_ip.starts_with("https://") {
+        format!("{bridge_ip}/api")
+    } else {
+        format!("https://{bridge_ip}/api")
+    };
     let payload = serde_json::json!({
         "devicetype": "hcc#server",
         "generateclientkey": true,

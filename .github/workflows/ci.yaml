@@ -40,4 +40,5 @@ jobs:
         with:
           workspaces: backend
       - run: cargo clippy -- -D warnings
+      - run: cargo test
       - run: cargo build

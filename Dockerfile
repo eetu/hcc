@@ -16,7 +16,7 @@ RUN yarn build
 # --- Stage 2: Build backend dependencies (native, cross-compiled) ---
 FROM --platform=$BUILDPLATFORM rust:1-alpine AS backend-deps
 COPY --from=xx / /
-RUN apk add --no-cache clang lld musl-dev
+RUN apk add --no-cache clang lld musl-dev curl
 ARG TARGETPLATFORM
 RUN xx-apk add --no-cache musl-dev gcc
 WORKDIR /app

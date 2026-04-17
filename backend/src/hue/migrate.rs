@@ -35,7 +35,7 @@ impl HubConnection {
         path: &str,
     ) -> Result<HueList<T>, HueError> {
         let res = client
-            .get(&self.url(path))
+            .get(self.url(path))
             .header("hue-application-key", &self.api_key)
             .send()
             .await?;
@@ -54,7 +54,7 @@ impl HubConnection {
         body: &serde_json::Value,
     ) -> Result<(), HueError> {
         let res = client
-            .put(&self.url(path))
+            .put(self.url(path))
             .header("hue-application-key", &self.api_key)
             .json(body)
             .send()
@@ -74,7 +74,7 @@ impl HubConnection {
         body: &serde_json::Value,
     ) -> Result<serde_json::Value, HueError> {
         let res = client
-            .post(&self.url(path))
+            .post(self.url(path))
             .header("hue-application-key", &self.api_key)
             .json(body)
             .send()
@@ -93,7 +93,7 @@ impl HubConnection {
         path: &str,
     ) -> Result<(), HueError> {
         let res = client
-            .delete(&self.url(path))
+            .delete(self.url(path))
             .header("hue-application-key", &self.api_key)
             .send()
             .await?;

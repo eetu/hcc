@@ -56,19 +56,26 @@ pub struct HueList<T> {
     pub data: Vec<T>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RoomResource {
     pub id: String,
-    pub metadata: Metadata,
+    pub metadata: RoomMetadata,
     pub children: Vec<ResourceRef>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RoomMetadata {
+    pub name: String,
+    #[serde(default)]
+    pub archetype: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Metadata {
     pub name: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ResourceRef {
     pub rid: String,
     pub rtype: String,
@@ -93,7 +100,7 @@ pub struct TemperatureReport {
     pub temperature: f64,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Owner {
     pub rid: String,
 }
@@ -116,10 +123,20 @@ pub struct OnState {
     pub on: bool,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DeviceResource {
     pub id: String,
     pub metadata: Metadata,
+    #[serde(default)]
+    pub product_data: Option<ProductData>,
+    #[serde(default)]
+    pub services: Vec<ResourceRef>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProductData {
+    pub product_name: Option<String>,
+    pub model_id: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -155,4 +172,30 @@ pub struct MotionReport {
 pub struct ZigbeeConnectivityResource {
     pub owner: Owner,
     pub status: String,
+}
+
+// ---- Additional CLIP v2 resources for migration ----
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LightResource {
+    pub id: String,
+    pub owner: Owner,
+    #[serde(default)]
+    pub metadata: Option<Metadata>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SceneResource {
+    pub id: String,
+    pub metadata: Metadata,
+    pub group: ResourceRef,
+    #[serde(default)]
+    pub actions: serde_json::Value,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ZoneResource {
+    pub id: String,
+    pub metadata: Metadata,
+    pub children: Vec<ResourceRef>,
 }

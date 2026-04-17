@@ -14,6 +14,19 @@ import RaindropIcon from "./RaindropIcon";
 import Tooltip from "./Tooltip";
 import WeatherChart from "./WeatherChart";
 
+const TomorrowWeatherIcon = ({ code }: { code: number }) => {
+  const IconComponent = getWeatherIcon(code);
+  return (
+    <IconComponent
+      css={{
+        marginLeft: "25px",
+        alignSelf: "center",
+      }}
+      size={52}
+    />
+  );
+};
+
 const weatherCode: Record<number, string> = {
   1000: "Selkeä, Aurinkoinen",
   1100: "Enimmäkseen Selkeä",
@@ -51,7 +64,7 @@ const TomorrowWeather: React.FC<TomorrowWeatherProps> = ({ className }) => {
     {
       refreshInterval: 3600000,
       refreshWhenHidden: true,
-    }
+    },
   );
 
   const theme = useTheme();
@@ -161,18 +174,7 @@ const TomorrowWeather: React.FC<TomorrowWeatherProps> = ({ className }) => {
               }}
             >{`${Math.round(weather.values.temperatureApparent)}°`}</div>
           </div>
-          {(() => {
-            const IconComponent = getWeatherIcon(weather.values.weatherCode);
-            return (
-              <IconComponent
-                css={{
-                  marginLeft: "25px",
-                  alignSelf: "center",
-                }}
-                size={52}
-              />
-            );
-          })()}
+          <TomorrowWeatherIcon code={weather.values.weatherCode} />
           <div
             css={{
               fontSize: "13px",

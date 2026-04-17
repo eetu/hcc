@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 
 import { api } from "../api";
 import { mq } from "../mq";
@@ -44,19 +44,28 @@ type LightGroupProps = {
 };
 
 const LightGroup: FC<LightGroupProps> = ({ group }) => {
-  const [isOn, setIsOn] = useState(group.state.on);
+  const [optimistic, setOptimistic] = useState<boolean | null>(null);
+  const prevPropOnRef = useRef(group.state.on);
 
-  useEffect(() => {
-    setIsOn(group.state.on);
-  }, [group.state.on]);
+  // Reset optimistic state when prop changes (without effect)
+  if (prevPropOnRef.current !== group.state.on) {
+    prevPropOnRef.current = group.state.on;
+    if (optimistic !== null) {
+      setOptimistic(null);
+    }
+  }
+
+  const isOn = optimistic ?? group.state.on;
 
   const handleClick = useCallback(
-    (id: string, isOn: boolean) => () => {
-      fetch(api(`/api/hue/toggleGroup/${id}`), { method: "POST" }).then((res) => {
-        if (res.status === 200) {
-          setIsOn(!isOn);
-        }
-      });
+    (id: string, current: boolean) => () => {
+      fetch(api(`/api/hue/toggleGroup/${id}`), { method: "POST" }).then(
+        (res) => {
+          if (res.status === 200) {
+            setOptimistic(!current);
+          }
+        },
+      );
     },
     [],
   );

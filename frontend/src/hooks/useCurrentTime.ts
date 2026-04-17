@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const useCurrentTime = () => {
-  const [currenTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(() => new Date());
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -12,7 +12,7 @@ const useCurrentTime = () => {
     };
   }, []);
 
-  return currenTime;
+  return currentTime;
 };
 
 export default useCurrentTime;

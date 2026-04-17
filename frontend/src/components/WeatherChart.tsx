@@ -21,7 +21,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  LineController
+  LineController,
 );
 
 type WeatherChartData = {

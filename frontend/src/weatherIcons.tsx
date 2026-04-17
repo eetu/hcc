@@ -111,7 +111,7 @@ export const getOwmWeatherIcon = (weatherId: number): LucideIcon => {
 
 export const getWeatherIcon = (
   weatherCode: number,
-  isNight?: boolean
+  isNight?: boolean,
 ): LucideIcon => {
   const mapping = weatherIconMap[weatherCode];
 

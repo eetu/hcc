@@ -22,6 +22,8 @@ pub struct AppState {
     pub hue_cache: Cache<hue::models::HueResponse>,
     pub tomorrow_cache: Cache<serde_json::Value>,
     pub hue_events_tx: broadcast::Sender<hue::events::HueLiveEvent>,
+    pub discovery_cache: Cache<Vec<hue::migrate::DiscoveredBridge>>,
+    pub migration: tokio::sync::RwLock<Option<hue::migrate::MigrationSession>>,
 }
 
 #[derive(OpenApi)]
@@ -102,6 +104,22 @@ pub fn create_app(
                             "/toggleGroup/{id}",
                             web::post().to(hue::handlers::toggle_group),
                         ),
+                )
+                .service(
+                    web::scope("/migrate")
+                        .route("/discover", web::get().to(hue::migrate::discover))
+                        .route("/connect", web::post().to(hue::migrate::connect))
+                        .route("/export", web::get().to(hue::migrate::export))
+                        .route("/import", web::post().to(hue::migrate::import))
+                        .route("/snapshot", web::get().to(hue::migrate::get_snapshot))
+                        .route("/create-rooms", web::post().to(hue::migrate::create_rooms))
+                        .route("/devices", web::get().to(hue::migrate::list_devices))
+                        .route("/identify/{device_id}", web::post().to(hue::migrate::identify))
+                        .route("/move-device", web::post().to(hue::migrate::move_device))
+                        .route("/search", web::post().to(hue::migrate::search))
+                        .route("/assign", web::post().to(hue::migrate::assign))
+                        .route("/unassign", web::post().to(hue::migrate::unassign))
+                        .route("/status", web::get().to(hue::migrate::status)),
                 ),
         )
         .service(SwaggerUi::new("/docs/{_:.*}").url("/api-doc/openapi.json", openapi))
@@ -142,6 +160,8 @@ pub fn create_test_app_state_with(settings: Settings) -> Arc<AppState> {
         hue_cache: Cache::new(std::time::Duration::from_secs(3)),
         tomorrow_cache: Cache::new(std::time::Duration::from_secs(3600)),
         hue_events_tx,
+        discovery_cache: Cache::new(std::time::Duration::from_secs(300)),
+        migration: tokio::sync::RwLock::new(None),
     })
 }
 
@@ -173,6 +193,8 @@ pub async fn run_server() -> std::io::Result<()> {
         hue_cache: Cache::new(std::time::Duration::from_secs(3)),
         tomorrow_cache: Cache::new(std::time::Duration::from_secs(3600)),
         hue_events_tx: hue_events_tx.clone(),
+        discovery_cache: Cache::new(std::time::Duration::from_secs(300)),
+        migration: tokio::sync::RwLock::new(None),
     });
 
     hue::events::start_stream_loop(state.clone());

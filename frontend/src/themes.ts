@@ -47,7 +47,8 @@ export const lightTheme: Theme = {
     border: "lightgray",
     activity: {
       on: "#f78f08",
-      onBackground: "linear-gradient(153deg, rgba(255,237,207,1) 0%, rgba(255,239,171,1) 56%)",
+      onBackground:
+        "linear-gradient(153deg, rgba(255,237,207,1) 0%, rgba(255,239,171,1) 56%)",
       offBackground: "#d9d9d9",
     },
     connected: "#4caf50",

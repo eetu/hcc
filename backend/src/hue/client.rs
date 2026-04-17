@@ -67,6 +67,31 @@ pub async fn hue_put(
     Ok(())
 }
 
+pub async fn hue_post(
+    state: &Arc<AppState>,
+    path: &str,
+    body: &serde_json::Value,
+) -> Result<serde_json::Value, HueError> {
+    let address = get_bridge_address(state).await?;
+    let url = format!("{address}{path}");
+
+    let res = state
+        .hue_client
+        .post(&url)
+        .header("hue-application-key", &state.settings.hue_bridge_user)
+        .json(body)
+        .send()
+        .await?;
+
+    if !res.status().is_success() {
+        let status = res.status().as_u16();
+        let body = res.text().await.unwrap_or_default();
+        return Err(HueError::Bridge { status, body });
+    }
+
+    Ok(res.json().await?)
+}
+
 pub async fn check_connection(state: &Arc<AppState>) -> bool {
     hue_fetch::<serde_json::Value>(state, "/clip/v2/resource/bridge")
         .await

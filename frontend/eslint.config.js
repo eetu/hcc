@@ -3,10 +3,9 @@ import eslintReactConfig from "eslint-config/react";
 export default [
   ...eslintReactConfig,
   {
-    files: ["**/*.ts", "**/*.tsx"],
+    files: ["src/routes/**/*.tsx"],
     rules: {
-      "react/no-unknown-property": ["error", { ignore: ["css"] }],
-      "react/prop-types": "off",
+      "react-refresh/only-export-components": "off",
     },
   },
 ];

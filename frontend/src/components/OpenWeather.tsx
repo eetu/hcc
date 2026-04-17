@@ -12,15 +12,32 @@ import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import WeatherChart from "./WeatherChart";
 
+const WeatherIcon = ({ weatherId }: { weatherId: number }) => {
+  const IconComponent = getOwmWeatherIcon(weatherId);
+  return (
+    <IconComponent
+      css={{
+        marginLeft: "25px",
+        alignSelf: "center",
+      }}
+      size={52}
+    />
+  );
+};
+
 type WeatherProps = {
   className?: string;
 };
 
 const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
-  const { data } = useSWR<OpenWeatherReponse>(api("/api/weather/owm"), fetcher, {
-    refreshInterval: 3600000,
-    refreshWhenHidden: true,
-  });
+  const { data } = useSWR<OpenWeatherReponse>(
+    api("/api/weather/owm"),
+    fetcher,
+    {
+      refreshInterval: 3600000,
+      refreshWhenHidden: true,
+    },
+  );
 
   const theme = useTheme();
 
@@ -131,18 +148,7 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
               }}
             >{`${Math.round(data.current.feels_like)}°`}</div>
           </div>
-          {(() => {
-            const IconComponent = getOwmWeatherIcon(weather.id);
-            return (
-              <IconComponent
-                css={{
-                  marginLeft: "25px",
-                  alignSelf: "center",
-                }}
-                size={52}
-              />
-            );
-          })()}
+          <WeatherIcon weatherId={weather.id} />
           <div
             css={{
               fontSize: "13px",
@@ -176,10 +182,7 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
               <span css={{ marginLeft: 10 }}>
                 {today.wind_speed.toFixed(1)} m/s
               </span>
-              <Arrow
-                css={{ marginLeft: 5 }}
-                deg={today.wind_deg + 180}
-              />
+              <Arrow css={{ marginLeft: 5 }} deg={today.wind_deg + 180} />
             </div>
           </div>
         </div>

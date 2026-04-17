@@ -147,6 +147,12 @@ pub async fn pair(
             .and_then(|c| c.as_str())
             .unwrap_or_default();
 
+        tracing::info!("=== HUE PAIRING SUCCESSFUL ===");
+        tracing::info!("HUE_BRIDGE_ADDRESS={bridge_ip}");
+        tracing::info!("HUE_BRIDGE_USER={username}");
+        tracing::info!("HUE_BRIDGE_USER_CLIENT_KEY={clientkey}");
+        tracing::info!("==============================");
+
         return HttpResponse::Ok().json(PairResponse {
             message: "Pairing successful. Add these to your .env:".into(),
             hue_bridge_address: bridge_ip,

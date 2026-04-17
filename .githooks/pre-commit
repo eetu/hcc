@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -e
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
+
+run_backend=false
+run_frontend=false
+
+while IFS= read -r file; do
+  case "$file" in
+    backend/*) run_backend=true ;;
+    frontend/*) run_frontend=true ;;
+  esac
+done <<< "$STAGED"
+
+if $run_backend; then
+  echo "Running cargo clippy..."
+  (cd backend && cargo clippy -- -D warnings)
+  echo "Running cargo test..."
+  (cd backend && cargo test)
+fi
+
+if $run_frontend; then
+  echo "Running eslint..."
+  (cd frontend && yarn lint)
+  echo "Running tsc..."
+  (cd frontend && yarn tsc --noEmit)
+fi

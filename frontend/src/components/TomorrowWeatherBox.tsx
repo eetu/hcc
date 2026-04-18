@@ -46,14 +46,16 @@ type TomorrowWeatherBoxProps = {
   className?: string;
 };
 
-const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({ className }) => {
+const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({
+  className,
+}) => {
   const { data } = useSWR<TomorrowWeatherData>(
     api("/api/weather/tomorrow"),
     fetcher,
     {
       refreshInterval: 3600000,
       refreshWhenHidden: true,
-    }
+    },
   );
 
   const theme = useTheme();
@@ -77,11 +79,14 @@ const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({ className }) =>
   const segments = getTemperatureSegments(hourly?.intervals);
 
   const currentTemp = weather?.values.temperature;
-  const roundedTemp = currentTemp !== undefined ? Math.round(currentTemp) : undefined;
+  const roundedTemp =
+    currentTemp !== undefined ? Math.round(currentTemp) : undefined;
+  /* eslint-disable react-hooks/exhaustive-deps -- intentionally keyed on roundedTemp to avoid re-randomizing on fractional changes */
   const roast = useMemo(
-    () => currentTemp !== undefined ? getTemperatureRoast(currentTemp) : null,
+    () => (currentTemp !== undefined ? getTemperatureRoast(currentTemp) : null),
     [roundedTemp],
   );
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   if (!(data && weather && today)) {
     return null;
@@ -200,28 +205,28 @@ const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({ className }) =>
           >
             {(today.values.rainAccumulation > 0 ||
               today.values.snowAccumulation > 0) && (
-                <div
-                  css={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  {today.values.rainAccumulation > 0 ? (
-                    <RaindropIcon />
-                  ) : (
-                    <Icon>ac_unit</Icon>
-                  )}
-                  <span css={{ marginLeft: 10 }}>
-                    {(
-                      today.values.rainAccumulation ||
-                      today.values.snowAccumulation
-                    ).toFixed(1)}{" "}
-                    mm ({today.values.precipitationProbabilityAvg.toFixed()}
-                    %)
-                  </span>
-                </div>
-              )}
+              <div
+                css={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                {today.values.rainAccumulation > 0 ? (
+                  <RaindropIcon />
+                ) : (
+                  <Icon>ac_unit</Icon>
+                )}
+                <span css={{ marginLeft: 10 }}>
+                  {(
+                    today.values.rainAccumulation ||
+                    today.values.snowAccumulation
+                  ).toFixed(1)}{" "}
+                  mm ({today.values.precipitationProbabilityAvg.toFixed()}
+                  %)
+                </span>
+              </div>
+            )}
             <div
               css={{
                 display: "flex",

@@ -52,11 +52,13 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
 
   const handleClick = useCallback(
     (id: string, isOn: boolean) => () => {
-      fetch(api(`/api/hue/toggleGroup/${id}`), { method: "POST" }).then((res) => {
-        if (res.status === 200) {
-          setIsOn(!isOn);
-        }
-      });
+      fetch(api(`/api/hue/toggleGroup/${id}`), { method: "POST" }).then(
+        (res) => {
+          if (res.status === 200) {
+            setIsOn(!isOn);
+          }
+        },
+      );
     },
     [],
   );

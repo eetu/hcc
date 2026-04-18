@@ -21,7 +21,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  LineController
+  LineController,
 );
 
 type WeatherChartData = {
@@ -40,8 +40,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
   const avgTemp =
     data.map((d) => d.temp).reduce((a, b) => a + b, 0) / data.length;
 
-  const weatherLineColor =
-    avgTemp < 5 ? theme.colors.cool : theme.colors.warm;
+  const weatherLineColor = avgTemp < 5 ? theme.colors.cool : theme.colors.warm;
 
   const chartData: ChartData = {
     labels: data.map((d) => d.label),

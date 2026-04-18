@@ -19,7 +19,7 @@ const Icon: React.FC<IconProps> = ({
       style={style}
       className={classNames(
         className,
-        `material-icons${type === "outlined" ? "-outlined" : ""}`
+        `material-icons${type === "outlined" ? "-outlined" : ""}`,
       )}
       css={{
         fontSize: size,

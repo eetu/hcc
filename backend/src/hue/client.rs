@@ -31,7 +31,11 @@ pub async fn hue_fetch<T: serde::de::DeserializeOwned>(
         .get(&url)
         .header("hue-application-key", &state.settings.hue_bridge_user)
         .send()
-        .await?;
+        .await
+        .map_err(|e| {
+            tracing::debug!("Hue fetch {path} failed: {e:#}");
+            e
+        })?;
 
     if !res.status().is_success() {
         let status = res.status().as_u16();

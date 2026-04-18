@@ -46,7 +46,7 @@ pub fn start_stream_loop(state: Arc<AppState>) {
 async fn run_stream_loop(state: Arc<AppState>) {
     loop {
         if let Err(e) = stream_events(&state).await {
-            tracing::error!("Hue event stream disconnected: {e}, reconnecting in 5s");
+            tracing::error!("Hue event stream disconnected: {e:#}, reconnecting in 5s");
         }
         tokio::time::sleep(Duration::from_secs(5)).await;
     }

@@ -1,6 +1,7 @@
 pub mod cache;
 pub mod hue;
 pub mod settings;
+pub mod storage;
 pub mod weather;
 
 use std::sync::Arc;
@@ -22,6 +23,7 @@ pub struct AppState {
     pub hue_cache: Cache<hue::models::HueResponse>,
     pub tomorrow_cache: Cache<serde_json::Value>,
     pub hue_events_tx: broadcast::Sender<hue::events::HueLiveEvent>,
+    pub storage: storage::Storage,
 }
 
 #[derive(OpenApi)]
@@ -33,6 +35,7 @@ pub struct AppState {
         hue::handlers::pair,
         hue::handlers::toggle_group,
         status,
+        sensor_history,
     ),
     components(schemas(
         hue::models::HueResponse,
@@ -44,6 +47,7 @@ pub struct AppState {
         hue::handlers::PairRequest,
         hue::handlers::PairResponse,
         StatusResponse,
+        storage::SensorReading,
     ))
 )]
 struct ApiDoc;
@@ -52,6 +56,37 @@ struct ApiDoc;
 struct StatusResponse {
     hue: bool,
     weather: bool,
+}
+
+#[derive(serde::Deserialize, utoipa::IntoParams)]
+struct SensorHistoryQuery {
+    /// Sensor ID to filter by (optional, returns all sensors if omitted)
+    sensor_id: Option<String>,
+    /// Number of hours of history to return (default: 24, max: 720)
+    hours: Option<u32>,
+}
+
+#[utoipa::path(
+    get,
+    path = "/api/history/sensors",
+    params(SensorHistoryQuery),
+    responses(
+        (status = 200, description = "Sensor reading history", body = Vec<storage::SensorReading>),
+        (status = 500, description = "Database error")
+    )
+)]
+async fn sensor_history(
+    state: web::Data<Arc<AppState>>,
+    query: web::Query<SensorHistoryQuery>,
+) -> HttpResponse {
+    let hours = query.hours.unwrap_or(24).min(720);
+    match state.storage.query_readings(query.sensor_id.as_deref(), hours).await {
+        Ok(readings) => HttpResponse::Ok().json(readings),
+        Err(e) => {
+            tracing::error!("Failed to query sensor history: {e}");
+            HttpResponse::InternalServerError().finish()
+        }
+    }
 }
 
 #[utoipa::path(
@@ -89,6 +124,10 @@ pub fn create_app(
         .route("/status", web::get().to(status))
         .service(
             web::scope("/api")
+                .service(
+                    web::scope("/history")
+                        .route("/sensors", web::get().to(sensor_history)),
+                )
                 .service(
                     web::scope("/weather")
                         .route("/tomorrow", web::get().to(weather::handlers::tomorrow)),
@@ -134,6 +173,8 @@ pub fn create_test_app_state_with(settings: Settings) -> Arc<AppState> {
         .expect("Failed to build Hue HTTP client");
 
     let (hue_events_tx, _) = broadcast::channel(256);
+    let storage = storage::Storage::open(std::path::Path::new(":memory:"))
+        .expect("Failed to open in-memory SQLite database");
 
     Arc::new(AppState {
         settings,
@@ -142,6 +183,7 @@ pub fn create_test_app_state_with(settings: Settings) -> Arc<AppState> {
         hue_cache: Cache::new(std::time::Duration::from_secs(3)),
         tomorrow_cache: Cache::new(std::time::Duration::from_secs(3600)),
         hue_events_tx,
+        storage,
     })
 }
 
@@ -166,6 +208,10 @@ pub async fn run_server() -> std::io::Result<()> {
 
     let (hue_events_tx, _) = broadcast::channel(256);
 
+    let db_path = std::env::var("HCC_DB_PATH").unwrap_or_else(|_| "hcc.db".into());
+    let storage = storage::Storage::open(std::path::Path::new(&db_path))
+        .expect("Failed to open SQLite database");
+
     let state = Arc::new(AppState {
         settings,
         http_client: reqwest::Client::new(),
@@ -173,9 +219,11 @@ pub async fn run_server() -> std::io::Result<()> {
         hue_cache: Cache::new(std::time::Duration::from_secs(3)),
         tomorrow_cache: Cache::new(std::time::Duration::from_secs(3600)),
         hue_events_tx: hue_events_tx.clone(),
+        storage,
     });
 
     hue::events::start_stream_loop(state.clone());
+    storage::start_recording_loop(state.clone());
 
     tracing::info!("Starting server on port {port}");
 

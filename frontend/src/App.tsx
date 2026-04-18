@@ -6,8 +6,8 @@ import CurrentTime from "./components/CurrentTime";
 import Icon from "./components/Icon";
 import LightGroups from "./components/LightGroups";
 import Motion from "./components/Motion";
-import Temperature from "./components/Temperature";
-import TomorrowWeather from "./components/TomorrowWeather";
+import TemperatureBox from "./components/TemperatureBox";
+import TomorrowWeatherBox from "./components/TomorrowWeatherBox";
 import { mq } from "./mq";
 import { type HueLiveEvent, type Response, type Sensor } from "./types/hue";
 
@@ -223,22 +223,22 @@ const App = () => {
           >
             {view === "temperature" && (
               <>
-                <TomorrowWeather
+                <TomorrowWeatherBox
                   css={{ gridColumn: "1 / span 3", gridRow: 1 }}
                 />
-                <Temperature
+                <TemperatureBox
                   css={temperatureCss}
                   sensors={outside}
                   title="ulkona"
                   error={error}
                 />
-                <Temperature
+                <TemperatureBox
                   css={temperatureCss}
                   sensors={inside}
                   title="sisällä"
                   error={error}
                 />
-                <Temperature
+                <TemperatureBox
                   css={temperatureCss}
                   sensors={insideCold}
                   title="kuisti"

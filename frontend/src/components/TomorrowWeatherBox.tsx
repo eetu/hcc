@@ -3,52 +3,82 @@ import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
 import useSWR from "swr";
 
-import { fetcher } from "../pages";
-import { OpenWeatherReponse } from "../pages/api/weather/owm";
-import { getOwmWeatherIcon } from "../src/weatherIcons";
+import { api, fetcher } from "../api";
+import { TomorrowWeatherData } from "../types/weather";
+import { getTemperatureSegments } from "../utils";
+import { getWeatherIcon } from "../weatherIcons";
 import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
+import RaindropIcon from "./RaindropIcon";
 import Tooltip from "./Tooltip";
 import WeatherChart from "./WeatherChart";
 
-type WeatherProps = {
+const weatherCode: Record<number, string> = {
+  1000: "Selkeä, Aurinkoinen",
+  1100: "Enimmäkseen Selkeä",
+  1101: "Osittain Pilvinen",
+  1102: "Enimmäkseen Pilvinen",
+  1001: "Pilvinen",
+  2000: "Sumu",
+  2100: "Kevyt Sumu",
+  4000: "Tihkusade",
+  4001: "Sade",
+  4200: "Kevyt Sade",
+  4201: "Rankkasade",
+  5000: "Lumisade",
+  5001: "Lumikuurot",
+  5100: "Kevyt Lumisade",
+  5101: "Rankka Lumisade",
+  6000: "Jäätävä Tihku",
+  6001: "Jäätävä Sade",
+  6200: "Kevyt Jäätävä Sade",
+  6201: "Rankka Jäätävä Sade",
+  7000: "Raesade",
+  7101: "Rankka Raesade",
+  7102: "Kevyt Raesade",
+  8000: "Ukkosmyrsky",
+};
+
+type TomorrowWeatherBoxProps = {
   className?: string;
 };
 
-const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
-  const { data } = useSWR<OpenWeatherReponse>("/api/weather/owm", fetcher, {
-    refreshInterval: 3600000, // refresh once per hour
-    refreshWhenHidden: true,
-  });
+const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({ className }) => {
+  const { data } = useSWR<TomorrowWeatherData>(
+    api("/api/weather/tomorrow"),
+    fetcher,
+    {
+      refreshInterval: 3600000,
+      refreshWhenHidden: true,
+    }
+  );
 
   const theme = useTheme();
 
-  const weather = data?.current.weather[0];
-  const today = data?.daily[0];
-  const daily = data?.daily || [];
-  const alerts = data?.alerts;
+  const weather = data?.data.timelines.find((t) => t.timestep === "current")
+    ?.intervals[0];
+  const daily =
+    data?.data.timelines.find((t) => t.timestep === "1d")?.intervals ?? [];
+  const today = daily[0];
+  const hourly = data?.data.timelines.find((t) => t.timestep === "1h");
+  const alerts: { code: number; message: string }[] = [];
 
   const chartData = daily.map((d) => ({
-    temp: d.temp.day,
-    rain: d.snow ?? d.rain ?? 0,
-    label: `${format(new Date(d.dt * 1000), "EEEEEE", {
+    temp: d.values.temperature,
+    rain: d.values.rainAccumulation || d.values.snowAccumulation || 0,
+    label: `${format(new Date(d.startTime), "EEEEEE", {
       locale: fi,
     })}`,
   }));
 
-  const sections = today
-    ? [
-        { title: "aamu", temp: Math.round(today.temp.morn) },
-        { title: "päivä", temp: Math.round(today.temp.day) },
-        { title: "ilta", temp: Math.round(today.temp.eve) },
-        { title: "yö", temp: Math.round(today.temp.night) },
-      ]
-    : [];
+  const segments = getTemperatureSegments(hourly?.intervals);
 
   if (!(data && weather && today)) {
     return null;
   }
+
+  const title = weatherCode[weather.values.weatherCode];
 
   return (
     <Box
@@ -82,14 +112,14 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
             textTransform: "capitalize",
           }}
         >
-          {weather.description}
+          {title}
           {alerts && alerts.length > 0 && (
             <Tooltip
               content={
                 <div>
                   {alerts.map((a) => (
-                    <div css={{ fontSize: 13, padding: 5 }} key={a.event}>
-                      {a.description}
+                    <div css={{ fontSize: 13, padding: 5 }} key={a.code}>
+                      {a.message}
                     </div>
                   ))}
                 </div>
@@ -118,7 +148,7 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
                 fontSize: "50px",
               }}
             >
-              {`${Math.round(data.current.temp)}°`}
+              {`${Math.round(weather.values.temperature)}°`}
             </div>
             <div
               css={{
@@ -129,12 +159,11 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
                 alignSelf: "bottom",
                 marginBottom: "5px",
               }}
-            >{`${Math.round(data.current.feels_like)}°`}</div>
+            >{`${Math.round(weather.values.temperatureApparent)}°`}</div>
           </div>
           {(() => {
-            const IconComponent = getOwmWeatherIcon(weather.id);
+            const IconComponent = getWeatherIcon(weather.values.weatherCode);
             return (
-              // eslint-disable-next-line react-hooks/static-components
               <IconComponent
                 css={{
                   marginLeft: "25px",
@@ -150,22 +179,30 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
               marginLeft: "25px",
             }}
           >
-            {(!today.rain || today.snow) && (
-              <div
-                css={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Icon>{today.snow ? "ac_unit" : "opacity"}</Icon>
-                <span css={{ marginLeft: 10 }}>
-                  {(today.rain || today.snow)?.toFixed(1)} mm (
-                  {(today.pop * 100).toFixed()}
-                  %)
-                </span>
-              </div>
-            )}
+            {(today.values.rainAccumulation > 0 ||
+              today.values.snowAccumulation > 0) && (
+                <div
+                  css={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  {today.values.rainAccumulation > 0 ? (
+                    <RaindropIcon />
+                  ) : (
+                    <Icon>ac_unit</Icon>
+                  )}
+                  <span css={{ marginLeft: 10 }}>
+                    {(
+                      today.values.rainAccumulation ||
+                      today.values.snowAccumulation
+                    ).toFixed(1)}{" "}
+                    mm ({today.values.precipitationProbabilityAvg.toFixed()}
+                    %)
+                  </span>
+                </div>
+              )}
             <div
               css={{
                 display: "flex",
@@ -175,11 +212,11 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
             >
               <Icon>air</Icon>
               <span css={{ marginLeft: 10 }}>
-                {today.wind_speed.toFixed(1)} m/s
+                {weather.values.windSpeed.toFixed(1)} m/s
               </span>
               <Arrow
                 css={{ marginLeft: 5 }}
-                deg={today.wind_deg + 180} // meteorological degrees + 180°
+                deg={weather.values.windDirection + 180}
               />
             </div>
           </div>
@@ -195,7 +232,7 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
           width: "100%",
         }}
       >
-        {sections.map((s) => (
+        {segments.map((s) => (
           <div
             key={s.title}
             css={{
@@ -218,4 +255,4 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
   );
 };
 
-export default OpenWeather;
+export default TomorrowWeatherBox;

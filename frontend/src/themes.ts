@@ -28,6 +28,8 @@ declare module "@emotion/react" {
       };
       connected: string;
       disconnected: string;
+      warm: string;
+      cool: string;
     };
     typography: {
       h1: Typography;
@@ -74,6 +76,8 @@ export const lightTheme: Theme = {
     },
     connected: "#4caf50",
     disconnected: "#f44336",
+    warm: "#e65100",
+    cool: "#1565c0",
   },
   typography,
   shadows: {
@@ -103,6 +107,8 @@ export const darkTheme: Theme = {
     },
     connected: "#4caf50",
     disconnected: "#f44336",
+    warm: "#ff7043",
+    cool: "#42a5f5",
   },
   typography,
   shadows: {

@@ -6,7 +6,7 @@ import { Sensor } from "../types/hue";
 import Box from "./Box";
 import Icon from "./Icon";
 
-type TemperatureProps = {
+type TemperatureBoxProps = {
   className?: string;
   title: React.ReactNode;
   sensors?: Sensor[];
@@ -16,7 +16,7 @@ type TemperatureProps = {
 const isBatteryLow = (sensor: Sensor) =>
   sensor.battery !== undefined && sensor.battery < 10;
 
-const Temperature: React.FC<TemperatureProps> = ({
+const TemperatureBox: React.FC<TemperatureBoxProps> = ({
   className,
   title,
   sensors = [],
@@ -61,6 +61,9 @@ const Temperature: React.FC<TemperatureProps> = ({
                 key={r.id}
                 css={{
                   display: "table-row",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
                   backgroundColor: theme.colors.background.light,
                   "& span": {
                     display: "table-cell",
@@ -157,4 +160,4 @@ const getBatteryStr = (value: number = 100) => {
   return "0_bar";
 };
 
-export default Temperature;
+export default TemperatureBox;

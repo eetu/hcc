@@ -40,11 +40,11 @@ const weatherCode: Record<number, string> = {
   8000: "Ukkosmyrsky",
 };
 
-type TomorrowWeatherProps = {
+type TomorrowWeatherBoxProps = {
   className?: string;
 };
 
-const TomorrowWeather: React.FC<TomorrowWeatherProps> = ({ className }) => {
+const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({ className }) => {
   const { data } = useSWR<TomorrowWeatherData>(
     api("/api/weather/tomorrow"),
     fetcher,
@@ -181,28 +181,28 @@ const TomorrowWeather: React.FC<TomorrowWeatherProps> = ({ className }) => {
           >
             {(today.values.rainAccumulation > 0 ||
               today.values.snowAccumulation > 0) && (
-              <div
-                css={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                {today.values.rainAccumulation > 0 ? (
-                  <RaindropIcon />
-                ) : (
-                  <Icon>ac_unit</Icon>
-                )}
-                <span css={{ marginLeft: 10 }}>
-                  {(
-                    today.values.rainAccumulation ||
-                    today.values.snowAccumulation
-                  ).toFixed(1)}{" "}
-                  mm ({today.values.precipitationProbabilityAvg.toFixed()}
-                  %)
-                </span>
-              </div>
-            )}
+                <div
+                  css={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  {today.values.rainAccumulation > 0 ? (
+                    <RaindropIcon />
+                  ) : (
+                    <Icon>ac_unit</Icon>
+                  )}
+                  <span css={{ marginLeft: 10 }}>
+                    {(
+                      today.values.rainAccumulation ||
+                      today.values.snowAccumulation
+                    ).toFixed(1)}{" "}
+                    mm ({today.values.precipitationProbabilityAvg.toFixed()}
+                    %)
+                  </span>
+                </div>
+              )}
             <div
               css={{
                 display: "flex",
@@ -255,4 +255,4 @@ const TomorrowWeather: React.FC<TomorrowWeatherProps> = ({ className }) => {
   );
 };
 
-export default TomorrowWeather;
+export default TomorrowWeatherBox;

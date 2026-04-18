@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import Icon from "./Icon";
 import Spinner from "./Spinner";
@@ -104,19 +104,38 @@ type BoxDrawerProps = {
 
 const BoxDrawer: React.FC<BoxDrawerProps> = ({ children, collapsed }) => {
   const theme = useTheme();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (!collapsed && contentRef.current) {
+      setHeight(contentRef.current.scrollHeight);
+    } else {
+      setHeight(0);
+    }
+  }, [collapsed]);
 
   return (
     <div
+      ref={wrapperRef}
       css={{
-        padding: 0,
+        overflow: "hidden",
+        height,
+        transition: "height 0.15s ease",
+      }}
+      onTransitionEnd={() => {
+        if (!collapsed) {
+          wrapperRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
       }}
     >
       <div
+        ref={contentRef}
         css={{
           overflowY: "scroll",
           borderLeft: `1px ${theme.colors.border} solid`,
           borderRight: `1px ${theme.colors.border} solid`,
-          height: collapsed ? 0 : "initial",
         }}
       >
         {children}

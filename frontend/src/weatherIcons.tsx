@@ -19,64 +19,6 @@ type WeatherIconMapping = {
   description: string;
 };
 
-export const owmWeatherIconMap: Record<number, WeatherIconMapping> = {
-  200: { icon: Zap, description: "Thunderstorm with light rain" },
-  201: { icon: Zap, description: "Thunderstorm with rain" },
-  202: { icon: Zap, description: "Thunderstorm with heavy rain" },
-  210: { icon: Zap, description: "Light thunderstorm" },
-  211: { icon: Zap, description: "Thunderstorm" },
-  212: { icon: Zap, description: "Heavy thunderstorm" },
-  221: { icon: Zap, description: "Ragged thunderstorm" },
-  230: { icon: Zap, description: "Thunderstorm with light drizzle" },
-  231: { icon: Zap, description: "Thunderstorm with drizzle" },
-  232: { icon: Zap, description: "Thunderstorm with heavy drizzle" },
-  300: { icon: CloudDrizzle, description: "Light drizzle" },
-  301: { icon: CloudDrizzle, description: "Drizzle" },
-  302: { icon: CloudDrizzle, description: "Heavy drizzle" },
-  310: { icon: CloudDrizzle, description: "Light drizzle rain" },
-  311: { icon: CloudDrizzle, description: "Drizzle rain" },
-  312: { icon: CloudDrizzle, description: "Heavy drizzle rain" },
-  313: { icon: CloudDrizzle, description: "Shower rain and drizzle" },
-  314: { icon: CloudDrizzle, description: "Heavy shower rain and drizzle" },
-  321: { icon: CloudDrizzle, description: "Shower drizzle" },
-  500: { icon: CloudDrizzle, description: "Light rain" },
-  501: { icon: CloudRain, description: "Moderate rain" },
-  502: { icon: CloudRain, description: "Heavy rain" },
-  503: { icon: CloudRain, description: "Very heavy rain" },
-  504: { icon: CloudRain, description: "Extreme rain" },
-  511: { icon: CloudRain, description: "Freezing rain" },
-  520: { icon: CloudRain, description: "Light shower rain" },
-  521: { icon: CloudRain, description: "Shower rain" },
-  522: { icon: CloudRain, description: "Heavy shower rain" },
-  531: { icon: CloudRain, description: "Ragged shower rain" },
-  600: { icon: CloudSnow, description: "Light snow" },
-  601: { icon: CloudSnow, description: "Snow" },
-  602: { icon: CloudSnow, description: "Heavy snow" },
-  611: { icon: CloudHail, description: "Sleet" },
-  612: { icon: CloudHail, description: "Light shower sleet" },
-  613: { icon: CloudHail, description: "Shower sleet" },
-  615: { icon: CloudSnow, description: "Light rain and snow" },
-  616: { icon: CloudSnow, description: "Rain and snow" },
-  620: { icon: Snowflake, description: "Light shower snow" },
-  621: { icon: Snowflake, description: "Shower snow" },
-  622: { icon: CloudSnow, description: "Heavy shower snow" },
-  701: { icon: CloudFog, description: "Mist" },
-  711: { icon: CloudFog, description: "Smoke" },
-  721: { icon: CloudFog, description: "Haze" },
-  731: { icon: CloudFog, description: "Dust" },
-  741: { icon: CloudFog, description: "Fog" },
-  751: { icon: CloudFog, description: "Sand" },
-  761: { icon: CloudFog, description: "Dust" },
-  762: { icon: CloudFog, description: "Volcanic ash" },
-  771: { icon: Cloud, description: "Squalls" },
-  781: { icon: Cloud, description: "Tornado" },
-  800: { icon: Sun, description: "Clear sky" },
-  801: { icon: CloudSun, description: "Few clouds" },
-  802: { icon: CloudSun, description: "Scattered clouds" },
-  803: { icon: Cloudy, description: "Broken clouds" },
-  804: { icon: Cloud, description: "Overcast clouds" },
-};
-
 export const weatherIconMap: Record<number, WeatherIconMapping> = {
   0: { icon: Sun, description: "Unknown" },
   1000: { icon: Sun, description: "Clear, Sunny" },
@@ -102,11 +44,6 @@ export const weatherIconMap: Record<number, WeatherIconMapping> = {
   7101: { icon: CloudHail, description: "Heavy Ice Pellets" },
   7102: { icon: CloudHail, description: "Light Ice Pellets" },
   8000: { icon: Zap, description: "Thunderstorm" },
-};
-
-export const getOwmWeatherIcon = (weatherId: number): LucideIcon => {
-  const mapping = owmWeatherIconMap[weatherId];
-  return mapping?.icon || Cloud;
 };
 
 export const getWeatherIcon = (

@@ -36,6 +36,14 @@ HUE_ROOM_TYPES={"inside": ["Keittiö", "Olohuone"], "inside_cold": ["Kuisti"], "
 
 Sensor names are taken directly from the device names set in the Hue app. To differentiate multiple sensors in the same room (e.g. sun vs. shadow), rename the devices in the Hue app.
 
+### Git hooks
+
+```bash
+./install-hooks.sh
+```
+
+Configures a pre-commit hook that runs `yarn lint` for frontend changes and `cargo clippy` for backend changes.
+
 ### Run
 
 ```bash

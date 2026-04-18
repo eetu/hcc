@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -e
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM)
+
+if echo "$STAGED" | grep -q "^frontend/"; then
+  echo "Running frontend lint..."
+  cd frontend && yarn lint
+fi
+
+if echo "$STAGED" | grep -q "^backend/"; then
+  echo "Running backend lint..."
+  cd backend && cargo clippy -- -D warnings
+fi

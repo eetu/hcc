@@ -1914,6 +1914,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chartjs-adapter-date-fns@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "chartjs-adapter-date-fns@npm:3.0.0"
+  peerDependencies:
+    chart.js: ">=2.8.0"
+    date-fns: ">=2.0.0"
+  checksum: 10/29a104882f865e5c674a4edc0a60a5e0cce1fad470ed133d218bd717069a5089475139df4016a976a18b07633b068cc6a31f8b6332f1d8b2d1987913eac475be
+  languageName: node
+  linkType: hard
+
 "chownr@npm:^2.0.0":
   version: 2.0.0
   resolution: "chownr@npm:2.0.0"
@@ -5541,6 +5551,7 @@ __metadata:
     "@vitest/browser-playwright": "npm:^4.1.4"
     babel-plugin-react-compiler: "npm:^1.0.0"
     chart.js: "npm:^4.5.1"
+    chartjs-adapter-date-fns: "npm:^3.0.0"
     classnames: "npm:^2.5.1"
     date-fns: "npm:^4.1.0"
     eslint: "npm:^9.39.4"

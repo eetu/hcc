@@ -18,6 +18,8 @@ POSITION_LAT=               # your latitude
 POSITION_LON=               # your longitude
 LANGUAGE=fi
 HCC_IMAGE_TAG=              # version label shown on the front page
+HCC_DB_PATH=/data/hcc.db    # SQLite database path (default: hcc.db in working directory)
+HCC_HISTORY_RETENTION_DAYS=90 # days of sensor history to keep (default: 0/disabled)
 
 # Maps room types to lists of room names as configured in the Hue app.
 # Rooms not listed default to "inside".
@@ -34,6 +36,14 @@ HUE_ROOM_TYPES={"inside": ["Keittiö", "Olohuone"], "inside_cold": ["Kuisti"], "
 
 Sensor names are taken directly from the device names set in the Hue app. To differentiate multiple sensors in the same room (e.g. sun vs. shadow), rename the devices in the Hue app.
 
+### Git hooks
+
+```bash
+./install-hooks.sh
+```
+
+Configures a pre-commit hook that runs `yarn lint` for frontend changes and `cargo clippy` for backend changes.
+
 ### Run
 
 ```bash
@@ -41,6 +51,25 @@ yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Sensor history
+
+Temperature readings from all enabled and connected sensors are automatically recorded to a SQLite database every 5 minutes. Old readings are pruned automatically based on `HCC_HISTORY_RETENTION_DAYS` (default: 90).
+
+### Storage
+
+In Docker the database is stored in a named volume (`hcc-data`) at `/data/hcc.db`. In development it defaults to `hcc.db` in the working directory.
+
+### API
+
+```
+GET /api/history/sensors?sensor_id=<id>&hours=<n>
+```
+
+| Parameter   | Required | Default | Description                          |
+|-------------|----------|---------|--------------------------------------|
+| `sensor_id` | no       | all     | Filter to a specific sensor          |
+| `hours`     | no       | 24      | Hours of history to return (max 720) |
 
 ## Media
 

@@ -41,7 +41,7 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
     data.map((d) => d.temp).reduce((a, b) => a + b, 0) / data.length;
 
   const weatherLineColor =
-    avgTemp < 5 ? "#1a5276" : theme.mode === "dark" ? "#c94022" : "#ff5733";
+    avgTemp < 5 ? theme.colors.cool : theme.colors.warm;
 
   const chartData: ChartData = {
     labels: data.map((d) => d.label),
@@ -66,6 +66,10 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
   const options: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false },
+    },
     scales: {
       x: {
         beginAtZero: false,

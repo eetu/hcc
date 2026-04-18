@@ -77,9 +77,10 @@ const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({ className }) =>
   const segments = getTemperatureSegments(hourly?.intervals);
 
   const currentTemp = weather?.values.temperature;
+  const roundedTemp = currentTemp !== undefined ? Math.round(currentTemp) : undefined;
   const roast = useMemo(
     () => currentTemp !== undefined ? getTemperatureRoast(currentTemp) : null,
-    [currentTemp !== undefined ? Math.round(currentTemp) : undefined],
+    [roundedTemp],
   );
 
   if (!(data && weather && today)) {

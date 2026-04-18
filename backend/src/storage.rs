@@ -164,7 +164,7 @@ pub fn start_recording_loop(state: Arc<AppState>) {
             }
 
             tick_count += 1;
-            if tick_count % 288 == 0 {
+            if tick_count.is_multiple_of(288) {
                 match state.storage.prune(state.settings.history_retention_days).await {
                     Ok(n) if n > 0 => tracing::info!("Pruned {n} old sensor readings"),
                     Err(e) => tracing::error!("Failed to prune old readings: {e}"),

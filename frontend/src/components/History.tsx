@@ -1,3 +1,5 @@
+import "chartjs-adapter-date-fns";
+
 import { useTheme } from "@emotion/react";
 import {
   CategoryScale,
@@ -13,7 +15,6 @@ import {
   TimeScale,
   Tooltip,
 } from "chart.js";
-import "chartjs-adapter-date-fns";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
 import { useEffect, useState } from "react";

@@ -1,9 +1,11 @@
 import { useTheme } from "@emotion/react";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
+import { useMemo } from "react";
 import useSWR from "swr";
 
 import { api, fetcher } from "../api";
+import { getTemperatureRoast } from "../temperatureRoast";
 import { TomorrowWeatherData } from "../types/weather";
 import { getTemperatureSegments } from "../utils";
 import { getWeatherIcon } from "../weatherIcons";
@@ -74,6 +76,13 @@ const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({ className }) =>
 
   const segments = getTemperatureSegments(hourly?.intervals);
 
+  const currentTemp = weather?.values.temperature;
+  const roundedTemp = currentTemp !== undefined ? Math.round(currentTemp) : undefined;
+  const roast = useMemo(
+    () => currentTemp !== undefined ? getTemperatureRoast(currentTemp) : null,
+    [roundedTemp],
+  );
+
   if (!(data && weather && today)) {
     return null;
   }
@@ -109,10 +118,20 @@ const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({ className }) =>
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            gap: 10,
             textTransform: "capitalize",
           }}
         >
           {title}
+          <span
+            css={{
+              ...theme.typography.caption,
+              color: theme.colors.text.muted,
+              textTransform: "none",
+            }}
+          >
+            {roast}
+          </span>
           {alerts && alerts.length > 0 && (
             <Tooltip
               content={

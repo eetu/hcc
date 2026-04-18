@@ -49,6 +49,7 @@ fn test_settings_with_mock(mock_url: &str) -> Settings {
         hue_room_types: "{}".into(),
         static_dir: "./dist".into(),
         port: 3000,
+        history_retention_days: 90,
     }
 }
 

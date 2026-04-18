@@ -1,10 +1,12 @@
 import { useTheme } from "@emotion/react";
 import classNames from "classnames";
 
+import useSensorTrend from "../hooks/useSensorTrend";
 import { mq } from "../mq";
 import { Sensor } from "../types/hue";
 import Box from "./Box";
 import Icon from "./Icon";
+import TrendIndicator from "./TrendIndicator";
 
 type TemperatureBoxProps = {
   className?: string;
@@ -23,6 +25,7 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
   error,
 }) => {
   const theme = useTheme();
+  const trend = useSensorTrend(sensors);
 
   const enabledSensors = sensors?.filter((r) => r.enabled);
 
@@ -127,6 +130,7 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
         </div>
         <div
           css={{
+            position: "relative",
             marginTop: "5px",
             display: "flex",
             fontWeight: "normal",
@@ -135,6 +139,20 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
         >
           {Math.round(temperature)}
           <span>°</span>
+          {trend && trend !== "stable" && (
+            <div
+              css={{
+                position: "absolute",
+                right: -36,
+                top: 0,
+                bottom: 0,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <TrendIndicator trend={trend} size={32} />
+            </div>
+          )}
         </div>
       </div>
     </Box>

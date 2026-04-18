@@ -11,6 +11,10 @@ services:
       - POSITION_LAT=${POSITION_LAT}
       - POSITION_LON=${POSITION_LON}
       - LANGUAGE=${LANGUAGE}
+      - HCC_DB_PATH=/data/hcc.db
+      - HCC_HISTORY_RETENTION_DAYS=90
+    volumes:
+      - hcc-data:/data
     ports:
       - 3000:3000
   watchtower:
@@ -20,3 +24,5 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 900 hcc
+volumes:
+  hcc-data:

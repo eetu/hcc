@@ -20,6 +20,8 @@ utoipa-swagger-ui = { version = "9", features = ["actix-web"] }
 thiserror = "2"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+rusqlite = { version = "0.34", features = ["bundled"] }
+chrono = { version = "0.4", features = ["serde"] }
 
 [dev-dependencies]
 wiremock = "0.6"

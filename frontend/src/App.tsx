@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import { api } from "./api";
 import CurrentTime from "./components/CurrentTime";
+import History from "./components/History";
 import Icon from "./components/Icon";
 import LightGroups from "./components/LightGroups";
 import Motion from "./components/Motion";
@@ -55,12 +56,13 @@ const applyEvent = (data: Response, event: HueLiveEvent): Response => {
   }
 };
 
-type View = "temperature" | "lights" | "motion" | "settings";
+type View = "temperature" | "lights" | "motion" | "history" | "settings";
 
 const VIEWS: { id: View; icon: string }[] = [
   { id: "temperature", icon: "thermostat" },
   { id: "lights", icon: "lightbulb" },
   { id: "motion", icon: "directions_run" },
+  { id: "history", icon: "timeline" },
   { id: "settings", icon: "settings" },
 ];
 
@@ -257,6 +259,10 @@ const App = () => {
                 sensors={outside.concat(insideCold).concat(inside)}
                 error={!!error}
               />
+            )}
+
+            {view === "history" && (
+              <History css={{ gridColumn: "1 / span 3" }} />
             )}
 
             {view === "settings" && (

@@ -11,6 +11,7 @@ pub struct Settings {
     pub hue_room_types: String,
     pub static_dir: String,
     pub port: u16,
+    pub history_retention_days: u32,
 }
 
 impl Settings {
@@ -26,6 +27,7 @@ impl Settings {
             hue_room_types: "{}".into(),
             static_dir: "./dist".into(),
             port: 3000,
+            history_retention_days: 0,
         }
     }
 
@@ -49,6 +51,10 @@ impl Settings {
                 .ok()
                 .and_then(|p| p.parse().ok())
                 .unwrap_or(3000),
+            history_retention_days: env::var("HCC_HISTORY_RETENTION_DAYS")
+                .ok()
+                .and_then(|d| d.parse().ok())
+                .unwrap_or(0),
         }
     }
 }

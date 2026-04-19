@@ -8,7 +8,7 @@ import Icon from "./components/Icon";
 import LightGroups from "./components/LightGroups";
 import Motion from "./components/Motion";
 import TemperatureBox from "./components/TemperatureBox";
-import TomorrowWeatherBox from "./components/TomorrowWeatherBox";
+import WeatherBox from "./components/WeatherBox";
 import { mq } from "./mq";
 import { type HueLiveEvent, type Response, type Sensor } from "./types/hue";
 
@@ -225,7 +225,7 @@ const App = () => {
           >
             {view === "temperature" && (
               <>
-                <TomorrowWeatherBox
+                <WeatherBox
                   css={{ gridColumn: "1 / span 3", gridRow: 1 }}
                 />
                 <TemperatureBox

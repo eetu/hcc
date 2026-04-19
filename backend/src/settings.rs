@@ -3,6 +3,7 @@ use std::env;
 pub struct Settings {
     pub tomorrow_io_api_key: String,
     pub tomorrow_io_base_url: String,
+    pub fmi_base_url: String,
     pub position_lat: String,
     pub position_lon: String,
     pub language: String,
@@ -19,6 +20,7 @@ impl Settings {
         Self {
             tomorrow_io_api_key: String::new(),
             tomorrow_io_base_url: "https://api.tomorrow.io".into(),
+            fmi_base_url: "https://opendata.fmi.fi/wfs".into(),
             position_lat: "60.17".into(),
             position_lon: "24.94".into(),
             language: "fi".into(),
@@ -36,6 +38,8 @@ impl Settings {
             tomorrow_io_api_key: env::var("TOMORROW_IO_API_KEY").unwrap_or_default(),
             tomorrow_io_base_url: env::var("TOMORROW_IO_BASE_URL")
                 .unwrap_or_else(|_| "https://api.tomorrow.io".into()),
+            fmi_base_url: env::var("FMI_BASE_URL")
+                .unwrap_or_else(|_| "https://opendata.fmi.fi/wfs".into()),
             position_lat: env::var("POSITION_LAT").expect("POSITION_LAT must be set"),
             position_lon: env::var("POSITION_LON").expect("POSITION_LON must be set"),
             language: env::var("LANGUAGE").unwrap_or_else(|_| "fi".into()),

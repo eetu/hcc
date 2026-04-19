@@ -134,7 +134,10 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
             >{`${Math.round(current.temperatureApparent)}°`}</div>
           </div>
           {(() => {
-            const IconComponent = getFmiWeatherIcon(current.weatherSymbol, isNight);
+            const IconComponent = getFmiWeatherIcon(
+              current.weatherSymbol,
+              isNight,
+            );
             return (
               <IconComponent
                 css={{

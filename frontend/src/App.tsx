@@ -225,9 +225,7 @@ const App = () => {
           >
             {view === "temperature" && (
               <>
-                <WeatherBox
-                  css={{ gridColumn: "1 / span 3", gridRow: 1 }}
-                />
+                <WeatherBox css={{ gridColumn: "1 / span 3", gridRow: 1 }} />
                 <TemperatureBox
                   css={temperatureCss}
                   sensors={outside}

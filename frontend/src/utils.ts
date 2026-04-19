@@ -52,9 +52,7 @@ export const getTemperatureSegments = (intervals: TomorrowInterval[] = []) => {
   return segments;
 };
 
-export const getFmiTemperatureSegments = (
-  forecasts: HourlyForecast[] = [],
-) => {
+export const getFmiTemperatureSegments = (forecasts: HourlyForecast[] = []) => {
   const result: Result = {
     morning: undefined,
     day: undefined,

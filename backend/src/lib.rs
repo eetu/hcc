@@ -22,6 +22,7 @@ pub struct AppState {
     pub hue_client: reqwest::Client,
     pub hue_cache: Cache<hue::models::HueResponse>,
     pub tomorrow_cache: Cache<serde_json::Value>,
+    pub weather_cache: Cache<weather::models::WeatherResponse>,
     pub hue_events_tx: broadcast::Sender<hue::events::HueLiveEvent>,
     pub storage: storage::Storage,
 }
@@ -29,6 +30,7 @@ pub struct AppState {
 #[derive(OpenApi)]
 #[openapi(
     paths(
+        weather::handlers::fmi,
         weather::handlers::tomorrow,
         hue::handlers::get_data,
         hue::handlers::events_sse,
@@ -98,7 +100,7 @@ async fn sensor_history(
 )]
 pub async fn status(state: web::Data<Arc<AppState>>) -> HttpResponse {
     let hue = hue::client::check_connection(&state).await;
-    let weather = state.tomorrow_cache.has_data().await;
+    let weather = state.weather_cache.has_data().await || state.tomorrow_cache.has_data().await;
     HttpResponse::Ok().json(StatusResponse { hue, weather })
 }
 
@@ -130,6 +132,7 @@ pub fn create_app(
                 )
                 .service(
                     web::scope("/weather")
+                        .route("/fmi", web::get().to(weather::handlers::fmi))
                         .route("/tomorrow", web::get().to(weather::handlers::tomorrow)),
                 )
                 .service(
@@ -182,6 +185,7 @@ pub fn create_test_app_state_with(settings: Settings) -> Arc<AppState> {
         hue_client,
         hue_cache: Cache::new(std::time::Duration::from_secs(3)),
         tomorrow_cache: Cache::new(std::time::Duration::from_secs(3600)),
+        weather_cache: Cache::new(std::time::Duration::from_secs(3600)),
         hue_events_tx,
         storage,
     })
@@ -218,6 +222,7 @@ pub async fn run_server() -> std::io::Result<()> {
         hue_client,
         hue_cache: Cache::new(std::time::Duration::from_secs(3)),
         tomorrow_cache: Cache::new(std::time::Duration::from_secs(3600)),
+        weather_cache: Cache::new(std::time::Duration::from_secs(3600)),
         hue_events_tx: hue_events_tx.clone(),
         storage,
     });

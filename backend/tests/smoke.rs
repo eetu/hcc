@@ -23,6 +23,7 @@ fn test_app(
             web::scope("/api")
                 .service(
                     web::scope("/weather")
+                        .route("/fmi", web::get().to(weather::handlers::fmi))
                         .route("/tomorrow", web::get().to(weather::handlers::tomorrow)),
                 )
                 .service(
@@ -41,6 +42,7 @@ fn test_settings_with_mock(mock_url: &str) -> Settings {
     Settings {
         tomorrow_io_api_key: "test-key".into(),
         tomorrow_io_base_url: mock_url.into(),
+        fmi_base_url: mock_url.into(),
         position_lat: "60.17".into(),
         position_lon: "24.94".into(),
         language: "fi".into(),

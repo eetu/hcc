@@ -1,54 +1,65 @@
 import { useTheme } from "@emotion/react";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
+import { useMemo } from "react";
 import useSWR from "swr";
 
 import { api, fetcher } from "../api";
-import { OpenWeatherReponse } from "../types/weather";
-import { getOwmWeatherIcon } from "../weatherIcons";
+import { getTemperatureRoast } from "../temperatureRoast";
+import { WeatherData } from "../types/weather";
+import { getFmiTemperatureSegments } from "../utils";
+import { getFmiWeatherDescription, getFmiWeatherIcon } from "../weatherIcons";
 import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
-import Tooltip from "./Tooltip";
+import RaindropIcon from "./RaindropIcon";
 import WeatherChart from "./WeatherChart";
 
-type WeatherProps = {
+type WeatherBoxProps = {
   className?: string;
 };
 
-const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
-  const { data } = useSWR<OpenWeatherReponse>(api("/api/weather/owm"), fetcher, {
+const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
+  const { data } = useSWR<WeatherData>(api("/api/weather/fmi"), fetcher, {
     refreshInterval: 3600000,
     refreshWhenHidden: true,
   });
 
   const theme = useTheme();
 
-  const weather = data?.current.weather[0];
-  const today = data?.daily[0];
-  const daily = data?.daily || [];
-  const alerts = data?.alerts;
+  const current = data?.current;
+  const daily = data?.daily ?? [];
+  const today = daily[0];
+  const hourly = data?.hourly;
 
   const chartData = daily.map((d) => ({
-    temp: d.temp.day,
-    rain: d.snow ?? d.rain ?? 0,
-    label: `${format(new Date(d.dt * 1000), "EEEEEE", {
+    temp: d.temperatureMax,
+    rain: d.precipitation,
+    label: `${format(new Date(d.date), "EEEEEE", {
       locale: fi,
     })}`,
   }));
 
-  const sections = today
-    ? [
-        { title: "aamu", temp: Math.round(today.temp.morn) },
-        { title: "päivä", temp: Math.round(today.temp.day) },
-        { title: "ilta", temp: Math.round(today.temp.eve) },
-        { title: "yö", temp: Math.round(today.temp.night) },
-      ]
-    : [];
+  const segments = getFmiTemperatureSegments(hourly);
 
-  if (!(data && weather && today)) {
+  const currentTemp = current?.temperature;
+  const roundedTemp =
+    currentTemp !== undefined ? Math.round(currentTemp) : undefined;
+  /* eslint-disable react-hooks/exhaustive-deps -- intentionally keyed on roundedTemp to avoid re-randomizing on fractional changes */
+  const roast = useMemo(
+    () => (currentTemp !== undefined ? getTemperatureRoast(currentTemp) : null),
+    [roundedTemp],
+  );
+  /* eslint-enable react-hooks/exhaustive-deps */
+
+  if (!(data && current && today)) {
     return null;
   }
+
+  const now = new Date();
+  const isNight =
+    now < new Date(current.sunrise) || now > new Date(current.sunset);
+  const title = getFmiWeatherDescription(current.weatherSymbol);
 
   return (
     <Box
@@ -79,29 +90,20 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            gap: 10,
             textTransform: "capitalize",
           }}
         >
-          {weather.description}
-          {alerts && alerts.length > 0 && (
-            <Tooltip
-              content={
-                <div>
-                  {alerts.map((a) => (
-                    <div css={{ fontSize: 13, padding: 5 }} key={a.event}>
-                      {a.description}
-                    </div>
-                  ))}
-                </div>
-              }
-            >
-              <div css={{ marginLeft: 15 }}>
-                <Icon type="normal" css={{ color: theme.colors.error }}>
-                  announcement
-                </Icon>
-              </div>
-            </Tooltip>
-          )}
+          {title}
+          <span
+            css={{
+              ...theme.typography.caption,
+              color: theme.colors.text.muted,
+              textTransform: "none",
+            }}
+          >
+            {roast}
+          </span>
         </div>
         <div
           css={{
@@ -118,7 +120,7 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
                 fontSize: "50px",
               }}
             >
-              {`${Math.round(data.current.temp)}°`}
+              {`${Math.round(current.temperature)}°`}
             </div>
             <div
               css={{
@@ -129,10 +131,13 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
                 alignSelf: "bottom",
                 marginBottom: "5px",
               }}
-            >{`${Math.round(data.current.feels_like)}°`}</div>
+            >{`${Math.round(current.temperatureApparent)}°`}</div>
           </div>
           {(() => {
-            const IconComponent = getOwmWeatherIcon(weather.id);
+            const IconComponent = getFmiWeatherIcon(
+              current.weatherSymbol,
+              isNight,
+            );
             return (
               <IconComponent
                 css={{
@@ -149,7 +154,7 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
               marginLeft: "25px",
             }}
           >
-            {(!today.rain || today.snow) && (
+            {today.precipitation > 0 && (
               <div
                 css={{
                   display: "flex",
@@ -157,11 +162,13 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
                   alignItems: "center",
                 }}
               >
-                <Icon>{today.snow ? "ac_unit" : "opacity"}</Icon>
+                {today.precipitationType === "snow" ? (
+                  <Icon>ac_unit</Icon>
+                ) : (
+                  <RaindropIcon />
+                )}
                 <span css={{ marginLeft: 10 }}>
-                  {(today.rain || today.snow)?.toFixed(1)} mm (
-                  {(today.pop * 100).toFixed()}
-                  %)
+                  {today.precipitation.toFixed(1)} mm
                 </span>
               </div>
             )}
@@ -174,11 +181,11 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
             >
               <Icon>air</Icon>
               <span css={{ marginLeft: 10 }}>
-                {today.wind_speed.toFixed(1)} m/s
+                {current.windSpeed.toFixed(1)} m/s
               </span>
               <Arrow
                 css={{ marginLeft: 5 }}
-                deg={today.wind_deg + 180}
+                deg={current.windDirection + 180}
               />
             </div>
           </div>
@@ -194,7 +201,7 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
           width: "100%",
         }}
       >
-        {sections.map((s) => (
+        {segments.map((s) => (
           <div
             key={s.title}
             css={{
@@ -217,4 +224,4 @@ const OpenWeather: React.FC<WeatherProps> = ({ className }) => {
   );
 };
 
-export default OpenWeather;
+export default WeatherBox;

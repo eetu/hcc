@@ -11,7 +11,7 @@ Control center for home Hue bridge
 ### Environment
 
 ```bash
-OPEN_WEATHER_API_KEY=       # tomorrow.io API key
+TOMORROW_IO_API_KEY=        # tomorrow.io API key
 HUE_BRIDGE_ADDRESS=         # optional — auto-discovered via meethue.com if omitted
 HUE_BRIDGE_USER=            # obtained via the pairing flow below
 POSITION_LAT=               # your latitude

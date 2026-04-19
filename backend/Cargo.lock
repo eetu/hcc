@@ -906,10 +906,12 @@ dependencies = [
  "chrono",
  "dotenvy",
  "futures-util",
+ "quick-xml",
  "reqwest",
  "rusqlite",
  "serde",
  "serde_json",
+ "sun",
  "thiserror",
  "tokio",
  "tokio-stream",
@@ -1495,6 +1497,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "quick-xml"
+version = "0.39.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "958f21e8e7ceb5a1aa7fa87fab28e7c75976e0bfe7e23ff069e0a260f894067d"
+dependencies = [
+ "memchr",
+]
+
+[[package]]
 name = "quinn"
 version = "0.11.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1998,6 +2009,12 @@ name = "subtle"
 version = "2.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
+
+[[package]]
+name = "sun"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9ee651f4a9b6f29759b0636638c8140836bcdc28ed2c5f332b71c5911a439433"
 
 [[package]]
 name = "syn"

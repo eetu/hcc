@@ -96,19 +96,35 @@ const History: React.FC<HistoryProps> = ({ className }) => {
   }, [hours]);
 
   // Group readings by sensor
-  const bySensor = new Map<string, { id: string, name: string; roomType: string; points: { x: number; y: number }[] }>();
+  const bySensor = new Map<
+    string,
+    {
+      id: string;
+      name: string;
+      roomType: string;
+      points: { x: number; y: number }[];
+    }
+  >();
   for (const r of readings) {
     let sensor = bySensor.get(r.sensorId);
     if (!sensor) {
-      sensor = { id: r.sensorId, name: r.sensorName, roomType: r.roomType, points: [] };
+      sensor = {
+        id: r.sensorId,
+        name: r.sensorName,
+        roomType: r.roomType,
+        points: [],
+      };
       bySensor.set(r.sensorId, sensor);
     }
-    sensor.points.push({ x: new Date(r.recordedAt).getTime(), y: r.temperature });
+    sensor.points.push({
+      x: new Date(r.recordedAt).getTime(),
+      y: r.temperature,
+    });
   }
 
   // Assign colors per room type
   const datasets = [...bySensor.values()].map((sensor) => {
-    const color = sensorColor(sensor.id, sensor.roomType)
+    const color = sensorColor(sensor.id, sensor.roomType);
 
     return {
       label: sensor.name,
@@ -129,7 +145,7 @@ const History: React.FC<HistoryProps> = ({ className }) => {
     responsive: true,
     maintainAspectRatio: false,
     animation: {
-      duration: 0
+      duration: 0,
     },
     interaction: {
       mode: "index",

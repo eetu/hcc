@@ -1,3 +1,5 @@
+// Tomorrow.io types (legacy)
+
 export type TomorrowWeatherData = {
   data: {
     timelines: Timeline[];
@@ -9,15 +11,15 @@ type Timeline = {
   timestep: string;
   endTime: string;
   startTime: string;
-  intervals: Interval[];
+  intervals: TomorrowInterval[];
 };
 
-export type Interval = {
+export type TomorrowInterval = {
   startTime: string;
-  values: Values;
+  values: TomorrowValues;
 };
 
-type Values = {
+type TomorrowValues = {
   cloudBase: number | null;
   cloudCeiling: number | null;
   cloudCover: number;
@@ -49,113 +51,50 @@ type Meta = {
   timestep: string;
 };
 
-export type OpenWeatherCurrent = {
-  dt: number;
-  sunrise: number;
-  sunset: number;
-  temp: number;
-  feels_like: number;
-  pressure: number;
+// FMI types
+
+export type WeatherData = {
+  current: CurrentWeather | null;
+  hourly: HourlyForecast[];
+  daily: DailyForecast[];
+};
+
+export type CurrentWeather = {
+  time: string;
+  temperature: number;
+  temperatureApparent: number;
+  windSpeed: number;
+  windGust: number | null;
+  windDirection: number;
   humidity: number;
-  dew_point: number;
-  uvi: number;
-  clouds: number;
-  visibility: number;
-  wind_speed: number;
-  wind_deg: number;
-  weather: Array<{
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
-  }>;
+  precipitation1h: number;
+  cloudCover: number | null;
+  pressure: number | null;
+  weatherSymbol: number;
+  sunrise: string;
+  sunset: string;
 };
 
-export type OpenWeatherHourly = {
-  dt: number;
-  temp: number;
-  feels_like: number;
-  pressure: number;
-  humidity: number;
-  dew_point: number;
-  uvi: number;
-  clouds: number;
-  visibility: number;
-  wind_speed: number;
-  wind_deg: number;
-  wind_gust: number;
-  weather: Array<{
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
-  }>;
-  pop: number;
-  rain?: {
-    "1h"?: number;
-  };
-  snow?: {
-    "1h"?: number;
-  };
+export type HourlyForecast = {
+  time: string;
+  temperature: number;
+  temperatureApparent: number;
+  windSpeed: number;
+  windGust: number | null;
+  windDirection: number;
+  humidity: number | null;
+  precipitation1h: number;
+  cloudCover: number | null;
+  weatherSymbol: number;
 };
 
-export type OpenWeatherDaily = {
-  dt: number;
-  sunrise: number;
-  sunset: number;
-  moonrise: number;
-  moonset: number;
-  moon_phase: number;
-  temp: {
-    day: number;
-    min: number;
-    max: number;
-    night: number;
-    eve: number;
-    morn: number;
-  };
-  feels_like: {
-    day: number;
-    night: number;
-    eve: number;
-    morn: number;
-  };
-  pressure: number;
-  humidity: number;
-  dew_point: number;
-  uvi: number;
-  clouds: number;
-  visibility: number;
-  wind_speed: number;
-  wind_deg: number;
-  wind_gust: number;
-  weather: Array<{
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
-  }>;
-  pop: number;
-  rain?: number;
-  snow?: number;
-};
-
-export type OpenWeatherAlert = {
-  sender_name: string;
-  event: string;
-  start: number;
-  end: number;
-  description: string;
-  tags: Array<string>;
-};
-
-export type OpenWeatherReponse = {
-  lat: number;
-  lon: number;
-  timezone: string;
-  timezone_offset: number;
-  current: OpenWeatherCurrent;
-  hourly: Array<OpenWeatherHourly>;
-  daily: Array<OpenWeatherDaily>;
-  alerts: Array<OpenWeatherAlert>;
+export type DailyForecast = {
+  date: string;
+  temperatureMax: number;
+  temperatureMin: number;
+  precipitation: number;
+  precipitationType: string;
+  weatherSymbol: number;
+  sunrise: string;
+  sunset: string;
 };

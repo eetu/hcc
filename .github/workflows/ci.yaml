@@ -21,6 +21,7 @@ jobs:
       - run: corepack enable
       - run: yarn install --immutable
       - run: yarn playwright install chromium
+      - run: yarn format
       - run: yarn lint
       - run: yarn test
       - run: yarn build

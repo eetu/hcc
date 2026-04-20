@@ -104,6 +104,34 @@ pub async fn status(state: web::Data<Arc<AppState>>) -> HttpResponse {
     HttpResponse::Ok().json(StatusResponse { hue, weather })
 }
 
+async fn get_settings(state: web::Data<Arc<AppState>>) -> HttpResponse {
+    match state.storage.get_settings().await {
+        Ok(data) => {
+            let json: serde_json::Value =
+                serde_json::from_str(&data).unwrap_or(serde_json::json!({}));
+            HttpResponse::Ok().json(json)
+        }
+        Err(e) => {
+            tracing::error!("Failed to read settings: {e}");
+            HttpResponse::InternalServerError().finish()
+        }
+    }
+}
+
+async fn put_settings(
+    state: web::Data<Arc<AppState>>,
+    body: web::Json<serde_json::Value>,
+) -> HttpResponse {
+    let data = body.into_inner().to_string();
+    match state.storage.save_settings(&data).await {
+        Ok(()) => HttpResponse::Ok().json(serde_json::from_str::<serde_json::Value>(&data).unwrap()),
+        Err(e) => {
+            tracing::error!("Failed to save settings: {e}");
+            HttpResponse::InternalServerError().finish()
+        }
+    }
+}
+
 pub fn create_app(
     state: Arc<AppState>,
     static_dir: &str,
@@ -129,6 +157,11 @@ pub fn create_app(
                 .service(
                     web::scope("/history")
                         .route("/sensors", web::get().to(sensor_history)),
+                )
+                .service(
+                    web::scope("/settings")
+                        .route("", web::get().to(get_settings))
+                        .route("", web::put().to(put_settings)),
                 )
                 .service(
                     web::scope("/weather")

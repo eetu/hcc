@@ -1,17 +1,22 @@
 import { useTheme } from "@emotion/react";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import useSWR from "swr";
 
 import { api, fetcher } from "../api";
+import useLocationSettings from "../hooks/useLocationSettings";
 import { getTemperatureRoast } from "../temperatureRoast";
-import { WeatherData } from "../types/weather";
-import { getFmiTemperatureSegments } from "../utils";
-import { getFmiWeatherDescription, getFmiWeatherIcon } from "../weatherIcons";
+import { WeatherData } from "../types/weather/fmi";
+import {
+  getFmiWeatherDescription,
+  getFmiWeatherIcon,
+} from "../weather/fmi/icons";
+import { getFmiTemperatureSegments } from "../weather/fmi/utils";
 import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
+import LocationForm from "./LocationForm";
 import RaindropIcon from "./RaindropIcon";
 import WeatherChart from "./WeatherChart";
 
@@ -20,27 +25,22 @@ type WeatherBoxProps = {
 };
 
 const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
-  const { data } = useSWR<WeatherData>(api("/api/weather/fmi"), fetcher, {
+  const theme = useTheme();
+  const { location, isLoading: locationLoading } = useLocationSettings();
+
+  const weatherUrl = location
+    ? api(`/api/weather/fmi?lat=${location.lat}&lon=${location.lon}`)
+    : null;
+
+  const { data } = useSWR<WeatherData>(weatherUrl, fetcher, {
     refreshInterval: 3600000,
     refreshWhenHidden: true,
   });
-
-  const theme = useTheme();
 
   const current = data?.current;
   const daily = data?.daily ?? [];
   const today = daily[0];
   const hourly = data?.hourly;
-
-  const chartData = daily.map((d) => ({
-    temp: d.temperatureMax,
-    rain: d.precipitation,
-    label: `${format(new Date(d.date), "EEEEEE", {
-      locale: fi,
-    })}`,
-  }));
-
-  const segments = getFmiTemperatureSegments(hourly);
 
   const currentTemp = current?.temperature;
   const roundedTemp =
@@ -52,9 +52,39 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
   );
   /* eslint-enable react-hooks/exhaustive-deps */
 
+  if (!location && !locationLoading) {
+    return (
+      <Box className={className}>
+        <div css={{ padding: "1em 0" }}>
+          <div
+            css={{
+              ...theme.typography.body1,
+              color: theme.colors.text.main,
+              marginBottom: "1em",
+              textAlign: "center",
+            }}
+          >
+            Set your location to see weather
+          </div>
+          <LocationForm />
+        </div>
+      </Box>
+    );
+  }
+
   if (!(data && current && today)) {
     return null;
   }
+
+  const chartData = daily.map((d) => ({
+    temp: d.temperatureMax,
+    rain: d.precipitation,
+    label: `${format(new Date(d.date), "EEEEEE", {
+      locale: fi,
+    })}`,
+  }));
+
+  const segments = getFmiTemperatureSegments(hourly);
 
   const now = new Date();
   const isNight =
@@ -102,7 +132,7 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
               textTransform: "none",
             }}
           >
-            {roast}
+            {[location?.displayName, roast].filter(Boolean).join(" – ")}
           </span>
         </div>
         <div
@@ -224,4 +254,4 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
   );
 };
 
-export default WeatherBox;
+export default memo(WeatherBox);

@@ -43,8 +43,6 @@ fn test_settings_with_mock(mock_url: &str) -> Settings {
         tomorrow_io_api_key: "test-key".into(),
         tomorrow_io_base_url: mock_url.into(),
         fmi_base_url: mock_url.into(),
-        position_lat: "60.17".into(),
-        position_lon: "24.94".into(),
         language: "fi".into(),
         hue_bridge_address: mock_url.into(),
         hue_bridge_user: "test-user".into(),
@@ -127,7 +125,7 @@ async fn weather_returns_data_from_api() {
     let app = test::init_service(test_app(state)).await;
 
     let req = test::TestRequest::get()
-        .uri("/api/weather/tomorrow")
+        .uri("/api/weather/tomorrow?lat=1&lon=1")
         .to_request();
     let resp = test::call_service(&app, req).await;
 
@@ -151,7 +149,7 @@ async fn weather_returns_502_when_api_fails() {
     let app = test::init_service(test_app(state)).await;
 
     let req = test::TestRequest::get()
-        .uri("/api/weather/tomorrow")
+        .uri("/api/weather/tomorrow?lat=1&lon=1")
         .to_request();
     let resp = test::call_service(&app, req).await;
 
@@ -162,12 +160,16 @@ async fn weather_returns_502_when_api_fails() {
 async fn weather_returns_cached_data() {
     let state = create_test_app_state();
     let cached = serde_json::json!({"test": "weather_data"});
-    state.tomorrow_cache.set(cached.clone()).await;
+
+    state
+        .tomorrow_cache
+        .set("1,1".to_owned(), cached.clone())
+        .await;
 
     let app = test::init_service(test_app(state)).await;
 
     let req = test::TestRequest::get()
-        .uri("/api/weather/tomorrow")
+        .uri("/api/weather/tomorrow?lat=1&lon=1")
         .to_request();
     let resp = test::call_service(&app, req).await;
 
@@ -191,13 +193,13 @@ async fn weather_serves_from_cache_over_api() {
     let state = create_test_app_state_with(settings);
     state
         .tomorrow_cache
-        .set(serde_json::json!({"cached": true}))
+        .set("1,1".to_owned(), serde_json::json!({"cached": true}))
         .await;
 
     let app = test::init_service(test_app(state)).await;
 
     let req = test::TestRequest::get()
-        .uri("/api/weather/tomorrow")
+        .uri("/api/weather/tomorrow?lat=1&lon=1")
         .to_request();
     let resp = test::call_service(&app, req).await;
 
@@ -265,7 +267,7 @@ async fn hue_get_returns_cached_data() {
             state: hue::models::GroupState { on: true },
         }],
     };
-    state.hue_cache.set(cached).await;
+    state.hue_cache.set("hue".to_owned(), cached).await;
 
     let app = test::init_service(test_app(state)).await;
     let req = test::TestRequest::get().uri("/api/hue").to_request();

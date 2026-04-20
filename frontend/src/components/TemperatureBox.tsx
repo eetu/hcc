@@ -1,5 +1,6 @@
 import { useTheme } from "@emotion/react";
 import classNames from "classnames";
+import { memo } from "react";
 
 import useSensorTrend from "../hooks/useSensorTrend";
 import { mq } from "../mq";
@@ -13,6 +14,7 @@ type TemperatureBoxProps = {
   title: React.ReactNode;
   sensors?: Sensor[];
   error?: boolean;
+  temperatureOverride?: number;
 };
 
 const isBatteryLow = (sensor: Sensor) =>
@@ -23,6 +25,7 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
   title,
   sensors = [],
   error,
+  temperatureOverride,
 }) => {
   const theme = useTheme();
   const trend = useSensorTrend(sensors);
@@ -30,6 +33,7 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
   const enabledSensors = sensors?.filter((r) => r.enabled);
 
   const temperature =
+    temperatureOverride ??
     enabledSensors.reduce((acc, room) => {
       if (room.temperature === undefined) return acc;
       return acc + room.temperature;
@@ -178,4 +182,4 @@ const getBatteryStr = (value: number = 100) => {
   return "0_bar";
 };
 
-export default TemperatureBox;
+export default memo(TemperatureBox);

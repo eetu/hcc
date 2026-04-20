@@ -1,7 +1,7 @@
 import { useTheme } from "@emotion/react";
 import { formatDistanceToNow } from "date-fns";
 import { fi } from "date-fns/locale/fi";
-import { FC } from "react";
+import { FC, memo } from "react";
 
 import { Sensor } from "../types/hue";
 
@@ -102,4 +102,4 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
   );
 };
 
-export default Motion;
+export default memo(Motion);

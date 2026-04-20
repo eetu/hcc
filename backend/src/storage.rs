@@ -45,7 +45,13 @@ impl Storage {
              CREATE INDEX IF NOT EXISTS idx_readings_sensor_time
                  ON sensor_readings (sensor_id, recorded_at);
              CREATE INDEX IF NOT EXISTS idx_readings_time
-                 ON sensor_readings (recorded_at);",
+                 ON sensor_readings (recorded_at);
+
+             CREATE TABLE IF NOT EXISTS user_settings (
+                 id INTEGER PRIMARY KEY CHECK (id = 1),
+                 data TEXT NOT NULL DEFAULT '{}'
+             );
+             INSERT OR IGNORE INTO user_settings (id, data) VALUES (1, '{}');",
         )?;
 
         Ok(Self {
@@ -101,6 +107,24 @@ impl Storage {
                 .collect::<rusqlite::Result<Vec<_>>>()?;
             Ok(rows)
         }
+    }
+
+    pub async fn get_settings(&self) -> rusqlite::Result<String> {
+        let conn = self.conn.lock().await;
+        conn.query_row(
+            "SELECT data FROM user_settings WHERE id = 1",
+            [],
+            |row| row.get(0),
+        )
+    }
+
+    pub async fn save_settings(&self, data: &str) -> rusqlite::Result<()> {
+        let conn = self.conn.lock().await;
+        conn.execute(
+            "UPDATE user_settings SET data = ?1 WHERE id = 1",
+            rusqlite::params![data],
+        )?;
+        Ok(())
     }
 
     pub async fn prune(&self, retain_days: u32) -> rusqlite::Result<usize> {

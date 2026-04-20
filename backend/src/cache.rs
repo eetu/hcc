@@ -3,6 +3,7 @@ use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
 
 struct CacheEntry<T> {
+    key: String,
     data: T,
     created_at: Instant,
 }
@@ -20,10 +21,10 @@ impl<T: Clone> Cache<T> {
         }
     }
 
-    pub async fn get(&self) -> Option<T> {
+    pub async fn get(&self, key: &str) -> Option<T> {
         let guard = self.inner.read().await;
         guard.as_ref().and_then(|entry| {
-            if entry.created_at.elapsed() < self.ttl {
+            if entry.key == key && entry.created_at.elapsed() < self.ttl {
                 Some(entry.data.clone())
             } else {
                 None
@@ -31,15 +32,19 @@ impl<T: Clone> Cache<T> {
         })
     }
 
-    /// Returns cached data even if expired (for fallback on error).
-    pub async fn get_stale(&self) -> Option<T> {
+    /// Returns cached data even if expired (for fallback on error), only if key matches.
+    pub async fn get_stale(&self, key: &str) -> Option<T> {
         let guard = self.inner.read().await;
-        guard.as_ref().map(|entry| entry.data.clone())
+        guard
+            .as_ref()
+            .filter(|entry| entry.key == key)
+            .map(|entry| entry.data.clone())
     }
 
-    pub async fn set(&self, data: T) {
+    pub async fn set(&self, key: String, data: T) {
         let mut guard = self.inner.write().await;
         *guard = Some(CacheEntry {
+            key,
             data,
             created_at: Instant::now(),
         });

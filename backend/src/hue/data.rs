@@ -8,13 +8,13 @@ use super::models::*;
 
 pub async fn fetch_hue_data(state: &Arc<AppState>) -> Result<HueResponse, HueError> {
     // Check cache first
-    if let Some(cached) = state.hue_cache.get().await {
+    if let Some(cached) = state.hue_cache.get("hue").await {
         tracing::debug!("Returning cached Hue data");
         return Ok(cached);
     }
 
     let data = fetch_from_bridge(state).await?;
-    state.hue_cache.set(data.clone()).await;
+    state.hue_cache.set("hue".into(), data.clone()).await;
     Ok(data)
 }
 

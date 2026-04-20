@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, memo, useCallback, useEffect, useState } from "react";
 
 import { api } from "../api";
 import { mq } from "../mq";
@@ -37,7 +37,7 @@ const LightGroups: FC<LightGroupsProps> = ({ groups, className }) => {
   );
 };
 
-export default LightGroups;
+export default memo(LightGroups);
 
 type LightGroupProps = {
   group: Group;

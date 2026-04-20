@@ -1,14 +1,15 @@
 import { css, useTheme } from "@emotion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { api } from "./api";
 import CurrentTime from "./components/CurrentTime";
+import FmiWeatherBox from "./components/FmiWeatherBox";
 import History from "./components/History";
 import Icon from "./components/Icon";
 import LightGroups from "./components/LightGroups";
+import LocationForm from "./components/LocationForm";
 import Motion from "./components/Motion";
 import TemperatureBox from "./components/TemperatureBox";
-import WeatherBox from "./components/WeatherBox";
 import { mq } from "./mq";
 import { type HueLiveEvent, type Response, type Sensor } from "./types/hue";
 
@@ -104,26 +105,27 @@ const App = () => {
 
   const temperatureCss = css({ gridRow: 2 });
 
-  const sensors = data?.sensors ?? [];
-  const emptySensorsArray: Sensor[] = [];
+  const sensors = data?.sensors;
+  const groups = useMemo(() => data?.groups ?? [], [data?.groups]);
 
-  const {
-    inside,
-    outside,
-    inside_cold: insideCold,
-  } = sensors.reduce(
-    (acc, s) => {
-      acc[s.type] = acc[s.type].concat(s);
-      return acc;
-    },
-    {
-      inside: emptySensorsArray,
-      outside: emptySensorsArray,
-      inside_cold: emptySensorsArray,
-    },
+  const { inside, outside, insideCold } = useMemo(() => {
+    const empty: Sensor[] = [];
+    if (!sensors) return { inside: empty, outside: empty, insideCold: empty };
+    return sensors.reduce(
+      (acc, s) => {
+        if (s.type === "inside_cold") acc.insideCold = acc.insideCold.concat(s);
+        else acc[s.type] = acc[s.type].concat(s);
+        return acc;
+      },
+      { inside: empty, outside: empty, insideCold: empty },
+    );
+  }, [sensors]);
+
+  const outsideTemp = Math.min(
+    ...outside
+      .map((s) => s.temperature)
+      .filter((t): t is number => t !== undefined),
   );
-
-  const groups = data?.groups ?? [];
 
   const theme = useTheme();
 
@@ -225,12 +227,13 @@ const App = () => {
           >
             {view === "temperature" && (
               <>
-                <WeatherBox css={{ gridColumn: "1 / span 3", gridRow: 1 }} />
+                <FmiWeatherBox css={{ gridColumn: "1 / span 3", gridRow: 1 }} />
                 <TemperatureBox
                   css={temperatureCss}
                   sensors={outside}
                   title="ulkona"
                   error={error}
+                  temperatureOverride={outsideTemp}
                 />
                 <TemperatureBox
                   css={temperatureCss}
@@ -274,6 +277,7 @@ const App = () => {
                   minHeight: 250,
                 }}
               >
+                <LocationForm css={{ marginBottom: "1.5em" }} />
                 <div
                   css={{
                     display: "flex",

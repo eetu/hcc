@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
-import React from "react";
+import React, { memo } from "react";
 
 import useCurrentTime from "../hooks/useCurrentTime";
 
@@ -37,4 +37,4 @@ const CurrentTime: React.FC<CurrentTimeProps> = ({ className }) => {
     </div>
   );
 };
-export default CurrentTime;
+export default memo(CurrentTime);

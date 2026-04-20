@@ -6,9 +6,9 @@ import useSWR from "swr";
 
 import { api, fetcher } from "../api";
 import { getTemperatureRoast } from "../temperatureRoast";
-import { TomorrowWeatherData } from "../types/weather";
-import { getTemperatureSegments } from "../utils";
-import { getWeatherIcon } from "../weatherIcons";
+import { TomorrowWeatherData } from "../types/weather/tomorrow";
+import { getWeatherIcon } from "../weather/tomorrow/icons";
+import { getTemperatureSegments } from "../weather/tomorrow/utils";
 import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";

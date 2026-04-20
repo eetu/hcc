@@ -2,21 +2,14 @@ use std::collections::BTreeMap;
 
 use chrono::{FixedOffset, Utc};
 
-use super::fmi::models::{FmiForecastPoint, FmiWeatherData};
-use super::models::*;
-use super::sun;
-
-pub trait WeatherConverter {
-    type Output: Clone + serde::Serialize;
-    fn convert(&self, data: &FmiWeatherData, lat: f64, lon: f64) -> Self::Output;
-}
+use super::models::{FmiForecastPoint, FmiObservation, FmiWeatherData};
+use crate::weather::models::*;
+use crate::weather::sun;
 
 pub struct FmiConverter;
 
-impl WeatherConverter for FmiConverter {
-    type Output = WeatherResponse;
-
-    fn convert(&self, data: &FmiWeatherData, lat: f64, lon: f64) -> WeatherResponse {
+impl FmiConverter {
+    pub fn convert(&self, data: &FmiWeatherData, lat: f64, lon: f64) -> WeatherResponse {
         let current = build_current(data, lat, lon);
         let hourly = build_hourly(&data.forecasts);
         let daily = build_daily(&data.forecasts, lat, lon);
@@ -208,9 +201,7 @@ fn symbol_severity(symbol: i32) -> i32 {
 }
 
 /// Guess a weather symbol from observation data (no WeatherSymbol3 in observations).
-fn guess_symbol_from_observation(
-    obs: &super::fmi::models::FmiObservation,
-) -> i32 {
+fn guess_symbol_from_observation(obs: &FmiObservation) -> i32 {
     let precip = obs.precipitation_1h.unwrap_or(0.0);
     let cloud = obs.cloud_cover; // okta (0-8) from manual observation
     let temp = obs.temperature.unwrap_or(0.0);
@@ -262,7 +253,7 @@ mod tests {
 
     #[test]
     fn test_determine_precip_type() {
-        use super::super::fmi::models::FmiForecastPoint;
+        use super::super::models::FmiForecastPoint;
         use chrono::Utc;
 
         let now = Utc::now();

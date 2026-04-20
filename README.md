@@ -14,8 +14,6 @@ Control center for home Hue bridge
 TOMORROW_IO_API_KEY=        # tomorrow.io API key
 HUE_BRIDGE_ADDRESS=         # optional — auto-discovered via meethue.com if omitted
 HUE_BRIDGE_USER=            # obtained via the pairing flow below
-POSITION_LAT=               # your latitude
-POSITION_LON=               # your longitude
 LANGUAGE=fi
 HCC_IMAGE_TAG=              # version label shown on the front page
 HCC_DB_PATH=/data/hcc.db    # SQLite database path (default: hcc.db in working directory)

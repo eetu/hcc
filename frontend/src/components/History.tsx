@@ -44,10 +44,10 @@ type SensorReading = {
 };
 
 const RANGES = [
-  { label: "6h", hours: 6 },
-  { label: "24h", hours: 24 },
-  { label: "7pv", hours: 168 },
-  { label: "30pv", hours: 720 },
+  { label: "6h", hours: 6, maxPoints: undefined },
+  { label: "24h", hours: 24, maxPoints: 288 },
+  { label: "7pv", hours: 168, maxPoints: 336 },
+  { label: "30pv", hours: 720, maxPoints: 720 },
 ] as const;
 
 // Base hue ranges per room type to keep visual grouping
@@ -82,19 +82,22 @@ type HistoryProps = {
 const History: React.FC<HistoryProps> = ({ className }) => {
   const theme = useTheme();
   const [readings, setReadings] = useState<SensorReading[]>([]);
-  const [hours, setHours] = useState(24);
+  const [range, setRange] = useState<(typeof RANGES)[number]>(RANGES[1]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    fetch(api(`/api/history/sensors?hours=${hours}`))
+    const params = new URLSearchParams({ hours: String(range.hours) });
+    if (range.maxPoints !== undefined)
+      params.set("max_points", String(range.maxPoints));
+    fetch(api(`/api/history/sensors?${params}`))
       .then((r) => r.json())
       .then((data: SensorReading[]) => {
         setReadings(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [hours]);
+  }, [range]);
 
   // Group readings by sensor
   const bySensor = new Map<
@@ -186,7 +189,7 @@ const History: React.FC<HistoryProps> = ({ className }) => {
           maxTicksLimit: 8,
           callback: (val) => {
             const d = new Date(val as number);
-            return hours <= 24
+            return range.hours <= 24
               ? format(d, "HH.mm", { locale: fi })
               : format(d, "EEEEEE d.M.", { locale: fi });
           },
@@ -224,18 +227,18 @@ const History: React.FC<HistoryProps> = ({ className }) => {
         {RANGES.map((r) => (
           <button
             key={r.hours}
-            onClick={() => setHours(r.hours)}
+            onClick={() => setRange(r)}
             css={{
               cursor: "pointer",
               padding: "4px 12px",
               borderRadius: 4,
               border: `1px solid ${theme.colors.border}`,
               backgroundColor:
-                hours === r.hours
+                range.hours === r.hours
                   ? theme.colors.text.main
                   : theme.colors.background.light,
               color:
-                hours === r.hours
+                range.hours === r.hours
                   ? theme.colors.background.main
                   : theme.colors.text.main,
               ...theme.typography.body2,

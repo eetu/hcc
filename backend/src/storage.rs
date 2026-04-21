@@ -80,32 +80,69 @@ impl Storage {
         &self,
         sensor_id: Option<&str>,
         hours: u32,
+        max_points: Option<u32>,
     ) -> rusqlite::Result<Vec<SensorReading>> {
         let conn = self.conn.lock().await;
         let cutoff = format!("-{hours} hours");
 
-        if let Some(sid) = sensor_id {
-            let mut stmt = conn.prepare_cached(
-                "SELECT sensor_id, sensor_name, temperature, room_type, recorded_at
-                 FROM sensor_readings
-                 WHERE sensor_id = ?1 AND recorded_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', ?2)
-                 ORDER BY recorded_at ASC",
-            )?;
-            let rows = stmt
-                .query_map(rusqlite::params![sid, cutoff], row_to_reading)?
-                .collect::<rusqlite::Result<Vec<_>>>()?;
-            Ok(rows)
-        } else {
-            let mut stmt = conn.prepare_cached(
-                "SELECT sensor_id, sensor_name, temperature, room_type, recorded_at
-                 FROM sensor_readings
-                 WHERE recorded_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', ?1)
-                 ORDER BY recorded_at ASC",
-            )?;
-            let rows = stmt
-                .query_map(rusqlite::params![cutoff], row_to_reading)?
-                .collect::<rusqlite::Result<Vec<_>>>()?;
-            Ok(rows)
+        match (sensor_id, max_points) {
+            (Some(sid), Some(max)) => {
+                let mut stmt = conn.prepare_cached(
+                    "SELECT sensor_id, sensor_name, temperature, room_type, recorded_at
+                     FROM (
+                         SELECT sensor_id, sensor_name, temperature, room_type, recorded_at,
+                                ROW_NUMBER() OVER (ORDER BY recorded_at) AS rn,
+                                COUNT(*) OVER () AS total
+                         FROM sensor_readings
+                         WHERE sensor_id = ?1
+                           AND recorded_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', ?2)
+                     )
+                     WHERE (rn - 1) % MAX(1, (total + ?3 - 1) / ?3) = 0
+                     ORDER BY recorded_at ASC",
+                )?;
+                let rows = stmt.query_map(rusqlite::params![sid, cutoff, max], row_to_reading)?
+                    .collect::<rusqlite::Result<Vec<_>>>();
+                rows
+            }
+            (Some(sid), None) => {
+                let mut stmt = conn.prepare_cached(
+                    "SELECT sensor_id, sensor_name, temperature, room_type, recorded_at
+                     FROM sensor_readings
+                     WHERE sensor_id = ?1 AND recorded_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', ?2)
+                     ORDER BY recorded_at ASC",
+                )?;
+                let rows = stmt.query_map(rusqlite::params![sid, cutoff], row_to_reading)?
+                    .collect::<rusqlite::Result<Vec<_>>>();
+                rows
+            }
+            (None, Some(max)) => {
+                let mut stmt = conn.prepare_cached(
+                    "SELECT sensor_id, sensor_name, temperature, room_type, recorded_at
+                     FROM (
+                         SELECT sensor_id, sensor_name, temperature, room_type, recorded_at,
+                                ROW_NUMBER() OVER (PARTITION BY sensor_id ORDER BY recorded_at) AS rn,
+                                COUNT(*) OVER (PARTITION BY sensor_id) AS total
+                         FROM sensor_readings
+                         WHERE recorded_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', ?1)
+                     )
+                     WHERE (rn - 1) % MAX(1, (total + ?2 - 1) / ?2) = 0
+                     ORDER BY recorded_at ASC",
+                )?;
+                let rows = stmt.query_map(rusqlite::params![cutoff, max], row_to_reading)?
+                    .collect::<rusqlite::Result<Vec<_>>>();
+                rows
+            }
+            (None, None) => {
+                let mut stmt = conn.prepare_cached(
+                    "SELECT sensor_id, sensor_name, temperature, room_type, recorded_at
+                     FROM sensor_readings
+                     WHERE recorded_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', ?1)
+                     ORDER BY recorded_at ASC",
+                )?;
+                let rows = stmt.query_map(rusqlite::params![cutoff], row_to_reading)?
+                    .collect::<rusqlite::Result<Vec<_>>>();
+                rows
+            }
         }
     }
 

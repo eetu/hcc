@@ -50,6 +50,10 @@ fn test_settings_with_mock(mock_url: &str) -> Settings {
         static_dir: "./dist".into(),
         port: 3000,
         history_retention_days: 90,
+        solis_base_url: "".into(),
+        solis_key_id: "".into(),
+        solis_key_secret: "".into(),
+        solis_station_id: "".into(),
     }
 }
 

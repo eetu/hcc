@@ -9,6 +9,7 @@ import Icon from "./components/Icon";
 import LightGroups from "./components/LightGroups";
 import LocationForm from "./components/LocationForm";
 import Motion from "./components/Motion";
+import SolisBox from "./components/SolisBox";
 import TemperatureBox from "./components/TemperatureBox";
 import { mq } from "./mq";
 import { type HueLiveEvent, type Response, type Sensor } from "./types/hue";
@@ -147,7 +148,7 @@ const App = () => {
       </button>
       <div
         css={{
-          width: 580,
+          width: 720,
           flexShrink: 0,
           [mq[0]]: {
             width: "100%",
@@ -215,7 +216,8 @@ const App = () => {
               flex: 1,
               minWidth: 0,
               display: "grid",
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+              gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+              alignItems: "start",
               gap: 20,
               [mq[0]]: {
                 display: "flex",
@@ -227,7 +229,7 @@ const App = () => {
           >
             {view === "temperature" && (
               <>
-                <FmiWeatherBox css={{ gridColumn: "1 / span 3", gridRow: 1 }} />
+                <FmiWeatherBox css={{ gridColumn: "1 / span 4", gridRow: 1 }} />
                 <TemperatureBox
                   css={temperatureCss}
                   sensors={outside}
@@ -247,29 +249,30 @@ const App = () => {
                   title="kuisti"
                   error={error}
                 />
+                <SolisBox css={temperatureCss} />
               </>
             )}
 
             {view === "lights" && (
-              <LightGroups css={{ gridColumn: "1 / span 3" }} groups={groups} />
+              <LightGroups css={{ gridColumn: "1 / span 4" }} groups={groups} />
             )}
 
             {view === "motion" && (
               <Motion
-                css={{ gridColumn: "1 / span 3" }}
+                css={{ gridColumn: "1 / span 4" }}
                 sensors={outside.concat(insideCold).concat(inside)}
                 error={!!error}
               />
             )}
 
             {view === "history" && (
-              <History css={{ gridColumn: "1 / span 3" }} />
+              <History css={{ gridColumn: "1 / span 4" }} />
             )}
 
             {view === "settings" && (
               <div
                 css={{
-                  gridColumn: "1 / span 3",
+                  gridColumn: "1 / span 4",
                   backgroundColor: theme.colors.background.main,
                   boxShadow: theme.shadows.main,
                   borderRadius: 6,

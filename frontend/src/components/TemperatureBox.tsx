@@ -147,14 +147,14 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
             <div
               css={{
                 position: "absolute",
-                right: -36,
+                right: -30,
                 top: 0,
                 bottom: 0,
                 display: "flex",
                 alignItems: "center",
               }}
             >
-              <TrendIndicator trend={trend} size={32} />
+              <TrendIndicator trend={trend} />
             </div>
           )}
         </div>

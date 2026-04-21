@@ -54,20 +54,17 @@ const Box: React.FC<BoxProps> = ({
   return (
     <div
       className={className}
-      css={[
-        {
-          cursor: "pointer",
-          height: "fit-content",
-          minWidth: 0,
-          overflow: "hidden",
-          boxShadow: theme.shadows.main,
-        },
-      ]}
+      css={{
+        cursor: "pointer",
+        minWidth: 0,
+        overflow: "hidden",
+        boxShadow: theme.shadows.main,
+      }}
       onClick={() => setCollapsed(!collapsed)}
     >
       <BoxHeader>{children}</BoxHeader>
       <BoxDrawer collapsed={collapsed}>{drawer}</BoxDrawer>
-      <BoxFooter collapsed={collapsed}></BoxFooter>
+      <BoxFooter collapsed={collapsed} />
     </div>
   );
 };

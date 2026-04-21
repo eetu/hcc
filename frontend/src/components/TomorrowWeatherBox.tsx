@@ -1,11 +1,9 @@
 import { useTheme } from "@emotion/react";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
-import { useMemo } from "react";
 import useSWR from "swr";
 
 import { api, fetcher } from "../api";
-import { getTemperatureRoast } from "../temperatureRoast";
 import { TomorrowWeatherData } from "../types/weather/tomorrow";
 import { getWeatherIcon } from "../weather/tomorrow/icons";
 import { getTemperatureSegments } from "../weather/tomorrow/utils";
@@ -78,16 +76,6 @@ const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({
 
   const segments = getTemperatureSegments(hourly?.intervals);
 
-  const currentTemp = weather?.values.temperature;
-  const roundedTemp =
-    currentTemp !== undefined ? Math.round(currentTemp) : undefined;
-  /* eslint-disable react-hooks/exhaustive-deps -- intentionally keyed on roundedTemp to avoid re-randomizing on fractional changes */
-  const roast = useMemo(
-    () => (currentTemp !== undefined ? getTemperatureRoast(currentTemp) : null),
-    [roundedTemp],
-  );
-  /* eslint-enable react-hooks/exhaustive-deps */
-
   if (!(data && weather && today)) {
     return null;
   }
@@ -128,15 +116,6 @@ const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({
           }}
         >
           {title}
-          <span
-            css={{
-              ...theme.typography.caption,
-              color: theme.colors.text.muted,
-              textTransform: "none",
-            }}
-          >
-            {roast}
-          </span>
           {alerts && alerts.length > 0 && (
             <Tooltip
               content={

@@ -1,12 +1,11 @@
 import { useTheme } from "@emotion/react";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import useSWR from "swr";
 
 import { api, fetcher } from "../api";
 import useLocationSettings from "../hooks/useLocationSettings";
-import { getTemperatureRoast } from "../temperatureRoast";
 import { WeatherData } from "../types/weather/fmi";
 import {
   getFmiWeatherDescription,
@@ -41,16 +40,6 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
   const daily = data?.daily ?? [];
   const today = daily[0];
   const hourly = data?.hourly;
-
-  const currentTemp = current?.temperature;
-  const roundedTemp =
-    currentTemp !== undefined ? Math.round(currentTemp) : undefined;
-  /* eslint-disable react-hooks/exhaustive-deps -- intentionally keyed on roundedTemp to avoid re-randomizing on fractional changes */
-  const roast = useMemo(
-    () => (currentTemp !== undefined ? getTemperatureRoast(currentTemp) : null),
-    [roundedTemp],
-  );
-  /* eslint-enable react-hooks/exhaustive-deps */
 
   if (!location && !locationLoading) {
     return (
@@ -132,7 +121,7 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
               textTransform: "none",
             }}
           >
-            {[location?.displayName, roast].filter(Boolean).join(" – ")}
+            {location?.displayName ?? ""}
           </span>
         </div>
         <div

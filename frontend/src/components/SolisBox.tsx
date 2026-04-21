@@ -4,7 +4,7 @@ import useSWR from "swr";
 
 import { api, fetcher } from "../api";
 import { SolisData } from "../types/solis";
-import Box from "./Box";
+import Box, { DrawerRow } from "./Box";
 import Icon from "./Icon";
 
 type SolisBoxProps = {
@@ -117,19 +117,6 @@ const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
         </div>
       </div>
     </Box>
-  );
-};
-
-const DrawerRow: React.FC<{ label: string; value: string }> = ({
-  label,
-  value,
-}) => {
-  const theme = useTheme();
-  return (
-    <div css={{ display: "flex", justifyContent: "space-between", gap: "1em" }}>
-      <span css={{ color: theme.colors.text.muted }}>{label}</span>
-      <span>{value}</span>
-    </div>
   );
 };
 

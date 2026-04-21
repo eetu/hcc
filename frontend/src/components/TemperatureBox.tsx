@@ -5,7 +5,7 @@ import { memo } from "react";
 import useSensorTrend from "../hooks/useSensorTrend";
 import { mq } from "../mq";
 import { Sensor } from "../types/hue";
-import Box from "./Box";
+import Box, { DrawerRow } from "./Box";
 import Icon from "./Icon";
 import TrendIndicator from "./TrendIndicator";
 
@@ -57,8 +57,12 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
       drawer={
         <div
           css={{
-            display: "table",
-            fontSize: "16px",
+            backgroundColor: theme.colors.background.light,
+            padding: "5px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5em",
+            fontSize: "14px",
           }}
         >
           {sensors.map((r) => {
@@ -67,36 +71,43 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
               <div
                 key={r.id}
                 css={{
-                  display: "table-row",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 5,
                   backgroundColor: theme.colors.background.light,
-                  "& span": {
-                    display: "table-cell",
-                    padding: "5px",
-                    opacity: r.enabled && r.connected ? 1 : 0.25,
-                    width: "100%",
-                  },
                 }}
               >
-                <span>{r.name}</span>
-                {isSensorBatteryLow ? (
-                  <Icon
-                    size={18}
-                    css={{
-                      color: theme.colors.error,
-                      transform: "rotate(90deg)",
-                    }}
-                  >{`battery_${getBatteryStr(r.battery)}`}</Icon>
-                ) : (
-                  <span>&nbsp;</span>
-                )}
-                <span>
-                  {r.temperature !== undefined
-                    ? `${Math.round(r.temperature)}°`
-                    : ""}
-                </span>
+                <DrawerRow
+                  label={
+                    <div
+                      css={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 5,
+                      }}
+                    >
+                      {r.name}
+                      {isSensorBatteryLow && (
+                        <Icon
+                          size={18}
+                          css={{
+                            color: theme.colors.error,
+                          }}
+                        >{`battery_${getBatteryStr(r.battery)}`}</Icon>
+                      )}
+                    </div>
+                  }
+                  value={
+                    <>
+                      <span>
+                        {r.temperature !== undefined
+                          ? `${Math.round(r.temperature)}°`
+                          : ""}
+                      </span>
+                    </>
+                  }
+                />
               </div>
             );
           })}

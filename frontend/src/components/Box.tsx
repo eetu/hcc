@@ -165,3 +165,24 @@ const BoxFooter: React.FC<BoxFooterProps> = ({ collapsed }) => {
     </div>
   );
 };
+
+export const DrawerRow: React.FC<{
+  label: React.ReactNode;
+  value: React.ReactNode;
+}> = ({ label, value }) => {
+  const theme = useTheme();
+  return (
+    <div
+      css={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <span css={{ color: theme.colors.text.muted }}>{label}</span>
+      <span>{value}</span>
+    </div>
+  );
+};

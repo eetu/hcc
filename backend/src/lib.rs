@@ -66,6 +66,8 @@ struct SensorHistoryQuery {
     sensor_id: Option<String>,
     /// Number of hours of history to return (default: 24, max: 720)
     hours: Option<u32>,
+    /// Maximum number of data points to return per sensor via uniform sampling (optional)
+    max_points: Option<u32>,
 }
 
 #[utoipa::path(
@@ -82,7 +84,7 @@ async fn sensor_history(
     query: web::Query<SensorHistoryQuery>,
 ) -> HttpResponse {
     let hours = query.hours.unwrap_or(24).min(720);
-    match state.storage.query_readings(query.sensor_id.as_deref(), hours).await {
+    match state.storage.query_readings(query.sensor_id.as_deref(), hours, query.max_points).await {
         Ok(readings) => HttpResponse::Ok().json(readings),
         Err(e) => {
             tracing::error!("Failed to query sensor history: {e}");

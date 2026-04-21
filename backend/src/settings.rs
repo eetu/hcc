@@ -11,6 +11,10 @@ pub struct Settings {
     pub static_dir: String,
     pub port: u16,
     pub history_retention_days: u32,
+    pub solis_key_id: String,
+    pub solis_key_secret: String,
+    pub solis_station_id: String,
+    pub solis_base_url: String,
 }
 
 impl Settings {
@@ -26,6 +30,10 @@ impl Settings {
             static_dir: "./dist".into(),
             port: 3000,
             history_retention_days: 0,
+            solis_key_id: String::new(),
+            solis_key_secret: String::new(),
+            solis_station_id: String::new(),
+            solis_base_url: "https://www.soliscloud.com:13333".into(),
         }
     }
 
@@ -53,6 +61,11 @@ impl Settings {
                 .ok()
                 .and_then(|d| d.parse().ok())
                 .unwrap_or(0),
+            solis_key_id: env::var("SOLIS_KEY_ID").unwrap_or_default(),
+            solis_key_secret: env::var("SOLIS_KEY_SECRET").unwrap_or_default(),
+            solis_station_id: env::var("SOLIS_STATION_ID").unwrap_or_default(),
+            solis_base_url: env::var("SOLIS_BASE_URL")
+                .unwrap_or_else(|_| "https://www.soliscloud.com:13333".into()),
         }
     }
 }

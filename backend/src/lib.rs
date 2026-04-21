@@ -1,6 +1,7 @@
 pub mod cache;
 pub mod hue;
 pub mod settings;
+pub mod solis;
 pub mod storage;
 pub mod weather;
 
@@ -23,6 +24,7 @@ pub struct AppState {
     pub hue_cache: Cache<hue::models::HueResponse>,
     pub tomorrow_cache: Cache<serde_json::Value>,
     pub weather_cache: Cache<weather::models::WeatherResponse>,
+    pub solis_cache: Cache<solis::models::SolisWidgetData>,
     pub hue_events_tx: broadcast::Sender<hue::events::HueLiveEvent>,
     pub storage: storage::Storage,
 }
@@ -36,6 +38,7 @@ pub struct AppState {
         hue::handlers::events_sse,
         hue::handlers::pair,
         hue::handlers::toggle_group,
+        solis::handlers::get_data,
         status,
         sensor_history,
     ),
@@ -48,6 +51,7 @@ pub struct AppState {
         hue::events::HueLiveEvent,
         hue::handlers::PairRequest,
         hue::handlers::PairResponse,
+        solis::models::SolisWidgetData,
         StatusResponse,
         storage::SensorReading,
     ))
@@ -179,6 +183,10 @@ pub fn create_app(
                             "/toggleGroup/{id}",
                             web::post().to(hue::handlers::toggle_group),
                         ),
+                )
+                .service(
+                    web::scope("/solis")
+                        .route("", web::get().to(solis::handlers::get_data)),
                 ),
         )
         .service(SwaggerUi::new("/docs/{_:.*}").url("/api-doc/openapi.json", openapi))
@@ -221,6 +229,7 @@ pub fn create_test_app_state_with(settings: Settings) -> Arc<AppState> {
         hue_cache: Cache::new(std::time::Duration::from_secs(3)),
         tomorrow_cache: Cache::new(std::time::Duration::from_secs(3600)),
         weather_cache: Cache::new(std::time::Duration::from_secs(3600)),
+        solis_cache: Cache::new(std::time::Duration::from_secs(300)),
         hue_events_tx,
         storage,
     })
@@ -258,6 +267,7 @@ pub async fn run_server() -> std::io::Result<()> {
         hue_cache: Cache::new(std::time::Duration::from_secs(3)),
         tomorrow_cache: Cache::new(std::time::Duration::from_secs(3600)),
         weather_cache: Cache::new(std::time::Duration::from_secs(3600)),
+        solis_cache: Cache::new(std::time::Duration::from_secs(300)),
         hue_events_tx: hue_events_tx.clone(),
         storage,
     });

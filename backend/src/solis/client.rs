@@ -29,8 +29,8 @@ fn md5_base64(body: &str) -> String {
 }
 
 fn hmac_sha1_base64(secret: &str, message: &str) -> String {
-    let mut mac = Hmac::<Sha1>::new_from_slice(secret.as_bytes())
-        .expect("HMAC accepts keys of any length");
+    let mut mac =
+        Hmac::<Sha1>::new_from_slice(secret.as_bytes()).expect("HMAC accepts keys of any length");
     mac.update(message.as_bytes());
     STANDARD.encode(mac.finalize().into_bytes())
 }
@@ -65,8 +65,12 @@ pub async fn fetch_station_detail(state: &AppState) -> Result<SolisWidgetData, S
     let path = "/v1/api/stationDetail";
     let body = format!(r#"{{"id":"{}"}}"#, settings.solis_station_id);
 
-    let (date, content_md5, authorization) =
-        build_auth_headers(&settings.solis_key_id, &settings.solis_key_secret, path, &body);
+    let (date, content_md5, authorization) = build_auth_headers(
+        &settings.solis_key_id,
+        &settings.solis_key_secret,
+        path,
+        &body,
+    );
 
     let url = format!("{}{}", settings.solis_base_url, path);
 
@@ -100,29 +104,50 @@ pub async fn fetch_station_detail(state: &AppState) -> Result<SolisWidgetData, S
             .and_then(|m| m.as_str())
             .unwrap_or("unknown error")
             .to_string();
-        return Err(SolisError::Api { status: 200, message });
+        return Err(SolisError::Api {
+            status: 200,
+            message,
+        });
     }
 
-    let data = json
-        .get("data")
-        .ok_or(SolisError::MissingField("data"))?;
+    let data = json.get("data").ok_or(SolisError::MissingField("data"))?;
+
+    tracing::debug!("stationDetail data {data:?}");
 
     Ok(SolisWidgetData {
         power: data.get("power").and_then(|v| v.as_f64()).unwrap_or(0.0),
         power_unit: string_field(data, "powerStr"),
-        today_energy: data.get("dayEnergy").and_then(|v| v.as_f64()).unwrap_or(0.0),
+        today_energy: data
+            .get("dayEnergy")
+            .and_then(|v| v.as_f64())
+            .unwrap_or(0.0),
         today_energy_unit: string_field(data, "dayEnergyStr"),
-        month_energy: data.get("monthEnergy").and_then(|v| v.as_f64()).unwrap_or(0.0),
+        month_energy: data
+            .get("monthEnergy")
+            .and_then(|v| v.as_f64())
+            .unwrap_or(0.0),
         month_energy_unit: string_field(data, "monthEnergyStr"),
-        year_energy: data.get("yearEnergy").and_then(|v| v.as_f64()).unwrap_or(0.0),
+        year_energy: data
+            .get("yearEnergy")
+            .and_then(|v| v.as_f64())
+            .unwrap_or(0.0),
         year_energy_unit: string_field(data, "yearEnergyStr"),
-        total_energy: data.get("allEnergy").and_then(|v| v.as_f64()).unwrap_or(0.0),
+        total_energy: data
+            .get("allEnergy")
+            .and_then(|v| v.as_f64())
+            .unwrap_or(0.0),
         total_energy_unit: string_field(data, "allEnergyStr"),
         grid_power: data.get("psum").and_then(|v| v.as_f64()),
-        grid_power_unit: data.get("psumStr").and_then(|v| v.as_str()).map(String::from),
+        grid_power_unit: data
+            .get("psumStr")
+            .and_then(|v| v.as_str())
+            .map(String::from),
         battery_soc: data.get("batteryPercent").and_then(|v| v.as_f64()),
         battery_power: data.get("batteryPower").and_then(|v| v.as_f64()),
-        battery_power_unit: data.get("batteryPowerStr").and_then(|v| v.as_str()).map(String::from),
+        battery_power_unit: data
+            .get("batteryPowerStr")
+            .and_then(|v| v.as_str())
+            .map(String::from),
         status: data.get("state").and_then(|v| v.as_u64()).unwrap_or(2) as u8,
         updated_at: data
             .get("dataTimestamp")

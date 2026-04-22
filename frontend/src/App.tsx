@@ -275,7 +275,7 @@ const App = () => {
                   gridColumn: "1 / span 4",
                   backgroundColor: theme.colors.background.main,
                   boxShadow: theme.shadows.main,
-                  borderRadius: 6,
+                  borderRadius: theme.border.radius,
                   padding: "1.5em",
                   minHeight: 250,
                 }}
@@ -287,6 +287,8 @@ const App = () => {
                     flexDirection: "row",
                     alignItems: "center",
                     gap: "0.5em",
+                    color: theme.colors.text.main,
+                    ...theme.typography.caption,
                   }}
                 >
                   <Icon css={{ opacity: 1 }} size={16}>

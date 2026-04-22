@@ -14,13 +14,13 @@ type SolisBoxProps = {
 const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
   const theme = useTheme();
 
-  const { data } = useSWR<SolisData>(api("/api/solis"), fetcher, {
+  const { data, error } = useSWR<SolisData>(api("/api/solis"), fetcher, {
     refreshInterval: 300_000,
     refreshWhenHidden: true,
     shouldRetryOnError: false,
   });
 
-  if (!data) return null;
+  if (!data || error) return null;
 
   const isAlarm = data.status === 3;
   const displayPower = data.power.toFixed(1);
@@ -52,13 +52,17 @@ const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
             label="Tänään"
             value={`${data.today_energy} ${data.today_energy_unit}`}
           />
+          <DrawerRow
+            label="Kk"
+            value={`${data.month_energy} ${data.month_energy_unit}`}
+          />
           {data.battery_soc !== null && (
             <>
               <DrawerRow
-                label={`Akku`}
+                label="Akku"
                 value={`${Math.round(data.battery_soc)}%`}
               />
-              {data.battery_power && data.battery_power_unit && (
+              {data.battery_power !== null && data.battery_power_unit && (
                 <DrawerRow
                   label={`${batteryLabel}`}
                   value={`${Math.abs(data.battery_power).toFixed(2)} ${data.battery_power_unit}`}

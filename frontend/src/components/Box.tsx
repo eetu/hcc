@@ -59,6 +59,7 @@ const Box: React.FC<BoxProps> = ({
         minWidth: 0,
         overflow: "hidden",
         boxShadow: theme.shadows.main,
+        borderRadius: theme.border.radius,
       }}
       onClick={() => setCollapsed(!collapsed)}
     >
@@ -71,8 +72,6 @@ const Box: React.FC<BoxProps> = ({
 
 export default Box;
 
-const BORDER_RADIUS = 5;
-
 type BoxHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
 const BoxHeader: React.FC<BoxHeaderProps> = ({ children }) => {
@@ -83,8 +82,6 @@ const BoxHeader: React.FC<BoxHeaderProps> = ({ children }) => {
       css={{
         display: "flex",
         flexDirection: "column",
-        borderTopLeftRadius: BORDER_RADIUS,
-        borderTopRightRadius: BORDER_RADIUS,
         backgroundColor: theme.colors.background.main,
         padding: "1.5em",
         borderBottom: `1px ${theme.colors.border} solid`,
@@ -153,8 +150,6 @@ const BoxFooter: React.FC<BoxFooterProps> = ({ collapsed }) => {
       css={{
         display: "flex",
         justifyContent: "center",
-        borderBottomRightRadius: BORDER_RADIUS,
-        borderBottomLeftRadius: BORDER_RADIUS,
         height: "25px",
         backgroundColor: theme.colors.background.main,
         borderTop: collapsed ? "none" : `1px ${theme.colors.border} solid`,

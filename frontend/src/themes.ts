@@ -8,6 +8,9 @@ type Typography = {
 declare module "@emotion/react" {
   export interface Theme {
     mode: string;
+    border: {
+      radius: number | string;
+    };
     colors: {
       body: string;
       text: {
@@ -56,6 +59,7 @@ const typography = {
 
 export const lightTheme: Theme = {
   mode: "light",
+  border: { radius: 6 },
   colors: {
     body: "#f0f0f0",
     text: {
@@ -88,6 +92,7 @@ export const lightTheme: Theme = {
 
 export const darkTheme: Theme = {
   mode: "dark",
+  border: { radius: 6 },
   colors: {
     body: "#0f0f0f",
     text: {

@@ -81,19 +81,19 @@ const LocationForm: React.FC<LocationFormProps> = ({ className }) => {
           display: "flex",
           alignItems: "center",
           gap: "0.5em",
-          color: theme.colors.text.muted,
+          color: theme.colors.text.main,
           ...theme.typography.caption,
         }}
       >
         <Icon size={16}>location_on</Icon>
-        Location
+        Sijainti
       </div>
 
       {location && (
         <div
           css={{
             color: theme.colors.text.main,
-            ...theme.typography.body1,
+            ...theme.typography.body2,
             marginBottom: "0.25em",
           }}
         >

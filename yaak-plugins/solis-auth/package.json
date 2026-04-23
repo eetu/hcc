@@ -1,0 +1,6 @@
+{
+  "name": "solis-auth",
+  "displayName": "SolisCloud Auth",
+  "description": "HMAC-SHA1 authentication headers for SolisCloud API",
+  "version": "1.0.0"
+}

@@ -83,24 +83,42 @@ impl Storage {
         max_points: Option<u32>,
     ) -> rusqlite::Result<Vec<SensorReading>> {
         let conn = self.conn.lock().await;
+
+        // 1. Performance PRAGMAs (Crucial for Raspberry Pi)
+        conn.execute_batch(
+            "
+            PRAGMA journal_mode = WAL;
+            PRAGMA temp_store = MEMORY;
+            PRAGMA synchronous = NORMAL;
+        ",
+        )?;
+
         let cutoff = format!("-{hours} hours");
 
         match (sensor_id, max_points) {
             (Some(sid), Some(max)) => {
+                // Get total count first to determine sampling step
+                let total: u32 = conn.query_row(
+                    "SELECT COUNT(*) FROM sensor_readings WHERE sensor_id = ?1 AND recorded_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', ?2)",
+                    rusqlite::params![sid, cutoff],
+
+                    |r| r.get(0),
+                )?;
+                let step = (total / max).max(1);
+
                 let mut stmt = conn.prepare_cached(
                     "SELECT sensor_id, sensor_name, temperature, room_type, recorded_at
                      FROM (
-                         SELECT sensor_id, sensor_name, temperature, room_type, recorded_at,
-                                ROW_NUMBER() OVER (ORDER BY recorded_at) AS rn,
-                                COUNT(*) OVER () AS total
+                         SELECT *, ROW_NUMBER() OVER (ORDER BY recorded_at) AS rn
                          FROM sensor_readings
                          WHERE sensor_id = ?1
                            AND recorded_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', ?2)
                      )
-                     WHERE (rn - 1) % MAX(1, (total + ?3 - 1) / ?3) = 0
+                     WHERE rn % ?3 = 0
                      ORDER BY recorded_at ASC",
                 )?;
-                let rows = stmt.query_map(rusqlite::params![sid, cutoff, max], row_to_reading)?
+                let rows = stmt
+                    .query_map(rusqlite::params![sid, cutoff, step], row_to_reading)?
                     .collect::<rusqlite::Result<Vec<_>>>();
                 rows
             }
@@ -111,24 +129,28 @@ impl Storage {
                      WHERE sensor_id = ?1 AND recorded_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', ?2)
                      ORDER BY recorded_at ASC",
                 )?;
-                let rows = stmt.query_map(rusqlite::params![sid, cutoff], row_to_reading)?
+                let rows = stmt
+                    .query_map(rusqlite::params![sid, cutoff], row_to_reading)?
                     .collect::<rusqlite::Result<Vec<_>>>();
                 rows
             }
             (None, Some(max)) => {
+                // For 'All Sensors', we use a sub-query to find the average density
+                // or just apply a global row-number filter per sensor.
                 let mut stmt = conn.prepare_cached(
                     "SELECT sensor_id, sensor_name, temperature, room_type, recorded_at
                      FROM (
-                         SELECT sensor_id, sensor_name, temperature, room_type, recorded_at,
-                                ROW_NUMBER() OVER (PARTITION BY sensor_id ORDER BY recorded_at) AS rn,
-                                COUNT(*) OVER (PARTITION BY sensor_id) AS total
+                         SELECT *, ROW_NUMBER() OVER (PARTITION BY sensor_id ORDER BY recorded_at) AS rn,
+                                COUNT(*) OVER (PARTITION BY sensor_id) as sensor_total
                          FROM sensor_readings
                          WHERE recorded_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', ?1)
                      )
-                     WHERE (rn - 1) % MAX(1, (total + ?2 - 1) / ?2) = 0
+                     -- Logic: Only return a row if it hits the step threshold for its specific sensor
+                     WHERE rn % MAX(1, sensor_total / ?2) = 0
                      ORDER BY recorded_at ASC",
                 )?;
-                let rows = stmt.query_map(rusqlite::params![cutoff, max], row_to_reading)?
+                let rows = stmt
+                    .query_map(rusqlite::params![cutoff, max], row_to_reading)?
                     .collect::<rusqlite::Result<Vec<_>>>();
                 rows
             }
@@ -139,7 +161,8 @@ impl Storage {
                      WHERE recorded_at > strftime('%Y-%m-%dT%H:%M:%SZ', 'now', ?1)
                      ORDER BY recorded_at ASC",
                 )?;
-                let rows = stmt.query_map(rusqlite::params![cutoff], row_to_reading)?
+                let rows = stmt
+                    .query_map(rusqlite::params![cutoff], row_to_reading)?
                     .collect::<rusqlite::Result<Vec<_>>>();
                 rows
             }
@@ -148,11 +171,9 @@ impl Storage {
 
     pub async fn get_settings(&self) -> rusqlite::Result<String> {
         let conn = self.conn.lock().await;
-        conn.query_row(
-            "SELECT data FROM user_settings WHERE id = 1",
-            [],
-            |row| row.get(0),
-        )
+        conn.query_row("SELECT data FROM user_settings WHERE id = 1", [], |row| {
+            row.get(0)
+        })
     }
 
     pub async fn save_settings(&self, data: &str) -> rusqlite::Result<()> {
@@ -226,7 +247,11 @@ pub fn start_recording_loop(state: Arc<AppState>) {
 
             tick_count += 1;
             if tick_count.is_multiple_of(288) {
-                match state.storage.prune(state.settings.history_retention_days).await {
+                match state
+                    .storage
+                    .prune(state.settings.history_retention_days)
+                    .await
+                {
                     Ok(n) if n > 0 => tracing::info!("Pruned {n} old sensor readings"),
                     Err(e) => tracing::error!("Failed to prune old readings: {e}"),
                     _ => {}

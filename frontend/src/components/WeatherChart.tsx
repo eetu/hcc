@@ -92,9 +92,8 @@ const WeatherChart: React.FC<WeatherChartProps> = ({
       yAxisID: "yPv",
       data: data.map((d) => d.pvKwh ?? null),
       backgroundColor: theme.mode === "dark" ? "#a35a00" : "#f5a524",
-      borderRadius: 2,
-      barPercentage: 0.5,
-      categoryPercentage: 0.7,
+      barPercentage: 0.7,
+      categoryPercentage: 0.75,
       datalabels: {
         display: true,
         rotation: -90,

@@ -77,18 +77,27 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
     return null;
   }
 
-  const pvByDate = new Map<string, number>();
+  // Aggregate hourly PV forecast points to per-day kWh + hour count.
+  // Days with partial coverage (e.g. first/last day of the 66h window) are
+  // dropped from the chart to avoid showing misleading near-zero totals.
+  const FULL_DAY_HOURS = 20;
+  const pvByDate = new Map<string, { kwh: number; hours: number }>();
   for (const p of pvForecast?.points ?? []) {
     const key = p.time.slice(0, 10);
-    pvByDate.set(key, (pvByDate.get(key) ?? 0) + p.outputW / 1000);
+    const cur = pvByDate.get(key) ?? { kwh: 0, hours: 0 };
+    pvByDate.set(key, {
+      kwh: cur.kwh + p.outputW / 1000,
+      hours: cur.hours + 1,
+    });
   }
 
   const chartData = daily.map((d) => {
     const key = d.date.slice(0, 10);
+    const pv = pvByDate.get(key);
     return {
       temp: d.temperatureMax,
       rain: d.precipitation,
-      pvKwh: pvByDate.has(key) ? pvByDate.get(key)! : null,
+      pvKwh: pv && pv.hours >= FULL_DAY_HOURS ? pv.kwh : null,
       label: `${format(new Date(d.date), "EEEEEE", {
         locale: fi,
       })}`,

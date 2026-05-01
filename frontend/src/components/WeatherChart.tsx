@@ -38,6 +38,18 @@ type WeatherChartProps = {
   days?: number;
 };
 
+const fitsInsideBar = (ctx: Context, charPx: number): boolean => {
+  const value = ctx.dataset.data[ctx.dataIndex] as number | null;
+  if (value == null) return true;
+  const scale = ctx.chart.scales.yPv;
+  if (!scale) return true;
+  const barHeight = Math.abs(
+    scale.getPixelForValue(value) - scale.getPixelForValue(0),
+  );
+  const text = `${value.toFixed(0)} kWh`;
+  return barHeight >= text.length * charPx + 4;
+};
+
 const WeatherChart: React.FC<WeatherChartProps> = ({
   data: unfilteredData,
   days,
@@ -85,26 +97,21 @@ const WeatherChart: React.FC<WeatherChartProps> = ({
       categoryPercentage: 0.7,
       datalabels: {
         display: true,
-        anchor: "center",
-        align: "center",
         rotation: -90,
         clip: false,
         font: { size: labelFontSize, weight: "bold" },
         formatter: (v: number | null) =>
           v == null ? "" : `${v.toFixed(0)} kWh`,
-        color: (ctx: Context) => {
-          const value = ctx.dataset.data[ctx.dataIndex] as number | null;
-          if (value == null) return "#ffffff";
-          const scale = ctx.chart.scales.yPv;
-          if (!scale) return "#ffffff";
-          const barHeight = Math.abs(
-            scale.getPixelForValue(value) - scale.getPixelForValue(0),
-          );
-          const text = `${value.toFixed(0)} kWh`;
-          const labelPx = text.length * labelCharPx + 4;
-          if (barHeight >= labelPx) return "#ffffff";
-          return theme.mode === "dark" ? "#f5a524" : "#a35a00";
-        },
+        anchor: (ctx: Context) =>
+          fitsInsideBar(ctx, labelCharPx) ? "center" : "end",
+        align: (ctx: Context) =>
+          fitsInsideBar(ctx, labelCharPx) ? "center" : "top",
+        color: (ctx: Context) =>
+          fitsInsideBar(ctx, labelCharPx)
+            ? "#ffffff"
+            : theme.mode === "dark"
+              ? "#f5a524"
+              : "#a35a00",
       },
     });
   }

@@ -48,6 +48,12 @@ const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
             fontSize: "14px",
           }}
         >
+          {data.grid_power !== null && (
+            <DrawerRow
+              label="Käyttää"
+              value={`${Math.max(0, data.power - data.grid_power).toFixed(1)} ${data.power_unit}`}
+            />
+          )}
           <DrawerRow
             label="Tänään"
             value={`${data.today_energy} ${data.today_energy_unit}`}

@@ -43,13 +43,17 @@ pub async fn get_data(state: web::Data<Arc<AppState>>) -> HttpResponse {
         (status = 200, description = "Server-sent events stream of Hue device changes")
     )
 )]
-pub async fn events_sse(state: web::Data<Arc<AppState>>) -> sse::Sse<impl futures_util::Stream<Item = Result<sse::Event, std::convert::Infallible>>> {
+pub async fn events_sse(
+    state: web::Data<Arc<AppState>>,
+) -> sse::Sse<impl futures_util::Stream<Item = Result<sse::Event, std::convert::Infallible>>> {
     let rx = subscribe(&state.hue_events_tx);
     let stream = BroadcastStream::new(rx).filter_map(|result| async move {
         match result {
             Ok(event) => {
                 let json = serde_json::to_string(&event).ok()?;
-                Some(Ok::<_, std::convert::Infallible>(sse::Event::Data(sse::Data::new(json))))
+                Some(Ok::<_, std::convert::Infallible>(sse::Event::Data(
+                    sse::Data::new(json),
+                )))
             }
             Err(_) => None,
         }
@@ -86,10 +90,7 @@ pub struct PairResponse {
         (status = 400, description = "Pairing failed")
     )
 )]
-pub async fn pair(
-    state: web::Data<Arc<AppState>>,
-    body: web::Json<PairRequest>,
-) -> HttpResponse {
+pub async fn pair(state: web::Data<Arc<AppState>>, body: web::Json<PairRequest>) -> HttpResponse {
     let bridge_ip = body
         .bridge_ip
         .clone()
@@ -114,16 +115,14 @@ pub async fn pair(
     let res = match state.hue_client.post(&url).json(&payload).send().await {
         Ok(r) => r,
         Err(e) => {
-            return HttpResponse::BadRequest()
-                .json(serde_json::json!({"error": e.to_string()}));
+            return HttpResponse::BadRequest().json(serde_json::json!({"error": e.to_string()}));
         }
     };
 
     let entries: Vec<serde_json::Value> = match res.json().await {
         Ok(v) => v,
         Err(e) => {
-            return HttpResponse::BadRequest()
-                .json(serde_json::json!({"error": e.to_string()}));
+            return HttpResponse::BadRequest().json(serde_json::json!({"error": e.to_string()}));
         }
     };
 
@@ -133,8 +132,7 @@ pub async fn pair(
             .get("description")
             .and_then(|d| d.as_str())
             .unwrap_or("Pairing failed");
-        return HttpResponse::BadRequest()
-            .json(serde_json::json!({"error": desc}));
+        return HttpResponse::BadRequest().json(serde_json::json!({"error": desc}));
     }
 
     if let Some(success) = entry.get("success") {
@@ -184,8 +182,7 @@ pub async fn toggle_group(
         Ok(res) => res,
         Err(e) => {
             tracing::error!("Failed to get group {group_id}: {e}");
-            return HttpResponse::BadGateway()
-                .json(serde_json::json!({"error": e.to_string()}));
+            return HttpResponse::BadGateway().json(serde_json::json!({"error": e.to_string()}));
         }
     };
 
@@ -202,8 +199,7 @@ pub async fn toggle_group(
         Ok(()) => HttpResponse::Ok().finish(),
         Err(e) => {
             tracing::error!("Failed to toggle group {group_id}: {e}");
-            HttpResponse::BadGateway()
-                .json(serde_json::json!({"error": e.to_string()}))
+            HttpResponse::BadGateway().json(serde_json::json!({"error": e.to_string()}))
         }
     }
 }

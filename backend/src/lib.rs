@@ -40,6 +40,7 @@ pub struct AppState {
         hue::handlers::events_sse,
         hue::handlers::pair,
         hue::handlers::toggle_group,
+        hue::handlers::toggle_motion,
         solis::handlers::get_data,
         pv::handlers::get_forecast,
         pv::handlers::post_forecast,
@@ -188,6 +189,10 @@ pub fn create_app(
                         .route(
                             "/toggleGroup/{id}",
                             web::post().to(hue::handlers::toggle_group),
+                        )
+                        .route(
+                            "/toggleMotion/{deviceId}",
+                            web::post().to(hue::handlers::toggle_motion),
                         ),
                 )
                 .service(

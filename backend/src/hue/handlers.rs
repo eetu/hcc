@@ -12,7 +12,7 @@ use crate::AppState;
 use super::client::{hue_fetch, hue_put};
 use super::data::fetch_hue_data;
 use super::events::subscribe;
-use super::models::GroupedLightResource;
+use super::models::{GroupedLightResource, MotionResource};
 
 // ---- GET /api/hue ----
 
@@ -199,6 +199,64 @@ pub async fn toggle_group(
         Ok(()) => HttpResponse::Ok().finish(),
         Err(e) => {
             tracing::error!("Failed to toggle group {group_id}: {e}");
+            HttpResponse::BadGateway().json(serde_json::json!({"error": e.to_string()}))
+        }
+    }
+}
+
+// ---- POST /api/hue/toggleMotion/{deviceId} ----
+
+#[utoipa::path(
+    post,
+    path = "/api/hue/toggleMotion/{deviceId}",
+    params(("deviceId" = String, Path, description = "Hue device ID owning the motion service")),
+    responses(
+        (status = 200, description = "Motion sensor toggled"),
+        (status = 404, description = "Motion service not found for device"),
+        (status = 502, description = "Failed to toggle motion sensor")
+    )
+)]
+pub async fn toggle_motion(
+    state: web::Data<Arc<AppState>>,
+    path: web::Path<String>,
+) -> HttpResponse {
+    let device_id = path.into_inner();
+
+    let motions = match hue_fetch::<MotionResource>(&state, "/clip/v2/resource/motion").await {
+        Ok(res) => res,
+        Err(e) => {
+            tracing::error!("Failed to list motion services: {e}");
+            return HttpResponse::BadGateway().json(serde_json::json!({"error": e.to_string()}));
+        }
+    };
+
+    let Some(service) = motions.data.iter().find(|m| m.owner.rid == device_id) else {
+        return HttpResponse::NotFound()
+            .json(serde_json::json!({"error": "Motion service not found for device"}));
+    };
+
+    let new_enabled = !service.enabled;
+    let body = serde_json::json!({"enabled": new_enabled});
+
+    match hue_put(
+        &state,
+        &format!("/clip/v2/resource/motion/{}", service.id),
+        &body,
+    )
+    .await
+    {
+        Ok(()) => {
+            state.hue_cache.invalidate("hue").await;
+            let _ = state
+                .hue_events_tx
+                .send(super::events::HueLiveEvent::MotionEnabled {
+                    device_id,
+                    enabled: new_enabled,
+                });
+            HttpResponse::Ok().json(serde_json::json!({"enabled": new_enabled}))
+        }
+        Err(e) => {
+            tracing::error!("Failed to toggle motion {}: {e}", service.id);
             HttpResponse::BadGateway().json(serde_json::json!({"error": e.to_string()}))
         }
     }

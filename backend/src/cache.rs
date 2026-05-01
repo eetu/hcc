@@ -50,6 +50,13 @@ impl<T: Clone> Cache<T> {
         });
     }
 
+    pub async fn invalidate(&self, key: &str) {
+        let mut guard = self.inner.write().await;
+        if guard.as_ref().is_some_and(|entry| entry.key == key) {
+            *guard = None;
+        }
+    }
+
     pub async fn has_data(&self) -> bool {
         self.inner.read().await.is_some()
     }

@@ -1,7 +1,7 @@
 use actix_web::{test, web, App};
 use hcc_backend::settings::Settings;
 use hcc_backend::{create_test_app_state, create_test_app_state_with, hue, weather};
-use wiremock::matchers::{method, path};
+use wiremock::matchers::{body_json, method, path};
 use wiremock::{Mock, MockServer, ResponseTemplate};
 
 /// Build a test app with only the API routes (no static file serving).
@@ -33,6 +33,10 @@ fn test_app(
                         .route(
                             "/toggleGroup/{id}",
                             web::post().to(hue::handlers::toggle_group),
+                        )
+                        .route(
+                            "/toggleMotion/{deviceId}",
+                            web::post().to(hue::handlers::toggle_motion),
                         ),
                 ),
         )
@@ -393,6 +397,70 @@ async fn hue_toggle_toggles_group() {
     let resp = test::call_service(&app, req).await;
 
     assert_eq!(resp.status(), 200);
+}
+
+#[actix_web::test]
+async fn hue_toggle_motion_toggles_enabled() {
+    let mock_server = MockServer::start().await;
+
+    Mock::given(method("GET"))
+        .and(path("/clip/v2/resource/motion"))
+        .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+            "data": [
+                {"id": "motion-1", "owner": {"rid": "device-1"}, "enabled": true, "motion": {"motion": false}},
+                {"id": "motion-2", "owner": {"rid": "device-2"}, "enabled": false, "motion": {"motion": null}}
+            ]
+        })))
+        .mount(&mock_server)
+        .await;
+
+    let put_mock = Mock::given(method("PUT"))
+        .and(path("/clip/v2/resource/motion/motion-1"))
+        .and(body_json(serde_json::json!({"enabled": false})))
+        .respond_with(ResponseTemplate::new(200))
+        .expect(1)
+        .mount_as_scoped(&mock_server)
+        .await;
+
+    let settings = test_settings_with_mock(&mock_server.uri());
+    let state = create_test_app_state_with(settings);
+    let app = test::init_service(test_app(state)).await;
+
+    let req = test::TestRequest::post()
+        .uri("/api/hue/toggleMotion/device-1")
+        .to_request();
+    let resp = test::call_service(&app, req).await;
+
+    assert_eq!(resp.status(), 200);
+    let body: serde_json::Value = test::read_body_json(resp).await;
+    assert_eq!(body["enabled"], false);
+    drop(put_mock);
+}
+
+#[actix_web::test]
+async fn hue_toggle_motion_unknown_device_returns_404() {
+    let mock_server = MockServer::start().await;
+
+    Mock::given(method("GET"))
+        .and(path("/clip/v2/resource/motion"))
+        .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+            "data": [
+                {"id": "motion-1", "owner": {"rid": "device-1"}, "enabled": true, "motion": {"motion": false}}
+            ]
+        })))
+        .mount(&mock_server)
+        .await;
+
+    let settings = test_settings_with_mock(&mock_server.uri());
+    let state = create_test_app_state_with(settings);
+    let app = test::init_service(test_app(state)).await;
+
+    let req = test::TestRequest::post()
+        .uri("/api/hue/toggleMotion/missing-device")
+        .to_request();
+    let resp = test::call_service(&app, req).await;
+
+    assert_eq!(resp.status(), 404);
 }
 
 // ---- Routing ----

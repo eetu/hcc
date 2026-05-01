@@ -150,17 +150,17 @@ const App = () => {
         css={{
           width: 720,
           flexShrink: 0,
+          padding: "16px 0",
           [mq[0]]: {
             width: "100%",
             flexShrink: 1,
-            padding: "0 12px",
+            padding: "12px",
             boxSizing: "border-box",
           },
         }}
       >
         <CurrentTime
           css={{
-            marginTop: "2em",
             [mq[0]]: { fontSize: "12px" },
           }}
         />

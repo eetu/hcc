@@ -40,8 +40,9 @@ const useSensorTrend = (sensors: Sensor[]): Trend | null => {
 
   useEffect(() => {
     if (!sensorIds || currentAvg === null) return;
+    const controller = new AbortController();
 
-    fetch(api("/api/history/sensors?hours=2"))
+    fetch(api("/api/history/sensors?hours=2"), { signal: controller.signal })
       .then((r) => r.json())
       .then((readings: SensorReading[]) => {
         const ids = new Set(sensorIds.split(","));
@@ -51,7 +52,6 @@ const useSensorTrend = (sensors: Sensor[]): Trend | null => {
           return;
         }
 
-        // Get the oldest reading per sensor to compare against current
         const oldestBySensor = new Map<string, number>();
         for (const r of relevant) {
           if (!oldestBySensor.has(r.sensorId)) {
@@ -65,7 +65,11 @@ const useSensorTrend = (sensors: Sensor[]): Trend | null => {
 
         setTrend(getTrend(currentAvg - oldAvg));
       })
-      .catch(() => setTrend(null));
+      .catch((err) => {
+        if (err.name !== "AbortError") setTrend(null);
+      });
+
+    return () => controller.abort();
   }, [sensorIds, currentAvg]);
 
   return trend;

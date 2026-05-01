@@ -164,7 +164,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ className }) => {
         >
           {results.map((r, i) => (
             <button
-              key={i}
+              key={`${r.lat},${r.lon}`}
               onClick={() => selectResult(r)}
               css={{
                 padding: "0.6em 0.75em",

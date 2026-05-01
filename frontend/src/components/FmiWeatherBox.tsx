@@ -1,7 +1,8 @@
 import { useTheme } from "@emotion/react";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
-import { memo } from "react";
+import { type LucideProps } from "lucide-react";
+import { createElement, memo, useState } from "react";
 import useSWR from "swr";
 
 import { api, fetcher } from "../api";
@@ -20,6 +21,17 @@ import LocationForm from "./LocationForm";
 import RaindropIcon from "./RaindropIcon";
 import WeatherChart from "./WeatherChart";
 
+type WeatherIconProps = {
+  weatherSymbol: number;
+  isNight: boolean;
+} & LucideProps;
+
+const WeatherIcon: React.FC<WeatherIconProps> = ({
+  weatherSymbol,
+  isNight,
+  ...props
+}) => createElement(getFmiWeatherIcon(weatherSymbol, isNight), props);
+
 type WeatherBoxProps = {
   className?: string;
 };
@@ -27,6 +39,7 @@ type WeatherBoxProps = {
 const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
   const theme = useTheme();
   const { location, isLoading: locationLoading } = useLocationSettings();
+  const [now] = useState(() => new Date());
 
   const weatherUrl = location
     ? api(`/api/weather/fmi?lat=${location.lat}&lon=${location.lon}`)
@@ -95,9 +108,8 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
     });
   }
 
-  const nowDate = new Date();
-  const todayKey = format(nowDate, "yyyy-MM-dd");
-  const hideToday = nowDate.getHours() >= HIDE_TODAY_PAST_HOUR;
+  const todayKey = format(now, "yyyy-MM-dd");
+  const hideToday = now.getHours() >= HIDE_TODAY_PAST_HOUR;
 
   const chartData = daily
     .filter((d) => !(d.date.slice(0, 10) === todayKey && hideToday))
@@ -117,7 +129,6 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
 
   const segments = getFmiTemperatureSegments(hourly);
 
-  const now = new Date();
   const isNight =
     now < new Date(current.sunrise) || now > new Date(current.sunset);
   const title = getFmiWeatherDescription(current.weatherSymbol);
@@ -194,21 +205,15 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
               }}
             >{`${Math.round(current.temperatureApparent)}°`}</div>
           </div>
-          {(() => {
-            const IconComponent = getFmiWeatherIcon(
-              current.weatherSymbol,
-              isNight,
-            );
-            return (
-              <IconComponent
-                css={{
-                  marginLeft: "25px",
-                  alignSelf: "center",
-                }}
-                size={52}
-              />
-            );
-          })()}
+          <WeatherIcon
+            weatherSymbol={current.weatherSymbol}
+            isNight={isNight}
+            css={{
+              marginLeft: "25px",
+              alignSelf: "center",
+            }}
+            size={52}
+          />
           <div
             css={{
               fontSize: "13px",

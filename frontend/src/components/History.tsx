@@ -81,22 +81,28 @@ type HistoryProps = {
 
 const History: React.FC<HistoryProps> = ({ className }) => {
   const theme = useTheme();
-  const [readings, setReadings] = useState<SensorReading[]>([]);
   const [range, setRange] = useState<(typeof RANGES)[number]>(RANGES[1]);
-  const [loading, setLoading] = useState(true);
+  const [response, setResponse] = useState<{
+    range: (typeof RANGES)[number];
+    readings: SensorReading[];
+  }>();
+  const loading = !response || response.range !== range;
+  const readings = response?.readings ?? [];
 
   useEffect(() => {
-    setLoading(true);
+    const controller = new AbortController();
     const params = new URLSearchParams({ hours: String(range.hours) });
     if (range.maxPoints !== undefined)
       params.set("max_points", String(range.maxPoints));
-    fetch(api(`/api/history/sensors?${params}`))
+    fetch(api(`/api/history/sensors?${params}`), { signal: controller.signal })
       .then((r) => r.json())
       .then((data: SensorReading[]) => {
-        setReadings(data);
-        setLoading(false);
+        setResponse({ range, readings: data });
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        if (err.name !== "AbortError") setResponse({ range, readings: [] });
+      });
+    return () => controller.abort();
   }, [range]);
 
   // Group readings by sensor

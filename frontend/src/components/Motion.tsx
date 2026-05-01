@@ -19,7 +19,7 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery("(max-width: 600px)");
 
-  const [pending, setPending] = useState<Set<string>>(new Set());
+  const [pending, setPending] = useState<Set<string>>(() => new Set());
   const motionSensors = sensors.filter(
     (s) => s.motion !== undefined || s.motionEnabled !== undefined,
   );

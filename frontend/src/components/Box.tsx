@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import Icon from "./Icon";
 import Spinner from "./Spinner";
@@ -98,25 +98,15 @@ type BoxDrawerProps = {
 
 const BoxDrawer: React.FC<BoxDrawerProps> = ({ children, collapsed }) => {
   const theme = useTheme();
-  const contentRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(0);
-
-  useEffect(() => {
-    if (!collapsed && contentRef.current) {
-      setHeight(contentRef.current.scrollHeight);
-    } else {
-      setHeight(0);
-    }
-  }, [collapsed]);
 
   return (
     <div
       ref={wrapperRef}
       css={{
-        overflow: "hidden",
-        height,
-        transition: "height 0.15s ease",
+        display: "grid",
+        gridTemplateRows: collapsed ? "0fr" : "1fr",
+        transition: "grid-template-rows 0.15s ease",
       }}
       onTransitionEnd={() => {
         if (!collapsed) {
@@ -124,15 +114,16 @@ const BoxDrawer: React.FC<BoxDrawerProps> = ({ children, collapsed }) => {
         }
       }}
     >
-      <div
-        ref={contentRef}
-        css={{
-          overflowY: "scroll",
-          borderLeft: `1px ${theme.colors.border} solid`,
-          borderRight: `1px ${theme.colors.border} solid`,
-        }}
-      >
-        {children}
+      <div css={{ minHeight: 0, overflow: "hidden" }}>
+        <div
+          css={{
+            overflowY: "scroll",
+            borderLeft: `1px ${theme.colors.border} solid`,
+            borderRight: `1px ${theme.colors.border} solid`,
+          }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );

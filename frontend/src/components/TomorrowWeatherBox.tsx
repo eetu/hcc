@@ -1,6 +1,8 @@
 import { useTheme } from "@emotion/react";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
+import { type LucideProps } from "lucide-react";
+import { createElement } from "react";
 import useSWR from "swr";
 
 import { api, fetcher } from "../api";
@@ -39,6 +41,13 @@ const weatherCode: Record<number, string> = {
   7102: "Kevyt Raesade",
   8000: "Ukkosmyrsky",
 };
+
+type WeatherIconProps = {
+  weatherCode: number;
+} & LucideProps;
+
+const WeatherIcon: React.FC<WeatherIconProps> = ({ weatherCode, ...props }) =>
+  createElement(getWeatherIcon(weatherCode), props);
 
 type TomorrowWeatherBoxProps = {
   className?: string;
@@ -164,18 +173,14 @@ const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({
               }}
             >{`${Math.round(weather.values.temperatureApparent)}°`}</div>
           </div>
-          {(() => {
-            const IconComponent = getWeatherIcon(weather.values.weatherCode);
-            return (
-              <IconComponent
-                css={{
-                  marginLeft: "25px",
-                  alignSelf: "center",
-                }}
-                size={52}
-              />
-            );
-          })()}
+          <WeatherIcon
+            weatherCode={weather.values.weatherCode}
+            css={{
+              marginLeft: "25px",
+              alignSelf: "center",
+            }}
+            size={52}
+          />
           <div
             css={{
               fontSize: "13px",

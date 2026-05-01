@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react";
-import { FC, memo, useCallback, useEffect, useState } from "react";
+import { FC, memo, useCallback, useState } from "react";
 
 import { api } from "../api";
 import { mq } from "../mq";
@@ -45,10 +45,12 @@ type LightGroupProps = {
 
 const LightGroup: FC<LightGroupProps> = ({ group }) => {
   const [isOn, setIsOn] = useState(group.state.on);
+  const [prevOn, setPrevOn] = useState(group.state.on);
 
-  useEffect(() => {
+  if (prevOn !== group.state.on) {
+    setPrevOn(group.state.on);
     setIsOn(group.state.on);
-  }, [group.state.on]);
+  }
 
   const handleClick = useCallback(
     (id: string, isOn: boolean) => () => {

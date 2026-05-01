@@ -2,8 +2,10 @@ import { useTheme } from "@emotion/react";
 import { formatDistanceToNow } from "date-fns";
 import { fi } from "date-fns/locale/fi";
 import { FC, memo, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
 
 import { api } from "../api";
+import { mq } from "../mq";
 import { Sensor } from "../types/hue";
 import Icon from "./Icon";
 
@@ -15,6 +17,8 @@ type MotionProps = {
 
 const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery("(max-width: 600px)");
+
   const [pending, setPending] = useState<Set<string>>(new Set());
   const motionSensors = sensors.filter(
     (s) => s.motion !== undefined || s.motionEnabled !== undefined,
@@ -45,7 +49,10 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
         backgroundColor: theme.colors.background.main,
         boxShadow: theme.shadows.main,
         borderRadius: 6,
-        padding: "1.5em",
+        padding: "1em",
+        [mq[0]]: {
+          padding: "0.5em",
+        },
       }}
     >
       {motionSensors.map((s) => {
@@ -54,12 +61,21 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
         return (
           <div
             key={s.id}
+            onClick={() => toggle(s.deviceId)}
+            aria-label={
+              enabled ? "Poista liiketunnistin käytöstä" : "Ota käyttöön"
+            }
             css={{
               display: "table-row",
               backgroundColor: active
                 ? theme.colors.activity.onBackground
                 : "transparent",
               opacity: enabled ? 1 : 0.5,
+              cursor: pending.has(s.deviceId) ? "wait" : "pointer",
+              background: "transparent",
+              border: "none",
+              padding: 0,
+              color: enabled ? theme.colors.text.main : theme.colors.text.muted,
             }}
           >
             <span
@@ -70,26 +86,14 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
                 width: 32,
               }}
             >
-              <button
-                onClick={() => toggle(s.deviceId)}
-                disabled={pending.has(s.deviceId)}
-                aria-label={
-                  enabled ? "Poista liiketunnistin käytöstä" : "Ota käyttöön"
-                }
+              <span
                 css={{
-                  cursor: pending.has(s.deviceId) ? "wait" : "pointer",
-                  background: "transparent",
-                  border: "none",
-                  padding: 0,
-                  color: enabled
-                    ? theme.colors.text.main
-                    : theme.colors.text.muted,
                   display: "flex",
                   alignItems: "center",
                 }}
               >
                 <Icon size={20}>{enabled ? "sensors" : "sensors_off"}</Icon>
-              </button>
+              </span>
             </span>
             <span
               css={{
@@ -98,7 +102,14 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
                 verticalAlign: "middle",
               }}
             >
-              <span css={{ fontWeight: active ? "bold" : "normal" }}>
+              <span
+                css={{
+                  fontWeight: active ? "bold" : "normal",
+                  whiteSpace: "nowrap",
+                  overflow: "hiddren",
+                  textOverflow: "ellipsis",
+                }}
+              >
                 {s.name}
               </span>
             </span>
@@ -134,7 +145,7 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
             >
               {enabled && s.motionUpdatedAt
                 ? formatDistanceToNow(new Date(s.motionUpdatedAt), {
-                    addSuffix: true,
+                    addSuffix: !isMobile,
                     locale: fi,
                   })
                 : "—"}

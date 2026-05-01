@@ -13,6 +13,13 @@ pub enum HueError {
     Http(#[from] reqwest::Error),
     #[error("Bridge error {status}: {body}")]
     Bridge { status: u16, body: String },
+    #[error("Failed to decode response from {path}: {source} (body: {body})")]
+    Decode {
+        path: String,
+        body: String,
+        #[source]
+        source: serde_json::Error,
+    },
 }
 
 pub async fn hue_fetch<T: serde::de::DeserializeOwned>(
@@ -40,10 +47,32 @@ pub async fn hue_fetch<T: serde::de::DeserializeOwned>(
     if !res.status().is_success() {
         let status = res.status().as_u16();
         let body = res.text().await.unwrap_or_default();
+        tracing::error!(path, status, body = %truncate(&body, 500), "Hue bridge returned non-success");
         return Err(HueError::Bridge { status, body });
     }
 
-    Ok(res.json().await?)
+    let body = res.text().await?;
+    serde_json::from_str::<HueList<T>>(&body).map_err(|e| {
+        tracing::error!(
+            path,
+            error = %e,
+            body = %truncate(&body, 500),
+            "Failed to decode Hue response"
+        );
+        HueError::Decode {
+            path: path.to_string(),
+            body,
+            source: e,
+        }
+    })
+}
+
+fn truncate(s: &str, n: usize) -> String {
+    if s.len() <= n {
+        s.to_string()
+    } else {
+        format!("{}…[+{} bytes]", &s[..n], s.len() - n)
+    }
 }
 
 pub async fn hue_put(

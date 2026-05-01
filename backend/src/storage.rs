@@ -8,6 +8,8 @@ use tokio::sync::Mutex;
 use utoipa::ToSchema;
 
 use crate::hue::data::fetch_hue_data;
+use crate::pv::models::PvForecast;
+use crate::pv::storage as pv_storage;
 use crate::AppState;
 
 pub struct Storage {
@@ -54,9 +56,26 @@ impl Storage {
              INSERT OR IGNORE INTO user_settings (id, data) VALUES (1, '{}');",
         )?;
 
+        pv_storage::init_schema(&conn)?;
+
         Ok(Self {
             conn: Mutex::new(conn),
         })
+    }
+
+    pub async fn upsert_pv_forecast(&self, forecast: &PvForecast) -> rusqlite::Result<usize> {
+        let conn = self.conn.lock().await;
+        pv_storage::upsert_forecast(&conn, forecast)
+    }
+
+    pub async fn read_pv_forecast(&self) -> rusqlite::Result<Option<PvForecast>> {
+        let conn = self.conn.lock().await;
+        pv_storage::read_forecast(&conn)
+    }
+
+    pub async fn prune_pv_forecast(&self) -> rusqlite::Result<usize> {
+        let conn = self.conn.lock().await;
+        pv_storage::prune_past(&conn)
     }
 
     pub async fn insert_readings(&self, readings: &[SensorReading]) -> rusqlite::Result<()> {

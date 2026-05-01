@@ -84,7 +84,8 @@ pub struct TemperatureResource {
 
 #[derive(Debug, Deserialize)]
 pub struct TemperatureData {
-    pub temperature: f64,
+    /// Absent on disabled temperature sensors — only `temperature_valid` is emitted then.
+    pub temperature: Option<f64>,
     pub temperature_report: Option<TemperatureReport>,
 }
 
@@ -141,7 +142,8 @@ pub struct MotionResource {
 
 #[derive(Debug, Deserialize)]
 pub struct MotionData {
-    pub motion: bool,
+    /// Absent on disabled motion sensors — only `motion_valid` is emitted then.
+    pub motion: Option<bool>,
     pub motion_report: Option<MotionReport>,
 }
 

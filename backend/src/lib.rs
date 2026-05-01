@@ -1,5 +1,6 @@
 pub mod cache;
 pub mod hue;
+pub mod pv;
 pub mod settings;
 pub mod solis;
 pub mod storage;
@@ -25,6 +26,7 @@ pub struct AppState {
     pub tomorrow_cache: Cache<serde_json::Value>,
     pub weather_cache: Cache<weather::models::WeatherResponse>,
     pub solis_cache: Cache<solis::models::SolisWidgetData>,
+    pub pv_cache: Cache<pv::models::PvForecast>,
     pub hue_events_tx: broadcast::Sender<hue::events::HueLiveEvent>,
     pub storage: storage::Storage,
 }
@@ -39,6 +41,8 @@ pub struct AppState {
         hue::handlers::pair,
         hue::handlers::toggle_group,
         solis::handlers::get_data,
+        pv::handlers::get_forecast,
+        pv::handlers::post_forecast,
         status,
         sensor_history,
     ),
@@ -52,6 +56,8 @@ pub struct AppState {
         hue::handlers::PairRequest,
         hue::handlers::PairResponse,
         solis::models::SolisWidgetData,
+        pv::models::PvForecast,
+        pv::models::PvPoint,
         StatusResponse,
         storage::SensorReading,
     ))
@@ -187,6 +193,13 @@ pub fn create_app(
                 .service(
                     web::scope("/solis")
                         .route("", web::get().to(solis::handlers::get_data)),
+                )
+                .service(
+                    web::scope("/pv").service(
+                        web::resource("/forecast")
+                            .route(web::get().to(pv::handlers::get_forecast))
+                            .route(web::post().to(pv::handlers::post_forecast)),
+                    ),
                 ),
         )
         .service(SwaggerUi::new("/docs/{_:.*}").url("/api-doc/openapi.json", openapi))
@@ -230,6 +243,7 @@ pub fn create_test_app_state_with(settings: Settings) -> Arc<AppState> {
         tomorrow_cache: Cache::new(std::time::Duration::from_secs(3600)),
         weather_cache: Cache::new(std::time::Duration::from_secs(3600)),
         solis_cache: Cache::new(std::time::Duration::from_secs(300)),
+        pv_cache: Cache::new(std::time::Duration::from_secs(60)),
         hue_events_tx,
         storage,
     })
@@ -268,6 +282,7 @@ pub async fn run_server() -> std::io::Result<()> {
         tomorrow_cache: Cache::new(std::time::Duration::from_secs(3600)),
         weather_cache: Cache::new(std::time::Duration::from_secs(3600)),
         solis_cache: Cache::new(std::time::Duration::from_secs(300)),
+        pv_cache: Cache::new(std::time::Duration::from_secs(60)),
         hue_events_tx: hue_events_tx.clone(),
         storage,
     });

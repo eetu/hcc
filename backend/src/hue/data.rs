@@ -36,7 +36,11 @@ async fn fetch_from_bridge(state: &Arc<AppState>) -> Result<HueResponse, HueErro
     let battery_by_device: HashMap<&str, u8> = device_powers
         .data
         .iter()
-        .filter_map(|dp| dp.power_state.battery_level.map(|b| (dp.owner.rid.as_str(), b)))
+        .filter_map(|dp| {
+            dp.power_state
+                .battery_level
+                .map(|b| (dp.owner.rid.as_str(), b))
+        })
         .collect();
 
     // device ID → room
@@ -65,7 +69,7 @@ async fn fetch_from_bridge(state: &Arc<AppState>) -> Result<HueResponse, HueErro
         .map(|m| {
             let (motion, updated_at) = match &m.motion.motion_report {
                 Some(report) => (report.motion, Some(report.changed.as_str())),
-                None => (m.motion.motion, None),
+                None => (m.motion.motion.unwrap_or(false), None),
             };
             (m.owner.rid.as_str(), (motion, updated_at))
         })
@@ -108,11 +112,9 @@ async fn fetch_from_bridge(state: &Arc<AppState>) -> Result<HueResponse, HueErro
                 .temperature_report
                 .as_ref()
                 .map(|r| r.temperature)
-                .unwrap_or(temp.temperature.temperature);
+                .or(temp.temperature.temperature);
 
-            let battery = battery_by_device
-                .get(temp.owner.rid.as_str())
-                .copied();
+            let battery = battery_by_device.get(temp.owner.rid.as_str()).copied();
 
             let motion_data = motion_by_device.get(temp.owner.rid.as_str());
 
@@ -120,7 +122,7 @@ async fn fetch_from_bridge(state: &Arc<AppState>) -> Result<HueResponse, HueErro
                 id: temp.id.clone(),
                 device_id: temp.owner.rid.clone(),
                 name,
-                temperature: Some(temperature),
+                temperature,
                 room_type,
                 enabled: temp.enabled,
                 battery,

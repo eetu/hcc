@@ -6,6 +6,7 @@ import useSWR from "swr";
 
 import { api, fetcher } from "../api";
 import useLocationSettings from "../hooks/useLocationSettings";
+import { PvForecast } from "../types/pv";
 import { WeatherData } from "../types/weather/fmi";
 import {
   getFmiWeatherDescription,
@@ -36,6 +37,17 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
     refreshWhenHidden: true,
   });
 
+  const { data: pvForecast } = useSWR<PvForecast>(
+    api("/api/pv/forecast"),
+    (url: string) =>
+      fetch(url).then((res) => (res.ok ? res.json() : undefined)),
+    {
+      refreshInterval: 3600000,
+      refreshWhenHidden: true,
+      shouldRetryOnError: false,
+    },
+  );
+
   const current = data?.current;
   const daily = data?.daily ?? [];
   const today = daily[0];
@@ -65,13 +77,23 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
     return null;
   }
 
-  const chartData = daily.map((d) => ({
-    temp: d.temperatureMax,
-    rain: d.precipitation,
-    label: `${format(new Date(d.date), "EEEEEE", {
-      locale: fi,
-    })}`,
-  }));
+  const pvByDate = new Map<string, number>();
+  for (const p of pvForecast?.points ?? []) {
+    const key = p.time.slice(0, 10);
+    pvByDate.set(key, (pvByDate.get(key) ?? 0) + p.outputW / 1000);
+  }
+
+  const chartData = daily.map((d) => {
+    const key = d.date.slice(0, 10);
+    return {
+      temp: d.temperatureMax,
+      rain: d.precipitation,
+      pvKwh: pvByDate.has(key) ? pvByDate.get(key)! : null,
+      label: `${format(new Date(d.date), "EEEEEE", {
+        locale: fi,
+      })}`,
+    };
+  });
 
   const segments = getFmiTemperatureSegments(hourly);
 
@@ -93,7 +115,7 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
             padding: 10,
           }}
         >
-          <WeatherChart data={chartData} />
+          <WeatherChart data={chartData} days={7} />
         </div>
       }
     >

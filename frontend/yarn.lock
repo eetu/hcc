@@ -1924,6 +1924,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chartjs-plugin-datalabels@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "chartjs-plugin-datalabels@npm:2.2.0"
+  peerDependencies:
+    chart.js: ">=3.0.0"
+  checksum: 10/e87c2f30d4f6f84b4b1a28c00d1b032d0100f87f8f296a498507047bd2f7fe98eced583a2c09f30e55806e79a0ca7e0db027cc3bed9b27688980e55701a6945f
+  languageName: node
+  linkType: hard
+
 "chownr@npm:^2.0.0":
   version: 2.0.0
   resolution: "chownr@npm:2.0.0"
@@ -5573,6 +5582,7 @@ __metadata:
     babel-plugin-react-compiler: "npm:^1.0.0"
     chart.js: "npm:^4.5.1"
     chartjs-adapter-date-fns: "npm:^3.0.0"
+    chartjs-plugin-datalabels: "npm:^2.2.0"
     classnames: "npm:^2.5.1"
     date-fns: "npm:^4.1.0"
     eslint: "npm:^9.39.4"

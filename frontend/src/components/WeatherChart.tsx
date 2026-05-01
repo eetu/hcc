@@ -24,7 +24,6 @@ ChartJS.register(
   PointElement,
   LineElement,
   LineController,
-  ChartDataLabels,
 );
 
 type WeatherChartData = {
@@ -121,7 +120,8 @@ const WeatherChart: React.FC<WeatherChartProps> = ({
     plugins: {
       legend: { display: false },
       tooltip: { enabled: false },
-      // Disabled by default — re-enabled per-dataset (PV bars only).
+      // Plugin scoped to this chart via the `plugins` prop on <Chart>.
+      // Disabled at chart level — re-enabled per-dataset on PV bars only.
       datalabels: { display: false },
     },
     scales: {
@@ -167,7 +167,14 @@ const WeatherChart: React.FC<WeatherChartProps> = ({
     },
   };
 
-  return <Chart type="bar" options={options} data={chartData}></Chart>;
+  return (
+    <Chart
+      type="bar"
+      options={options}
+      data={chartData}
+      plugins={[ChartDataLabels]}
+    />
+  );
 };
 
 export default WeatherChart;

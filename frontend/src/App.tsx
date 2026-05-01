@@ -46,6 +46,15 @@ const applyEvent = (data: Response, event: HueLiveEvent): Response => {
             : s,
         ),
       };
+    case "motion_enabled":
+      return {
+        ...data,
+        sensors: data.sensors.map((s) =>
+          s.deviceId === event.deviceId
+            ? { ...s, motionEnabled: event.enabled }
+            : s,
+        ),
+      };
     case "connectivity":
       return {
         ...data,

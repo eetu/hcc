@@ -26,6 +26,8 @@ pub struct Sensor {
     pub motion: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub motion_updated_at: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub motion_enabled: Option<bool>,
     pub connected: bool,
 }
 
@@ -136,7 +138,9 @@ pub struct PowerState {
 
 #[derive(Debug, Deserialize)]
 pub struct MotionResource {
+    pub id: String,
     pub owner: Owner,
+    pub enabled: bool,
     pub motion: MotionData,
 }
 

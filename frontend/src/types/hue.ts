@@ -8,6 +8,7 @@ export type Sensor = {
   battery?: number;
   motion?: boolean;
   motionUpdatedAt?: string;
+  motionEnabled?: boolean;
   connected: boolean;
 };
 
@@ -27,4 +28,5 @@ export type HueLiveEvent =
   | { type: "temperature"; id: string; temperature: number }
   | { type: "device_power"; deviceId: string; battery: number }
   | { type: "motion"; deviceId: string; motion: boolean; updatedAt: string }
+  | { type: "motion_enabled"; deviceId: string; enabled: boolean }
   | { type: "connectivity"; deviceId: string; connected: boolean };

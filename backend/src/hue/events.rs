@@ -32,6 +32,11 @@ pub enum HueLiveEvent {
         #[serde(rename = "updatedAt")]
         updated_at: String,
     },
+    MotionEnabled {
+        #[serde(rename = "deviceId")]
+        device_id: String,
+        enabled: bool,
+    },
     Connectivity {
         #[serde(rename = "deviceId")]
         device_id: String,
@@ -100,7 +105,7 @@ async fn stream_events(state: &Arc<AppState>) -> Result<(), Box<dyn std::error::
                     continue;
                 }
                 for resource in envelope.data {
-                    if let Some(event) = parse_resource_update(&resource) {
+                    for event in parse_resource_update(&resource) {
                         let _ = state.hue_events_tx.send(event);
                     }
                 }
@@ -117,52 +122,103 @@ struct EventEnvelope {
     data: Vec<serde_json::Value>,
 }
 
-fn parse_resource_update(resource: &serde_json::Value) -> Option<HueLiveEvent> {
-    let rtype = resource.get("type")?.as_str()?;
+fn parse_resource_update(resource: &serde_json::Value) -> Vec<HueLiveEvent> {
+    let Some(rtype) = resource.get("type").and_then(|v| v.as_str()) else {
+        return Vec::new();
+    };
     match rtype {
-        "grouped_light" => {
-            let on = resource.get("on")?.get("on")?.as_bool()?;
-            let id = resource.get("id")?.as_str()?.to_string();
-            Some(HueLiveEvent::GroupedLight { id, on })
-        }
-        "temperature" => {
-            let temp_obj = resource.get("temperature")?;
-            let temperature = temp_obj
-                .get("temperature_report")
-                .and_then(|r| r.get("temperature"))
-                .or_else(|| temp_obj.get("temperature"))?
-                .as_f64()?;
-            let id = resource.get("id")?.as_str()?.to_string();
-            Some(HueLiveEvent::Temperature { id, temperature })
-        }
-        "device_power" => {
-            let battery = resource
-                .get("power_state")?
-                .get("battery_level")?
-                .as_u64()? as u8;
-            let device_id = resource.get("owner")?.get("rid")?.as_str()?.to_string();
-            Some(HueLiveEvent::DevicePower { device_id, battery })
-        }
+        "grouped_light" => resource
+            .get("on")
+            .and_then(|o| o.get("on"))
+            .and_then(|o| o.as_bool())
+            .zip(resource.get("id").and_then(|v| v.as_str()))
+            .map(|(on, id)| {
+                vec![HueLiveEvent::GroupedLight {
+                    id: id.to_string(),
+                    on,
+                }]
+            })
+            .unwrap_or_default(),
+        "temperature" => resource
+            .get("temperature")
+            .and_then(|temp_obj| {
+                temp_obj
+                    .get("temperature_report")
+                    .and_then(|r| r.get("temperature"))
+                    .or_else(|| temp_obj.get("temperature"))
+                    .and_then(|t| t.as_f64())
+            })
+            .zip(resource.get("id").and_then(|v| v.as_str()))
+            .map(|(temperature, id)| {
+                vec![HueLiveEvent::Temperature {
+                    id: id.to_string(),
+                    temperature,
+                }]
+            })
+            .unwrap_or_default(),
+        "device_power" => resource
+            .get("power_state")
+            .and_then(|s| s.get("battery_level"))
+            .and_then(|b| b.as_u64())
+            .zip(
+                resource
+                    .get("owner")
+                    .and_then(|o| o.get("rid"))
+                    .and_then(|r| r.as_str()),
+            )
+            .map(|(battery, device_id)| {
+                vec![HueLiveEvent::DevicePower {
+                    device_id: device_id.to_string(),
+                    battery: battery as u8,
+                }]
+            })
+            .unwrap_or_default(),
         "motion" => {
-            let report = resource.get("motion")?.get("motion_report")?;
-            let motion = report.get("motion")?.as_bool()?;
-            let updated_at = report.get("changed")?.as_str()?.to_string();
-            let device_id = resource.get("owner")?.get("rid")?.as_str()?.to_string();
-            Some(HueLiveEvent::Motion {
-                device_id,
-                motion,
-                updated_at,
-            })
+            let Some(device_id) = resource
+                .get("owner")
+                .and_then(|o| o.get("rid"))
+                .and_then(|r| r.as_str())
+            else {
+                return Vec::new();
+            };
+            let mut events = Vec::new();
+            if let Some(enabled) = resource.get("enabled").and_then(|e| e.as_bool()) {
+                events.push(HueLiveEvent::MotionEnabled {
+                    device_id: device_id.to_string(),
+                    enabled,
+                });
+            }
+            if let Some(report) = resource.get("motion").and_then(|m| m.get("motion_report")) {
+                if let (Some(motion), Some(updated_at)) = (
+                    report.get("motion").and_then(|m| m.as_bool()),
+                    report.get("changed").and_then(|c| c.as_str()),
+                ) {
+                    events.push(HueLiveEvent::Motion {
+                        device_id: device_id.to_string(),
+                        motion,
+                        updated_at: updated_at.to_string(),
+                    });
+                }
+            }
+            events
         }
-        "zigbee_connectivity" => {
-            let status = resource.get("status")?.as_str()?;
-            let device_id = resource.get("owner")?.get("rid")?.as_str()?.to_string();
-            Some(HueLiveEvent::Connectivity {
-                device_id,
-                connected: status == "connected",
+        "zigbee_connectivity" => resource
+            .get("status")
+            .and_then(|s| s.as_str())
+            .zip(
+                resource
+                    .get("owner")
+                    .and_then(|o| o.get("rid"))
+                    .and_then(|r| r.as_str()),
+            )
+            .map(|(status, device_id)| {
+                vec![HueLiveEvent::Connectivity {
+                    device_id: device_id.to_string(),
+                    connected: status == "connected",
+                }]
             })
-        }
-        _ => None,
+            .unwrap_or_default(),
+        _ => Vec::new(),
     }
 }
 

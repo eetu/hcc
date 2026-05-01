@@ -63,7 +63,7 @@ async fn fetch_from_bridge(state: &Arc<AppState>) -> Result<HueResponse, HueErro
         .collect();
 
     // device ID → motion data
-    let motion_by_device: HashMap<&str, (bool, Option<&str>)> = motions
+    let motion_by_device: HashMap<&str, (bool, Option<&str>, bool)> = motions
         .data
         .iter()
         .map(|m| {
@@ -71,7 +71,7 @@ async fn fetch_from_bridge(state: &Arc<AppState>) -> Result<HueResponse, HueErro
                 Some(report) => (report.motion, Some(report.changed.as_str())),
                 None => (m.motion.motion.unwrap_or(false), None),
             };
-            (m.owner.rid.as_str(), (motion, updated_at))
+            (m.owner.rid.as_str(), (motion, updated_at, m.enabled))
         })
         .collect();
 
@@ -126,8 +126,9 @@ async fn fetch_from_bridge(state: &Arc<AppState>) -> Result<HueResponse, HueErro
                 room_type,
                 enabled: temp.enabled,
                 battery,
-                motion: motion_data.map(|(m, _)| *m),
-                motion_updated_at: motion_data.and_then(|(_, u)| u.map(String::from)),
+                motion: motion_data.map(|(m, _, _)| *m),
+                motion_updated_at: motion_data.and_then(|(_, u, _)| u.map(String::from)),
+                motion_enabled: motion_data.map(|(_, _, e)| *e),
                 connected: connected_by_device
                     .get(temp.owner.rid.as_str())
                     .copied()

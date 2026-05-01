@@ -80,7 +80,11 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
   // Aggregate hourly PV forecast points to per-day kWh + hour count.
   // Days with partial coverage (e.g. first/last day of the 66h window) are
   // dropped from the chart to avoid showing misleading near-zero totals.
+  // Today's forecast is also dropped past local noon: by midday actual
+  // generation has eclipsed the forecast and the SolisBox already shows
+  // the live number, making the forward-looking bar redundant.
   const FULL_DAY_HOURS = 20;
+  const HIDE_TODAY_PAST_HOUR = 12;
   const pvByDate = new Map<string, { kwh: number; hours: number }>();
   for (const p of pvForecast?.points ?? []) {
     const key = p.time.slice(0, 10);
@@ -91,18 +95,25 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
     });
   }
 
-  const chartData = daily.map((d) => {
-    const key = d.date.slice(0, 10);
-    const pv = pvByDate.get(key);
-    return {
-      temp: d.temperatureMax,
-      rain: d.precipitation,
-      pvKwh: pv && pv.hours >= FULL_DAY_HOURS ? pv.kwh : null,
-      label: `${format(new Date(d.date), "EEEEEE", {
-        locale: fi,
-      })}`,
-    };
-  });
+  const nowDate = new Date();
+  const todayKey = format(nowDate, "yyyy-MM-dd");
+  const hideToday = nowDate.getHours() >= HIDE_TODAY_PAST_HOUR;
+
+  const chartData = daily
+    .filter((d) => !(d.date.slice(0, 10) === todayKey && hideToday))
+    .map((d) => {
+      const key = d.date.slice(0, 10);
+      const pv = pvByDate.get(key);
+      const includePv = pv && pv.hours >= FULL_DAY_HOURS;
+      return {
+        temp: d.temperatureMax,
+        rain: d.precipitation,
+        pvKwh: includePv ? pv.kwh : null,
+        label: `${format(new Date(d.date), "EEEEEE", {
+          locale: fi,
+        })}`,
+      };
+    });
 
   const segments = getFmiTemperatureSegments(hourly);
 

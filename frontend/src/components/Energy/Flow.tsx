@@ -43,12 +43,13 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
   const hasFlow = (v: number) => Math.abs(v) > 0.05;
 
   const accent = theme.colors.activity.on;
-  const cool = theme.colors.rain;
+  const cool = theme.colors.cool;
   const muted = theme.colors.text.muted;
+  const gridStroke = theme.colors.text.main;
 
   const flowStyle = {
     fill: "none",
-    strokeWidth: 1.5,
+    strokeWidth: 2,
     strokeDasharray: "4 6",
     animation: `${flow} 1.4s linear infinite`,
   };
@@ -130,8 +131,8 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         {/* home → grid (export) or grid → home (import) */}
         <path
           d="M400,210 C500,210 520,110 620,110"
-          stroke={importing > 0 ? accent : muted}
-          opacity={hasFlow(grid) ? 1 : 0.2}
+          stroke={importing > 0 ? accent : gridStroke}
+          opacity={hasFlow(grid) ? 1 : 0.3}
           css={{
             ...flowStyle,
             animationDirection: exporting > 0 ? "reverse" : "normal",

@@ -158,14 +158,14 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         {/* PV → Inverter */}
         <path
           d="M160,110 C260,110 300,210 400,210"
-          stroke={pvActive ? accent : idleStroke}
+          stroke={accent}
           opacity={pvActive ? 1 : 0.3}
           css={[flowBase, pvActive && flowAnim]}
         />
         {/* Battery ↔ Inverter */}
         <path
           d="M160,310 C260,310 300,210 400,210"
-          stroke={batteryActive ? battery : idleStroke}
+          stroke={battery}
           opacity={batteryActive ? 1 : 0.3}
           css={[
             flowBase,
@@ -176,7 +176,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         {/* Inverter ↔ Grid */}
         <path
           d="M400,210 C500,210 540,110 640,110"
-          stroke={gridActive ? accent : idleStroke}
+          stroke={accent}
           opacity={gridActive ? 1 : 0.3}
           css={[
             flowBase,
@@ -187,7 +187,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         {/* Inverter → Home */}
         <path
           d="M400,210 C500,210 540,310 640,310"
-          stroke={homeActive ? homeColor : idleStroke}
+          stroke={homeColor}
           opacity={homeActive ? 1 : 0.3}
           css={[flowBase, homeActive && flowAnim]}
         />

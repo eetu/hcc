@@ -2697,12 +2697,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^1.11.0":
-  version: 1.11.0
-  resolution: "lucide-react@npm:1.11.0"
+"lucide-react@npm:^1.14.0":
+  version: 1.14.0
+  resolution: "lucide-react@npm:1.14.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10/7eff2ed85e65066d2227aa6ee0937eb013d3cca4a70fe80bd7c54d3afbb75b79afab0dd7f331d3f369e5af0695c665cad78aa3b6c9a3f0857018eec4008d4ce3
+  checksum: 10/bbfed6ac7b32bd84924a0a38760b77ee22dbc8bb15cb0437ac796164ed8007669e8372465f72be09650538d0142e73532ac3bc9529ffb19ab9551c73df470c18
   languageName: node
   linkType: hard
 
@@ -4030,7 +4030,7 @@ __metadata:
     date-fns: "npm:^4.1.0"
     eslint: "npm:^10.3.0"
     eslint-config: "github:eetu/eslint-config#v2.0.1"
-    lucide-react: "npm:^1.11.0"
+    lucide-react: "npm:^1.14.0"
     playwright: "npm:^1.59.1"
     prettier: "npm:^3.8.3"
     react: "npm:^19.2.5"

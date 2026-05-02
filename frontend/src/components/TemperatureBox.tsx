@@ -136,9 +136,9 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
         )}
         <div
           css={{
-            fontWeight: "normal",
-            fontSize: 18,
-            textTransform: "capitalize",
+            ...theme.typography.label,
+            color: theme.colors.text.muted,
+            letterSpacing: "0.04em",
           }}
         >
           {title}
@@ -148,8 +148,10 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
             position: "relative",
             marginTop: "5px",
             display: "flex",
-            fontWeight: "normal",
-            fontSize: "50px",
+            fontWeight: 400,
+            fontSize: 50,
+            lineHeight: 1,
+            fontVariantNumeric: "tabular-nums",
           }}
         >
           {Math.round(temperature)}

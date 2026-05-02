@@ -118,8 +118,10 @@ const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
         >
           <div
             css={{
-              fontWeight: "normal",
-              fontSize: "50px",
+              fontWeight: 400,
+              fontSize: 50,
+              lineHeight: 1,
+              fontVariantNumeric: "tabular-nums",
             }}
           >
             {displayPower}

@@ -223,7 +223,7 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
         background: theme.colors.background.light,
         transition: "border-color 0.3s ease",
         textAlign: "left",
-        touchAction: "none",
+        touchAction: "pan-y",
         userSelect: "none",
       }}
     >

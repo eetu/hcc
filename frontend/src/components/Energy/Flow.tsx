@@ -206,7 +206,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </g>
         <text
           x="160"
-          y="46"
+          y="36"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
           fontSize="18"
@@ -214,7 +214,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         >
           aurinko
         </text>
-        <text x="160" y="72" textAnchor="middle" fontSize="16" fill={muted}>
+        <text x="160" y="60" textAnchor="middle" fontSize="16" fill={muted}>
           tänään {data.today_energy.toFixed(1)} {data.today_energy_unit}
         </text>
         <text
@@ -328,7 +328,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </g>
         <text
           x="640"
-          y="46"
+          y="36"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
           fontSize="18"
@@ -336,7 +336,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         >
           verkko
         </text>
-        <text x="640" y="72" textAnchor="middle" fontSize="16" fill={muted}>
+        <text x="640" y="60" textAnchor="middle" fontSize="16" fill={muted}>
           {importing > 0 ? "tuonti" : exporting > 0 ? "vienti" : "lepotila"}
         </text>
         <text

@@ -1,4 +1,4 @@
-import { useTheme } from "@emotion/react";
+import { keyframes, useTheme } from "@emotion/react";
 import { formatDistanceToNow } from "date-fns";
 import { fi } from "date-fns/locale/fi";
 import { FC, memo, useState } from "react";
@@ -8,6 +8,11 @@ import { api } from "../api";
 import { mq } from "../mq";
 import { Sensor } from "../types/hue";
 import Icon from "./Icon";
+
+const motionPulse = keyframes`
+  0%, 100% { box-shadow: 0 0 0 0 rgba(247, 143, 8, 0.5); }
+  50%      { box-shadow: 0 0 0 6px rgba(247, 143, 8, 0); }
+`;
 
 type MotionProps = {
   className?: string;
@@ -67,15 +72,12 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
             }
             css={{
               display: "table-row",
-              backgroundColor: active
-                ? theme.colors.activity.onBackground
-                : "transparent",
               opacity: enabled ? 1 : 0.5,
               cursor: pending.has(s.deviceId) ? "wait" : "pointer",
-              background: "transparent",
               border: "none",
               padding: 0,
               color: enabled ? theme.colors.text.main : theme.colors.text.muted,
+              transition: "opacity 0.3s ease",
             }}
           >
             <span
@@ -83,16 +85,33 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
                 display: "table-cell",
                 padding: "8px 4px",
                 verticalAlign: "middle",
-                width: 32,
+                width: 40,
               }}
             >
               <span
                 css={{
-                  display: "flex",
+                  display: "inline-flex",
                   alignItems: "center",
+                  gap: 8,
                 }}
               >
-                <Icon size={20}>{enabled ? "sensors" : "sensors_off"}</Icon>
+                <span
+                  css={{
+                    display: "inline-block",
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    backgroundColor: active
+                      ? theme.colors.activity.on
+                      : theme.colors.text.muted,
+                    animation: active
+                      ? `${motionPulse} 1.8s ease-out infinite`
+                      : "none",
+                  }}
+                />
+                <Icon size={18} css={{ color: theme.colors.text.muted }}>
+                  {enabled ? "sensors" : "sensors_off"}
+                </Icon>
               </span>
             </span>
             <span
@@ -104,10 +123,11 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
             >
               <span
                 css={{
-                  fontWeight: active ? "bold" : "normal",
+                  fontWeight: active ? 600 : 400,
                   whiteSpace: "nowrap",
-                  overflow: "hiddren",
+                  overflow: "hidden",
                   textOverflow: "ellipsis",
+                  textTransform: "lowercase",
                 }}
               >
                 {s.name}
@@ -121,9 +141,10 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
                 color: active
                   ? theme.colors.activity.on
                   : theme.colors.text.muted,
-                fontWeight: active ? "bold" : "normal",
+                fontWeight: active ? 600 : 400,
                 textAlign: "right",
                 whiteSpace: "nowrap",
+                transition: "color 0.3s ease",
               }}
             >
               {!enabled

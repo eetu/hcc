@@ -51,30 +51,38 @@ const Box: React.FC<BoxProps> = ({
     );
   }
 
+  const expandable = drawer !== undefined;
+
   return (
     <div
       className={className}
       css={{
-        cursor: "pointer",
+        cursor: expandable ? "pointer" : "default",
         minWidth: 0,
         overflow: "hidden",
         boxShadow: theme.shadows.main,
         borderRadius: theme.border.radius,
       }}
-      onClick={() => setCollapsed(!collapsed)}
+      onClick={expandable ? () => setCollapsed(!collapsed) : undefined}
     >
-      <BoxHeader>{children}</BoxHeader>
-      <BoxDrawer collapsed={collapsed}>{drawer}</BoxDrawer>
-      <BoxFooter collapsed={collapsed} />
+      <BoxHeader hairline={expandable}>{children}</BoxHeader>
+      {expandable && (
+        <>
+          <BoxDrawer collapsed={collapsed}>{drawer}</BoxDrawer>
+          <BoxFooter collapsed={collapsed} />
+        </>
+      )}
     </div>
   );
 };
 
 export default Box;
 
-type BoxHeaderProps = React.HTMLAttributes<HTMLDivElement>;
+type BoxHeaderProps = {
+  hairline: boolean;
+} & React.HTMLAttributes<HTMLDivElement>;
 
-const BoxHeader: React.FC<BoxHeaderProps> = ({ children }) => {
+const BoxHeader: React.FC<BoxHeaderProps> = ({ children, hairline }) => {
   const theme = useTheme();
 
   return (
@@ -84,7 +92,7 @@ const BoxHeader: React.FC<BoxHeaderProps> = ({ children }) => {
         flexDirection: "column",
         backgroundColor: theme.colors.background.main,
         padding: "1.5em",
-        borderBottom: `1px ${theme.colors.border} solid`,
+        borderBottom: hairline ? `1px ${theme.colors.border} solid` : "none",
       }}
     >
       {children}
@@ -117,7 +125,6 @@ const BoxDrawer: React.FC<BoxDrawerProps> = ({ children, collapsed }) => {
       <div css={{ minHeight: 0, overflow: "hidden" }}>
         <div
           css={{
-            overflowY: "scroll",
             borderLeft: `1px ${theme.colors.border} solid`,
             borderRight: `1px ${theme.colors.border} solid`,
           }}

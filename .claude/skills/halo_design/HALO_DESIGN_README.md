@@ -195,11 +195,11 @@ Used as ligatures via the `<Icon>` component (`frontend/src/components/Icon.tsx`
 **A few hand‑rolled SVG icons** live alongside Material:
 - `RaindropIcon.tsx` — outlined teardrop, currentColor stroke.
 - `Arrow.tsx` — wind direction (compass triangle inside a thin circle), rotates by `deg`.
-- `favicon.svg` — house outline (a black‑filled house glyph at 24×24).
+- `frontend/public/favicon.svg` — halo brand mark (ring + warm dot), used as primary favicon.
 
 These are extensions of Material's "outlined, currentColor, 24px" vibe, not departures from it.
 
-**No emoji. No unicode pictographs. No `lucide-react` rendered as raw icons** — although `lucide-react` is a dep, it's used only as a TypeScript type (`LucideProps`) by the FMI weather icon factory, which itself returns SVG components.
+**No emoji. No unicode pictographs.** `lucide-react` is used in two places: (1) the FMI weather icon factory, which maps weather codes to Lucide components, and (2) the Energy view flow diagram (`frontend/src/components/Energy/Flow.tsx`), which renders nodes (Sun, Activity, Battery*, Plug, House) inside SVG `<foreignObject>`s.
 
 For this design system, Material Icons is loaded **from the Google CDN** (matching the source). No local icon font is bundled.
 

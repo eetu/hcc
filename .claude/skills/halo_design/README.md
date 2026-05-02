@@ -306,12 +306,18 @@ A few hand-rolled SVG icons live alongside Material:
 
 ## Assets
 
-In `design_files/assets/`:
+In `assets/` (this skill):
 
-- `halo-logo.svg` — the ring + warm centre brand mark. Use at 22px in chrome; can scale up for a splash / about screen.
-- `halo-wordmark.svg` — full lockup (mark + wordmark). Use this when you need the lockup as a single asset; otherwise compose mark + Inter 600 wordmark inline (the prototypes do this).
-- `favicon.svg` / `favicon.png` — house glyph, original from the source repo. The prototypes use this as the favicon.
-- `screenshot.png` — reference screenshot of the original `eetu/hcc` dashboard for context. Layout has shifted in the redesign; treat this as historical.
+- `halo-logo.svg` — ring + warm centre brand mark. Use at 22px in chrome; scale up for splash / about screens.
+- `halo-wordmark.svg` — full lockup (mark + wordmark). Compose mark + Inter 600 wordmark inline when you need it as text alongside the mark.
+
+Deployed favicons live in the host repo at `frontend/public/`:
+
+- `favicon.svg` — vector, primary; halo logo with `#525252` ring + `#f78f08` dot.
+- `favicon.png` — 512×512 raster fallback (transparent).
+- `favicon.ico` — multi-resolution (16/32/48/64/128/256) fallback.
+
+Treat the production files as the source of truth — do not re-bundle stale favicons in this skill.
 
 Inter and Space Grotesk are loaded from Google Fonts CDN. For an offline build, download both families and self-host; rewrite the `@import` in `colors_and_type.css`.
 
@@ -326,11 +332,9 @@ design_handoff_halo_dashboard/
     ├── SKILL.md                                   ← Claude Code skill manifest
     ├── HALO_DESIGN_README.md                      ← full design system reference (visual language, voice, tokens)
     ├── colors_and_type.css                        ← all design tokens as CSS variables
-    ├── assets/                                    ← logos + favicon
+    ├── assets/                                    ← brand mark and wordmark
     │   ├── halo-logo.svg
-    │   ├── halo-wordmark.svg
-    │   ├── favicon.svg
-    │   └── favicon.png
+    │   └── halo-wordmark.svg
     └── ui_kits/
         └── dashboard/
             ├── index.html                         ← runtime entry; open this to view the prototype

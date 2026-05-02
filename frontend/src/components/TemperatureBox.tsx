@@ -127,8 +127,8 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
           <Icon
             css={{
               position: "absolute",
-              top: 0,
-              right: 0,
+              top: -16,
+              right: -16,
               display: "block",
               color: theme.colors.error,
             }}
@@ -160,11 +160,12 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
             <div
               css={{
                 position: "absolute",
-                right: -30,
+                right: -25,
                 top: 0,
                 bottom: 0,
                 display: "flex",
                 alignItems: "center",
+                opacity: 0.75,
               }}
             >
               <TrendIndicator trend={trend} />

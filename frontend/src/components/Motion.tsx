@@ -7,7 +7,6 @@ import { useMediaQuery } from "usehooks-ts";
 import { api } from "../api";
 import { mq } from "../mq";
 import { Sensor } from "../types/hue";
-import Icon from "./Icon";
 
 const motionPulse = keyframes`
   0%, 100% { box-shadow: 0 0 0 0 rgba(247, 143, 8, 0.5); }
@@ -85,34 +84,23 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
                 display: "table-cell",
                 padding: "8px 4px",
                 verticalAlign: "middle",
-                width: 40,
+                width: 20,
               }}
             >
               <span
                 css={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
+                  display: "inline-block",
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  backgroundColor: active
+                    ? theme.colors.activity.on
+                    : theme.colors.text.muted,
+                  animation: active
+                    ? `${motionPulse} 1.8s ease-out infinite`
+                    : "none",
                 }}
-              >
-                <span
-                  css={{
-                    display: "inline-block",
-                    width: 8,
-                    height: 8,
-                    borderRadius: "50%",
-                    backgroundColor: active
-                      ? theme.colors.activity.on
-                      : theme.colors.text.muted,
-                    animation: active
-                      ? `${motionPulse} 1.8s ease-out infinite`
-                      : "none",
-                  }}
-                />
-                <Icon size={18} css={{ color: theme.colors.text.muted }}>
-                  {enabled ? "sensors" : "sensors_off"}
-                </Icon>
-              </span>
+              />
             </span>
             <span
               css={{

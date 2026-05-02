@@ -1,10 +1,15 @@
-import { useTheme } from "@emotion/react";
+import { keyframes, useTheme } from "@emotion/react";
 import { FC, memo, useCallback, useState } from "react";
 
 import { api } from "../api";
 import { mq } from "../mq";
 import { Group } from "../types/hue";
 import Icon from "./Icon";
+
+const bulbGlow = keyframes`
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(247, 143, 8, 0.55)); }
+  50%      { filter: drop-shadow(0 0 10px rgba(247, 143, 8, 0.85)); }
+`;
 
 type LightGroupsProps = {
   groups: Group[];
@@ -22,9 +27,9 @@ const LightGroups: FC<LightGroupsProps> = ({ groups, className }) => {
         padding: "1em",
         display: "flex",
         flexDirection: "row",
-        gap: 5,
+        gap: 8,
         flexWrap: "wrap",
-        borderRadius: 5,
+        borderRadius: theme.border.radius,
         [mq[0]]: {
           flexDirection: "column",
         },
@@ -73,22 +78,21 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        gap: 5,
+        gap: 8,
         [mq[0]]: {
           gap: 10,
-        },
-        color: theme.colors.text.main,
-        padding: "5px 2px",
-        cursor: "pointer",
-        width: 148,
-        borderRadius: 5,
-        [mq[0]]: {
           width: "100%",
         },
+        color: theme.colors.text.main,
+        padding: "5px 12px 5px 4px",
+        cursor: "pointer",
+        width: 175,
+        borderRadius: theme.border.radius,
         border: `3px solid ${isOn ? theme.colors.activity.on : theme.colors.text.main}`,
         background: isOn
           ? theme.colors.activity.onBackground
-          : theme.colors.activity.offBackground,
+          : theme.colors.background.light,
+        transition: "background 0.4s ease, border-color 0.3s ease",
       }}
       onClick={handleClick(group.id, isOn)}
     >
@@ -99,15 +103,20 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
           alignItems: "center",
           borderRadius: "100%",
           backgroundColor: isOn
-            ? "rgba(247, 143, 8, 0.15)"
-            : "rgba(0,0,0, 0.15)",
+            ? "rgba(247, 143, 8, 0.18)"
+            : "rgba(0, 0, 0, 0.06)",
           height: 42,
           width: 42,
+          transition: "background 0.4s ease",
         }}
       >
         <Icon
-          css={{ color: isOn ? "#f8a63a" : theme.colors.text.main }}
-          size={36}
+          css={{
+            color: isOn ? theme.colors.activity.on : theme.colors.text.muted,
+            animation: isOn ? `${bulbGlow} 3.2s ease-in-out infinite` : "none",
+            transition: "color 0.3s ease",
+          }}
+          size={32}
           type="normal"
         >
           lightbulb
@@ -121,6 +130,7 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
           },
           overflow: "hidden",
           textOverflow: "ellipsis",
+          textTransform: "lowercase",
         }}
       >
         {group.name}

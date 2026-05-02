@@ -2,6 +2,7 @@ import { useTheme } from "@emotion/react";
 import classNames from "classnames";
 import { memo } from "react";
 
+import useScreenshotMode, { anonymize } from "../hooks/useScreenshotMode";
 import useSensorTrend from "../hooks/useSensorTrend";
 import { mq } from "../mq";
 import { Sensor } from "../types/hue";
@@ -29,6 +30,7 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
 }) => {
   const theme = useTheme();
   const trend = useSensorTrend(sensors);
+  const demo = useScreenshotMode();
 
   const enabledSensors = sensors?.filter((r) => r.enabled);
 
@@ -87,7 +89,7 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
                         gap: 5,
                       }}
                     >
-                      {r.name}
+                      {demo ? anonymize(r.id, "anturi") : r.name}
                       {isSensorBatteryLow && (
                         <Icon
                           size={18}
@@ -127,8 +129,8 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
           <Icon
             css={{
               position: "absolute",
-              top: 0,
-              right: 0,
+              top: -16,
+              right: -16,
               display: "block",
               color: theme.colors.error,
             }}
@@ -136,9 +138,9 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
         )}
         <div
           css={{
-            fontWeight: "normal",
-            fontSize: 18,
-            textTransform: "capitalize",
+            ...theme.typography.label,
+            color: theme.colors.text.muted,
+            letterSpacing: "0.04em",
           }}
         >
           {title}
@@ -148,8 +150,10 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
             position: "relative",
             marginTop: "5px",
             display: "flex",
-            fontWeight: "normal",
-            fontSize: "50px",
+            fontWeight: 400,
+            fontSize: 50,
+            lineHeight: 1,
+            fontVariantNumeric: "tabular-nums",
           }}
         >
           {Math.round(temperature)}
@@ -158,11 +162,12 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
             <div
               css={{
                 position: "absolute",
-                right: -30,
+                right: -25,
                 top: 0,
                 bottom: 0,
                 display: "flex",
                 alignItems: "center",
+                opacity: 0.75,
               }}
             >
               <TrendIndicator trend={trend} />

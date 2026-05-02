@@ -2,7 +2,8 @@ import { Theme } from "@emotion/react";
 
 type Typography = {
   fontSize: string;
-  fontWeight: string;
+  fontWeight: number | string;
+  fontFamily?: string;
 };
 
 declare module "@emotion/react" {
@@ -10,6 +11,10 @@ declare module "@emotion/react" {
     mode: string;
     border: {
       radius: number | string;
+    };
+    fonts: {
+      body: string;
+      heading: string;
     };
     colors: {
       body: string;
@@ -27,12 +32,15 @@ declare module "@emotion/react" {
       activity: {
         on: string;
         onBackground: string;
+        onSoft: string;
         offBackground: string;
       };
       connected: string;
       disconnected: string;
       warm: string;
       cool: string;
+      rain: string;
+      pv: string;
     };
     typography: {
       h1: Typography;
@@ -41,6 +49,7 @@ declare module "@emotion/react" {
       body1: Typography;
       body2: Typography;
       caption: Typography;
+      label: Typography;
     };
     shadows: {
       main: string;
@@ -48,18 +57,25 @@ declare module "@emotion/react" {
   }
 }
 
+const fonts = {
+  body: '"Inter", system-ui, sans-serif',
+  heading: '"Space Grotesk", "Inter", sans-serif',
+};
+
 const typography = {
-  h1: { fontSize: "50px", fontWeight: "normal" },
-  h2: { fontSize: "20px", fontWeight: "normal" },
-  h3: { fontSize: "18px", fontWeight: "normal" },
-  body1: { fontSize: "16px", fontWeight: "normal" },
-  body2: { fontSize: "14px", fontWeight: "normal" },
-  caption: { fontSize: "13px", fontWeight: "lighter" },
+  h1: { fontSize: "50px", fontWeight: 400, fontFamily: fonts.body },
+  h2: { fontSize: "20px", fontWeight: 500, fontFamily: fonts.heading },
+  h3: { fontSize: "18px", fontWeight: 500, fontFamily: fonts.heading },
+  body1: { fontSize: "16px", fontWeight: 400, fontFamily: fonts.body },
+  body2: { fontSize: "14px", fontWeight: 400, fontFamily: fonts.body },
+  caption: { fontSize: "13px", fontWeight: 300, fontFamily: fonts.body },
+  label: { fontSize: "14px", fontWeight: 500, fontFamily: fonts.heading },
 };
 
 export const lightTheme: Theme = {
   mode: "light",
   border: { radius: 6 },
+  fonts,
   colors: {
     body: "#f0f0f0",
     text: {
@@ -77,12 +93,15 @@ export const lightTheme: Theme = {
       on: "#f78f08",
       onBackground:
         "linear-gradient(153deg, rgba(255,237,207,1) 0%, rgba(255,239,171,1) 56%)",
+      onSoft: "rgba(247, 143, 8, 0.10)",
       offBackground: "#d9d9d9",
     },
     connected: "#4caf50",
     disconnected: "#f44336",
     warm: "#e65100",
     cool: "#1565c0",
+    rain: "#94daf7",
+    pv: "#f5a524",
   },
   typography,
   shadows: {
@@ -93,6 +112,7 @@ export const lightTheme: Theme = {
 export const darkTheme: Theme = {
   mode: "dark",
   border: { radius: 6 },
+  fonts,
   colors: {
     body: "#0f0f0f",
     text: {
@@ -109,12 +129,15 @@ export const darkTheme: Theme = {
     activity: {
       on: "#f78f08",
       onBackground: "rgba(247, 143, 8, 0.2)",
+      onSoft: "rgba(247, 143, 8, 0.20)",
       offBackground: "#404040",
     },
     connected: "#4caf50",
     disconnected: "#f44336",
     warm: "#ff7043",
     cool: "#42a5f5",
+    rain: "#43529c",
+    pv: "#a35a00",
   },
   typography,
   shadows: {

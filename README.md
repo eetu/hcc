@@ -23,6 +23,12 @@ HCC_HISTORY_RETENTION_DAYS=90 # days of sensor history to keep (default: 0/disab
 # Rooms not listed default to "inside".
 HUE_ROOM_TYPES={"inside": ["Keittiö", "Olohuone"], "inside_cold": ["Kuisti"], "outside": ["Ulkona"]}
 
+# SolisCloud (PV inverter) — required for the energy view + history.
+SOLIS_KEY_ID=
+SOLIS_KEY_SECRET=
+SOLIS_STATION_ID=
+SOLIS_BASE_URL=             # default https://www.soliscloud.com:13333
+
 ```
 
 PV forecast vars (`PV_LAT`, `PV_LON`, `PV_TILT`, `PV_AZIMUTH`, `PV_KW`) are
@@ -74,6 +80,19 @@ GET /api/history/sensors?sensor_id=<id>&hours=<n>
 | `sensor_id` | no       | all     | Filter to a specific sensor          |
 | `hours`     | no       | 24      | Hours of history to return (max 720) |
 
+## Solis history
+
+When SolisCloud is configured, the backend polls `/v1/api/stationDetail` every 5 minutes and writes a row to `solis_readings` (PV power, grid power, battery SoC + power, today's energy, status). Readings during inverter offline (`status=2`) are skipped to keep gaps visible in the chart. Retention follows `HCC_HISTORY_RETENTION_DAYS`.
+
+```
+GET /api/history/solis?hours=<n>&max_points=<m>
+```
+
+| Parameter    | Required | Default | Description                                 |
+|--------------|----------|---------|---------------------------------------------|
+| `hours`      | no       | 24      | Hours of history to return (max 720)        |
+| `max_points` | no       | —       | Uniform sampling cap (window-function based) |
+
 ## PV forecast
 
 The backend exposes `GET/POST /api/pv/forecast`. The actual forecast is
@@ -124,6 +143,44 @@ The FMI forecast covers Finland, Scandinavia, and the Baltic countries. See
 [ilmatieteenlaitos.fi/numerical-weather-prediction](https://en.ilmatieteenlaitos.fi/numerical-weather-prediction)
 for the full available area.
 
-## Media
+## Views
 
-![screenshot](/documentation/screenshot.png)
+### Temperature (default)
+
+![temperature view](/documentation/screenshots/main.png)
+
+Glanceable home dashboard. Top row: current weather + 4 day-segments with a collapsible 7-day chart drawer (FMI temperature line, rain bars in blue, PV forecast bars in orange with daily kWh). Bottom row: temperature cards for `ulkona`, `sisällä`, `kuisti` (each averaging Hue motion sensor readings, with low-battery and trend indicators) plus the `Solis` solar production card (kW now). Tap any card to expand a drawer with per-sensor details.
+
+### Energy
+
+![energy view](/documentation/screenshots/energy.png)
+
+Live PV ↔ inverter ↔ home / battery / grid flow diagram from SolisCloud. Active paths animate (dashed scrolling stroke); idle paths stay static at reduced opacity. Each node carries its current kW, plus aurinko shows today's kWh, akku shows SOC %, verkko shows direction (`tuonti` / `vienti` / `lepotila`).
+
+### Lights
+
+![lights view](/documentation/screenshots/lights.png)
+
+All Hue rooms / zones as tappable toggles. Lit groups get a warm cream background, accent ring, and a softly glowing bulb. Status row shows `päällä` / `pois` with a state dot.
+
+### Motion
+
+![motion view](/documentation/screenshots/motion.png)
+
+All Hue motion sensors in a single list. Active rows show a pulsing accent dot and bold `liikettä`; idle rows stay muted. Disabled sensors fade out. Last-trigger timestamp on the right uses Finnish relative formatting.
+
+### History
+
+![history view](/documentation/screenshots/history.png)
+
+Sensor temperature history from the local SQLite store. Range pills (`6h`, `24h`, `7pv`, `30pv`) trigger backend-side downsampling so wide ranges stay snappy. Per-sensor colors are derived from room type (cool blues for outside, warm reds for inside, greens for cold-inside).
+
+### Settings
+
+![settings view](/documentation/screenshots/settings.png)
+
+Location set via address search or device geolocation, plus the deployed image tag.
+
+### Screenshot mode
+
+Append `?demo=1` to any URL to anonymize sensor / room / location names (stable hashed labels like `anturi 042`, `ryhmä 488`). Useful for sharing screenshots without leaking topology.

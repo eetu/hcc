@@ -1,10 +1,16 @@
-import { useTheme } from "@emotion/react";
+import { keyframes, useTheme } from "@emotion/react";
 import { FC, memo, useCallback, useState } from "react";
 
 import { api } from "../api";
+import useScreenshotMode, { anonymize } from "../hooks/useScreenshotMode";
 import { mq } from "../mq";
 import { Group } from "../types/hue";
 import Icon from "./Icon";
+
+const bulbGlow = keyframes`
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(247, 143, 8, 0.55)); }
+  50%      { filter: drop-shadow(0 0 10px rgba(247, 143, 8, 0.85)); }
+`;
 
 type LightGroupsProps = {
   groups: Group[];
@@ -20,18 +26,17 @@ const LightGroups: FC<LightGroupsProps> = ({ groups, className }) => {
         backgroundColor: theme.colors.background.main,
         boxShadow: theme.shadows.main,
         padding: "1em",
-        display: "flex",
-        flexDirection: "row",
-        gap: 5,
-        flexWrap: "wrap",
-        borderRadius: 5,
+        display: "grid",
+        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+        gap: 12,
+        borderRadius: theme.border.radius,
         [mq[0]]: {
-          flexDirection: "column",
+          gridTemplateColumns: "1fr",
         },
       }}
     >
       {groups.map((g) => (
-        <LightGroup key={g.id} group={g}></LightGroup>
+        <LightGroup key={g.id} group={g} />
       ))}
     </div>
   );
@@ -53,11 +58,11 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
   }
 
   const handleClick = useCallback(
-    (id: string, isOn: boolean) => () => {
+    (id: string, on: boolean) => () => {
       fetch(api(`/api/hue/toggleGroup/${id}`), { method: "POST" }).then(
         (res) => {
           if (res.status === 200) {
-            setIsOn(!isOn);
+            setIsOn(!on);
           }
         },
       );
@@ -66,65 +71,105 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
   );
 
   const theme = useTheme();
+  const demo = useScreenshotMode();
+  const accent = theme.colors.activity.on;
+  const muted = theme.colors.text.muted;
 
   return (
     <button
+      onClick={handleClick(group.id, isOn)}
       css={{
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        gap: 5,
-        [mq[0]]: {
-          gap: 10,
-        },
+        gap: 14,
         color: theme.colors.text.main,
-        padding: "5px 2px",
+        padding: "8px 16px 8px 6px",
         cursor: "pointer",
-        width: 148,
-        borderRadius: 5,
-        [mq[0]]: {
-          width: "100%",
-        },
-        border: `3px solid ${isOn ? theme.colors.activity.on : theme.colors.text.main}`,
+        width: "100%",
+        borderRadius: theme.border.radius,
+        border: `3px solid ${isOn ? accent : theme.colors.text.main}`,
         background: isOn
           ? theme.colors.activity.onBackground
-          : theme.colors.activity.offBackground,
+          : theme.colors.background.light,
+        transition: "background 0.4s ease, border-color 0.3s ease",
+        textAlign: "left",
       }}
-      onClick={handleClick(group.id, isOn)}
     >
       <div
         css={{
+          flexShrink: 0,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           borderRadius: "100%",
           backgroundColor: isOn
-            ? "rgba(247, 143, 8, 0.15)"
-            : "rgba(0,0,0, 0.15)",
+            ? "rgba(247, 143, 8, 0.18)"
+            : "rgba(0, 0, 0, 0.06)",
           height: 42,
           width: 42,
+          transition: "background 0.4s ease",
         }}
       >
         <Icon
-          css={{ color: isOn ? "#f8a63a" : theme.colors.text.main }}
-          size={36}
+          css={{
+            color: isOn ? accent : muted,
+            animation: isOn ? `${bulbGlow} 3.2s ease-in-out infinite` : "none",
+            transition: "color 0.3s ease",
+          }}
+          size={32}
           type="normal"
         >
           lightbulb
         </Icon>
       </div>
-      <span
+      <div
         css={{
-          fontSize: 14,
-          [mq[0]]: {
-            fontSize: 18,
-          },
-          overflow: "hidden",
-          textOverflow: "ellipsis",
+          flex: 1,
+          minWidth: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
         }}
       >
-        {group.name}
-      </span>
+        <span
+          css={{
+            fontSize: 16,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            textTransform: "lowercase",
+          }}
+        >
+          {demo ? anonymize(group.id, "ryhmä") : group.name}
+        </span>
+        <span
+          css={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            fontFamily: theme.fonts.heading,
+            fontSize: 12,
+            fontWeight: 500,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            color: isOn ? accent : muted,
+            transition: "color 0.3s ease",
+          }}
+        >
+          <span
+            css={{
+              display: "inline-block",
+              width: 7,
+              height: 7,
+              borderRadius: "50%",
+              backgroundColor: isOn ? accent : muted,
+              transition: "background 0.3s ease",
+            }}
+          />
+          {isOn ? "päällä" : "pois"}
+        </span>
+      </div>
     </button>
   );
 };

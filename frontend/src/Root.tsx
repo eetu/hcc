@@ -13,7 +13,7 @@ const Root = () => {
       <Global
         styles={{
           html: {
-            fontFamily: '"Open Sans", sans-serif',
+            fontFamily: theme.fonts.body,
           },
           body: {
             padding: 0,
@@ -25,6 +25,7 @@ const Root = () => {
             backgroundColor: theme.colors.body,
             color: theme.colors.text.main,
             userSelect: "none",
+            WebkitFontSmoothing: "antialiased",
           },
           a: {
             color: "inherit",

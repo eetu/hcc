@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { Chart } from "react-chartjs-2";
 
 import { api } from "../api";
+import useScreenshotMode, { anonymize } from "../hooks/useScreenshotMode";
 
 ChartJS.register(
   CategoryScale,
@@ -81,6 +82,7 @@ type HistoryProps = {
 
 const History: React.FC<HistoryProps> = ({ className }) => {
   const theme = useTheme();
+  const demo = useScreenshotMode();
   const [range, setRange] = useState<(typeof RANGES)[number]>(RANGES[1]);
   const [response, setResponse] = useState<{
     range: (typeof RANGES)[number];
@@ -137,7 +139,7 @@ const History: React.FC<HistoryProps> = ({ className }) => {
     const color = sensorColor(sensor.id, sensor.roomType);
 
     return {
-      label: sensor.name,
+      label: demo ? anonymize(sensor.id, "anturi") : sensor.name,
       data: sensor.points,
       borderColor: color,
       backgroundColor: color,
@@ -231,30 +233,31 @@ const History: React.FC<HistoryProps> = ({ className }) => {
           marginBottom: "1em",
         }}
       >
-        {RANGES.map((r) => (
-          <button
-            key={r.hours}
-            onClick={() => setRange(r)}
-            css={{
-              cursor: "pointer",
-              padding: "4px 12px",
-              borderRadius: 4,
-              border: `1px solid ${theme.colors.border}`,
-              backgroundColor:
-                range.hours === r.hours
-                  ? theme.colors.text.main
-                  : theme.colors.background.light,
-              color:
-                range.hours === r.hours
-                  ? theme.colors.background.main
+        {RANGES.map((r) => {
+          const active = range.hours === r.hours;
+          return (
+            <button
+              key={r.hours}
+              onClick={() => setRange(r)}
+              css={{
+                cursor: "pointer",
+                padding: "5px 12px",
+                borderRadius: theme.border.radius,
+                border: `1px solid ${active ? theme.colors.activity.on : theme.colors.border}`,
+                backgroundColor: active
+                  ? theme.colors.activity.onSoft
+                  : theme.colors.background.main,
+                color: active
+                  ? theme.colors.activity.on
                   : theme.colors.text.main,
-              ...theme.typography.body2,
-              transition: "all 0.15s",
-            }}
-          >
-            {r.label}
-          </button>
-        ))}
+                ...theme.typography.body2,
+                transition: "all 0.15s",
+              }}
+            >
+              {r.label}
+            </button>
+          );
+        })}
       </div>
       <div css={{ position: "relative", height: 300 }}>
         {loading ? (

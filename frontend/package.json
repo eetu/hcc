@@ -10,6 +10,8 @@
     "lint:fix": "eslint eslint.config.js src --fix",
     "format": "prettier --check src",
     "format:fix": "prettier --write src",
+    "typecheck": "tsc --noEmit",
+    "validate": "yarn lint && yarn format && yarn typecheck",
     "preview": "vite preview",
     "test": "vitest",
     "test:e2e": "playwright test -c ./playwright.configuration.ts"

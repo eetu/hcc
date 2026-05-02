@@ -9,6 +9,7 @@ import {
 } from "../geo";
 import useGeoLocation from "../hooks/useGeoLocation";
 import useLocationSettings from "../hooks/useLocationSettings";
+import useScreenshotMode from "../hooks/useScreenshotMode";
 import Icon from "./Icon";
 
 type LocationFormProps = {
@@ -19,6 +20,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ className }) => {
   const theme = useTheme();
   const { location, saveLocation } = useLocationSettings();
   const geo = useGeoLocation();
+  const demo = useScreenshotMode();
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<NominatimResult[]>([]);
@@ -86,7 +88,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ className }) => {
         }}
       >
         <Icon size={16}>location_on</Icon>
-        Sijainti
+        sijainti
       </div>
 
       {location && (
@@ -97,14 +99,14 @@ const LocationForm: React.FC<LocationFormProps> = ({ className }) => {
             marginBottom: "0.25em",
           }}
         >
-          {location.displayName}
+          {demo ? "—" : location.displayName}
         </div>
       )}
 
       <div css={{ display: "flex", gap: "0.5em", position: "relative" }}>
         <input
           type="text"
-          placeholder="Search city or address..."
+          placeholder="kaupunki tai osoite"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleDetect()}
@@ -142,7 +144,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ className }) => {
           }}
         >
           <Icon size={16}>{query.trim() ? "search" : "my_location"}</Icon>
-          {query.trim() ? "Search" : "Detect"}
+          {query.trim() ? "hae" : "paikanna"}
         </button>
       </div>
 

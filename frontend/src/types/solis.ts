@@ -18,3 +18,13 @@ export type SolisData = {
   status: 1 | 2 | 3;
   updated_at: number;
 };
+
+export type SolisReading = {
+  power: number;
+  gridPower: number | null;
+  batterySoc: number | null;
+  batteryPower: number | null;
+  todayEnergy: number;
+  status: number;
+  recordedAt: string;
+};

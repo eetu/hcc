@@ -1,6 +1,8 @@
 import { useTheme } from "@emotion/react";
 import React, { memo } from "react";
 
+import { mq } from "../mq";
+
 type WordmarkProps = {
   size?: number;
 } & React.HTMLAttributes<HTMLDivElement>;
@@ -40,6 +42,7 @@ const Wordmark: React.FC<WordmarkProps> = ({
           letterSpacing: "-0.04em",
           fontSize: size,
           lineHeight: 1,
+          [mq[0]]: { display: "none" },
         }}
       >
         halo<span css={{ color: theme.colors.activity.on }}>.</span>

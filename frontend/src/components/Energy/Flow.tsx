@@ -208,19 +208,19 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           y="46"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
-          fontSize="14"
+          fontSize="18"
           fill={theme.colors.text.main}
         >
           aurinko
         </text>
-        <text x="160" y="64" textAnchor="middle" fontSize="12" fill={muted}>
+        <text x="160" y="64" textAnchor="middle" fontSize="16" fill={muted}>
           tänään {data.today_energy.toFixed(1)} {data.today_energy_unit}
         </text>
         <text
           x="160"
           y="174"
           textAnchor="middle"
-          fontSize="20"
+          fontSize="24"
           fill={theme.colors.text.main}
           style={{ fontVariantNumeric: "tabular-nums" }}
         >
@@ -250,7 +250,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           y="262"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
-          fontSize="13"
+          fontSize="16"
           fill={theme.colors.text.main}
         >
           invertteri
@@ -281,7 +281,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
               y="368"
               textAnchor="middle"
               fontFamily={theme.fonts.heading}
-              fontSize="14"
+              fontSize="18"
               fill={theme.colors.text.main}
             >
               akku
@@ -290,7 +290,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
               x="160"
               y="386"
               textAnchor="middle"
-              fontSize="12"
+              fontSize="16"
               fill={muted}
             >
               {Math.round(soc)}%
@@ -304,7 +304,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
               x="160"
               y="404"
               textAnchor="middle"
-              fontSize="20"
+              fontSize="24"
               fill={theme.colors.text.main}
               style={{ fontVariantNumeric: "tabular-nums" }}
             >
@@ -336,19 +336,19 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           y="46"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
-          fontSize="14"
+          fontSize="18"
           fill={theme.colors.text.main}
         >
           verkko
         </text>
-        <text x="640" y="64" textAnchor="middle" fontSize="12" fill={muted}>
+        <text x="640" y="64" textAnchor="middle" fontSize="16" fill={muted}>
           {importing > 0 ? "tuonti" : exporting > 0 ? "vienti" : "lepotila"}
         </text>
         <text
           x="640"
           y="174"
           textAnchor="middle"
-          fontSize="20"
+          fontSize="24"
           fill={theme.colors.text.main}
           style={{ fontVariantNumeric: "tabular-nums" }}
         >
@@ -378,7 +378,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           y="368"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
-          fontSize="14"
+          fontSize="18"
           fill={theme.colors.text.main}
         >
           koti
@@ -387,7 +387,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           x="640"
           y="386"
           textAnchor="middle"
-          fontSize="12"
+          fontSize="16"
           fill={muted}
           style={{ fontVariantNumeric: "tabular-nums" }}
         >

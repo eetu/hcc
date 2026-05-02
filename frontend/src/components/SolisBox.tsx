@@ -29,8 +29,12 @@ const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
   // Not configured: hide entirely.
   if (error?.status === 503) return null;
 
-  const offline = !!error || data?.status === 2;
-  if (offline) {
+  // Full offline state when:
+  // - inverter reports offline (status=2)
+  // - network error and we have nothing cached to render
+  const inverterOffline = data?.status === 2;
+  const networkErrorNoData = !!error && !data;
+  if (inverterOffline || networkErrorNoData) {
     const lastSeen = data?.updated_at ? new Date(data.updated_at) : null;
     return (
       <Box className={className}>
@@ -40,6 +44,8 @@ const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
   }
 
   if (!data) return null;
+
+  const isStale = !!error;
 
   const isAlarm = data.status === 3;
   const displayPower = data.power.toFixed(1);
@@ -142,6 +148,11 @@ const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
               {isAlarm ? "warning" : "solar_power"}
             </Icon>
             {data.power_unit}
+            {isStale && (
+              <Icon size={14} css={{ opacity: 0.6 }}>
+                cloud_off
+              </Icon>
+            )}
           </div>
           <div
             css={{

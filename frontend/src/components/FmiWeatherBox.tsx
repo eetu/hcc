@@ -90,7 +90,7 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
     );
   }
 
-  if (error) {
+  if (error && !data) {
     return (
       <Box className={className}>
         <OfflineState label="säätiedot" />
@@ -101,6 +101,8 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
   if (!(data && current && today)) {
     return null;
   }
+
+  const isStale = !!error;
 
   // Aggregate hourly PV forecast points to per-day kWh + hour count.
   // Days with partial coverage (e.g. first/last day of the 66h window) are
@@ -188,6 +190,14 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
           >
             {demo ? "" : (location?.displayName ?? "")}
           </span>
+          {isStale && (
+            <Icon
+              size={14}
+              css={{ color: theme.colors.text.muted, opacity: 0.7 }}
+            >
+              cloud_off
+            </Icon>
+          )}
         </div>
         <div
           css={{

@@ -56,7 +56,11 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
       null,
     );
 
-  if (error) {
+  // Full offline UI only when we have no prior data to fall back on.
+  // With cached sensors, render the normal card and surface a subtle stale
+  // hint instead — avoids flashing offline state during standby reconnects.
+  const isStale = !!error && sensors.length > 0;
+  if (error && sensors.length === 0) {
     return (
       <Box
         className={classNames(className)}
@@ -212,12 +216,20 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
         >
           <div
             css={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
               ...theme.typography.label,
               color: theme.colors.text.muted,
               letterSpacing: "0.04em",
             }}
           >
             {title}
+            {isStale && (
+              <Icon size={14} css={{ opacity: 0.6 }}>
+                cloud_off
+              </Icon>
+            )}
           </div>
           <div
             css={{

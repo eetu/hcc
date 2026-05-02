@@ -5,7 +5,7 @@ import { type LucideProps } from "lucide-react";
 import { createElement, memo, useState } from "react";
 import useSWR from "swr";
 
-import { api, fetcher } from "../api";
+import { api, jsonFetcher } from "../api";
 import useLocationSettings from "../hooks/useLocationSettings";
 import useScreenshotMode from "../hooks/useScreenshotMode";
 import { PvForecast } from "../types/pv";
@@ -19,6 +19,7 @@ import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
 import LocationForm from "./LocationForm";
+import OfflineState from "./OfflineState";
 import RaindropIcon from "./RaindropIcon";
 import WeatherChart from "./WeatherChart";
 
@@ -47,9 +48,10 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
     ? api(`/api/weather/fmi?lat=${location.lat}&lon=${location.lon}`)
     : null;
 
-  const { data } = useSWR<WeatherData>(weatherUrl, fetcher, {
+  const { data, error } = useSWR<WeatherData>(weatherUrl, jsonFetcher, {
     refreshInterval: 3600000,
     refreshWhenHidden: true,
+    shouldRetryOnError: false,
   });
 
   const { data: pvForecast } = useSWR<PvForecast>(
@@ -84,6 +86,14 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
           </div>
           <LocationForm />
         </div>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box className={className}>
+        <OfflineState label="säätiedot" />
       </Box>
     );
   }

@@ -2,10 +2,11 @@ import { useTheme } from "@emotion/react";
 import { memo } from "react";
 import useSWR from "swr";
 
-import { api, fetcher } from "../api";
+import { api, HttpError, jsonFetcher } from "../api";
 import { SolisData } from "../types/solis";
 import Box, { DrawerRow } from "./Box";
 import Icon from "./Icon";
+import OfflineState from "./OfflineState";
 
 type SolisBoxProps = {
   className?: string;
@@ -14,13 +15,30 @@ type SolisBoxProps = {
 const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
   const theme = useTheme();
 
-  const { data, error } = useSWR<SolisData>(api("/api/solis"), fetcher, {
-    refreshInterval: 300_000,
-    refreshWhenHidden: true,
-    shouldRetryOnError: false,
-  });
+  const { data, error } = useSWR<SolisData, HttpError>(
+    api("/api/solis"),
+    jsonFetcher,
+    {
+      refreshInterval: 300_000,
+      refreshWhenHidden: true,
+      shouldRetryOnError: false,
+    },
+  );
 
-  if (!data || error) return null;
+  // Not configured: hide entirely.
+  if (error?.status === 503) return null;
+
+  const offline = !!error || data?.status === 2;
+  if (offline) {
+    const lastSeen = data?.updated_at ? new Date(data.updated_at) : null;
+    return (
+      <Box className={className}>
+        <OfflineState label="aurinkopaneelit" lastSeen={lastSeen} />
+      </Box>
+    );
+  }
+
+  if (!data) return null;
 
   const isAlarm = data.status === 3;
   const displayPower = data.power.toFixed(1);

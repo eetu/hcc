@@ -8,6 +8,7 @@ import { mq } from "../mq";
 import { Sensor } from "../types/hue";
 import Box, { DrawerRow } from "./Box";
 import Icon from "./Icon";
+import OfflineState from "./OfflineState";
 import TrendIndicator from "./TrendIndicator";
 
 type TemperatureBoxProps = {
@@ -43,6 +44,24 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
 
   const sensorWithLowBattery = sensors.find(isBatteryLow);
 
+  if (error) {
+    return (
+      <Box
+        className={classNames(className)}
+        css={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          [mq[0]]: {
+            width: "100%",
+          },
+        }}
+      >
+        <OfflineState label={typeof title === "string" ? title : "anturit"} />
+      </Box>
+    );
+  }
+
   return (
     <Box
       className={classNames(className)}
@@ -55,7 +74,6 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
         },
       }}
       loading={sensors.length === 0}
-      error={error}
       drawer={
         <div
           css={{

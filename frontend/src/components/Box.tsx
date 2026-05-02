@@ -8,16 +8,9 @@ type BoxProps = {
   className?: string;
   drawer?: React.ReactElement;
   loading?: boolean;
-  error?: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const Box: React.FC<BoxProps> = ({
-  className,
-  children,
-  drawer,
-  loading,
-  error,
-}) => {
+const Box: React.FC<BoxProps> = ({ className, children, drawer, loading }) => {
   const [collapsed, setCollapsed] = useState(true);
   const theme = useTheme();
 
@@ -32,21 +25,6 @@ const Box: React.FC<BoxProps> = ({
         }}
       >
         <Spinner />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div
-        className={className}
-        css={{
-          display: "flex",
-          justifyContent: "center",
-          color: theme.colors.error,
-        }}
-      >
-        <Icon>error</Icon>
       </div>
     );
   }

@@ -105,7 +105,10 @@ const App = () => {
   useEffect(() => {
     const syncData = () => {
       fetch(api("/api/hue"))
-        .then((r) => r.json())
+        .then((r) => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        })
         .then((d: Response) => {
           setData(d);
           setError(false);
@@ -113,8 +116,10 @@ const App = () => {
         .catch(() => setError(true));
     };
 
+    syncData();
     const es = new EventSource(api("/api/hue/events"));
     es.onopen = syncData;
+    es.onerror = () => setError(true);
     es.onmessage = (e: MessageEvent) => {
       const event = JSON.parse(e.data as string) as HueLiveEvent;
       setData((prev) => (prev ? applyEvent(prev, event) : prev));

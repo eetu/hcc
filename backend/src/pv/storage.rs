@@ -49,10 +49,13 @@ pub fn upsert_forecast(conn: &Connection, forecast: &PvForecast) -> rusqlite::Re
 }
 
 pub fn read_forecast(conn: &Connection) -> rusqlite::Result<Option<PvForecast>> {
+    // Include up to 24h of already-passed points so the UI can still render
+    // today's full-day forecast after the pusher's sliding window has eroded
+    // the morning hours. The frontend decides when to hide today (noon cutoff).
     let mut stmt = conn.prepare(
         "SELECT time, output_w, temperature, wind, module_temp, generated_at
          FROM pv_forecast_points
-         WHERE time >= strftime('%Y-%m-%dT%H:00:00Z', 'now')
+         WHERE time >= strftime('%Y-%m-%dT%H:00:00Z', 'now', '-24 hours')
          ORDER BY time ASC",
     )?;
 
@@ -84,7 +87,7 @@ pub fn read_forecast(conn: &Connection) -> rusqlite::Result<Option<PvForecast>> 
 pub fn prune_past(conn: &Connection) -> rusqlite::Result<usize> {
     conn.execute(
         "DELETE FROM pv_forecast_points
-         WHERE time < strftime('%Y-%m-%dT%H:00:00Z', 'now', '-12 hours')",
+         WHERE time < strftime('%Y-%m-%dT%H:00:00Z', 'now', '-36 hours')",
         [],
     )
 }

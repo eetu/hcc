@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { memo } from "react";
 import useSWR from "swr";
+import { useMediaQuery } from "usehooks-ts";
 
 import { api, fetcher } from "../../api";
 import { SolisData } from "../../types/solis";
@@ -62,6 +63,7 @@ const batteryIcon = (soc: number, charging: boolean): LucideIcon => {
 
 const Flow: React.FC<{ className?: string }> = ({ className }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery("(max-width: 600px)");
   const { data } = useSWR<SolisData>(api("/api/solis"), fetcher, {
     refreshInterval: 60_000,
     refreshWhenHidden: true,
@@ -107,6 +109,11 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
   const batteryActive = hasFlow(batteryPower);
   const gridActive = hasFlow(grid);
 
+  const strokeWidth = isMobile ? 4 : 2;
+  const nodeSize = isMobile ? 42 : 36;
+  const nodeTitleFontSize = isMobile ? 24 : 18;
+  const nodeSubTitleFontSize = isMobile ? 20 : 16;
+
   return (
     <div
       className={className}
@@ -148,7 +155,10 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             : "—"}
         </div>
       </div>
-      <svg viewBox="0 0 800 470" css={{ width: "100%", height: "auto" }}>
+      <svg
+        viewBox={isMobile ? "80 20 640 425" : "0 0 800 470"}
+        css={{ width: "100%", height: "auto" }}
+      >
         {/* PV → Inverter */}
         <path
           d="M160,110 C260,110 300,210 400,210"
@@ -191,15 +201,15 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           <circle
             cx="160"
             cy="110"
-            r="36"
+            r={nodeSize}
             fill={theme.colors.background.light}
             stroke={theme.colors.activity.on}
-            strokeWidth="2"
+            strokeWidth={strokeWidth}
           />
           <NodeIcon
             cx={160}
             cy={110}
-            size={32}
+            size={nodeSize}
             color={theme.colors.activity.on}
             icon={Sun}
           />
@@ -209,7 +219,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           y="36"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
-          fontSize="18"
+          fontSize={nodeTitleFontSize}
           fill={theme.colors.text.main}
         >
           aurinko
@@ -218,7 +228,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           x="160"
           y="60"
           textAnchor="middle"
-          fontSize="16"
+          fontSize={nodeSubTitleFontSize}
           fill={theme.colors.text.muted}
         >
           tänään {data.today_energy.toFixed(1)} {data.today_energy_unit}
@@ -239,25 +249,25 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           <circle
             cx="400"
             cy="210"
-            r="32"
+            r={nodeSize}
             fill={theme.colors.background.light}
             stroke={theme.colors.text.main}
-            strokeWidth="2"
+            strokeWidth={strokeWidth}
           />
           <NodeIcon
             cx={400}
             cy={210}
-            size={28}
+            size={nodeSize}
             color={theme.colors.text.main}
             icon={Activity}
           />
         </g>
         <text
           x="400"
-          y="262"
+          y={262 + (isMobile ? 12 : 0)}
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
-          fontSize="16"
+          fontSize={nodeTitleFontSize}
           fill={theme.colors.text.main}
         >
           invertteri
@@ -270,34 +280,34 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
               <circle
                 cx="160"
                 cy="310"
-                r="36"
+                r={nodeSize}
                 fill={theme.colors.background.light}
                 stroke={theme.colors.battery}
-                strokeWidth="2"
+                strokeWidth={strokeWidth}
               />
               <NodeIcon
                 cx={160}
                 cy={310}
-                size={32}
+                size={nodeSize}
                 color={theme.colors.battery}
                 icon={batteryIcon(soc, charging > 0)}
               />
             </g>
             <text
               x="160"
-              y="373"
+              y={373 + (isMobile ? 5 : 0)}
               textAnchor="middle"
               fontFamily={theme.fonts.heading}
-              fontSize="18"
+              fontSize={nodeTitleFontSize}
               fill={theme.colors.text.main}
             >
               akku
             </text>
             <text
               x="160"
-              y="397"
+              y={397 + (isMobile ? 5 : 0)}
               textAnchor="middle"
-              fontSize="16"
+              fontSize={nodeSubTitleFontSize}
               fill={theme.colors.text.muted}
             >
               {Math.round(soc)}%
@@ -309,7 +319,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             </text>
             <text
               x="160"
-              y="429"
+              y={429 + (isMobile ? 5 : 0)}
               textAnchor="middle"
               fontSize="24"
               fill={theme.colors.text.main}
@@ -325,15 +335,15 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           <circle
             cx="640"
             cy="110"
-            r="36"
+            r={nodeSize}
             fill={theme.colors.background.light}
             stroke={theme.colors.activity.on}
-            strokeWidth="2"
+            strokeWidth={strokeWidth}
           />
           <NodeIcon
             cx={640}
             cy={110}
-            size={30}
+            size={nodeSize}
             color={theme.colors.activity.on}
             icon={Plug}
           />
@@ -343,7 +353,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           y="36"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
-          fontSize="18"
+          fontSize={nodeTitleFontSize}
           fill={theme.colors.text.main}
         >
           verkko
@@ -352,14 +362,14 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           x="640"
           y="60"
           textAnchor="middle"
-          fontSize="16"
+          fontSize={nodeSubTitleFontSize}
           fill={theme.colors.text.muted}
         >
           {importing > 0 ? "tuonti" : exporting > 0 ? "vienti" : "lepotila"}
         </text>
         <text
           x="640"
-          y="178"
+          y={178 + (isMobile ? 5 : 0)}
           textAnchor="middle"
           fontSize="24"
           fill={theme.colors.text.main}
@@ -373,32 +383,32 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           <circle
             cx="640"
             cy="310"
-            r="36"
+            r={nodeSize}
             fill={theme.colors.background.light}
             stroke={theme.colors.home}
-            strokeWidth="2"
+            strokeWidth={strokeWidth}
           />
           <NodeIcon
             cx={640}
             cy={310}
-            size={30}
+            size={nodeSize}
             color={theme.colors.home}
             icon={House}
           />
         </g>
         <text
           x="640"
-          y="373"
+          y={373 + (isMobile ? 5 : 0)}
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
-          fontSize="18"
+          fontSize={nodeTitleFontSize}
           fill={theme.colors.text.main}
         >
           koti
         </text>
         <text
           x="640"
-          y="429"
+          y={429 + (isMobile ? 5 : 0)}
           textAnchor="middle"
           fontSize="24"
           fill={theme.colors.text.main}

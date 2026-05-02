@@ -21,6 +21,7 @@ import { memo, useEffect, useState } from "react";
 import { Chart } from "react-chartjs-2";
 
 import { api } from "../../api";
+import { mq } from "../../mq";
 import { SolisReading } from "../../types/solis";
 
 ChartJS.register(
@@ -212,6 +213,9 @@ const DailyHistory: React.FC<{ className?: string }> = ({ className }) => {
         boxShadow: theme.shadows.main,
         borderRadius: theme.border.radius,
         padding: "1.25em 1.5em",
+        [mq[0]]: {
+          padding: "1em",
+        },
       }}
     >
       <div

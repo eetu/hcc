@@ -143,32 +143,6 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
         >
           {demo ? anonymize(group.id, "ryhmä") : group.name}
         </span>
-        <span
-          css={{
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            fontFamily: theme.fonts.heading,
-            fontSize: 12,
-            fontWeight: 500,
-            letterSpacing: "0.05em",
-            textTransform: "uppercase",
-            color: isOn ? accent : muted,
-            transition: "color 0.3s ease",
-          }}
-        >
-          <span
-            css={{
-              display: "inline-block",
-              width: 7,
-              height: 7,
-              borderRadius: "50%",
-              backgroundColor: isOn ? accent : muted,
-              transition: "background 0.3s ease",
-            }}
-          />
-          {isOn ? "päällä" : "pois"}
-        </span>
       </div>
     </button>
   );

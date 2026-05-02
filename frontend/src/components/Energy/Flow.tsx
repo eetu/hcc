@@ -90,7 +90,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
 
   const flowBase = {
     fill: "none",
-    strokeWidth: 3,
+    strokeWidth: isMobile ? 5 : 3,
     strokeDasharray: "4 6",
   };
   const flowAnim = { animation: `${flow} 1.4s linear infinite` };

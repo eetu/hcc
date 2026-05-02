@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { api } from "./api";
 import CurrentTime from "./components/CurrentTime";
+import EnergyFlow from "./components/Energy/Flow";
 import FmiWeatherBox from "./components/FmiWeatherBox";
 import History from "./components/History";
 import Icon from "./components/Icon";
@@ -68,10 +69,17 @@ const applyEvent = (data: Response, event: HueLiveEvent): Response => {
   }
 };
 
-type View = "temperature" | "lights" | "motion" | "history" | "settings";
+type View =
+  | "temperature"
+  | "energy"
+  | "lights"
+  | "motion"
+  | "history"
+  | "settings";
 
 const VIEWS: { id: View; icon: string }[] = [
   { id: "temperature", icon: "thermostat" },
+  { id: "energy", icon: "bolt" },
   { id: "lights", icon: "lightbulb" },
   { id: "motion", icon: "directions_run" },
   { id: "history", icon: "timeline" },
@@ -237,6 +245,14 @@ const App = () => {
                         height: 18,
                         borderRadius: 2,
                         backgroundColor: theme.colors.activity.on,
+                        [mq[0]]: {
+                          left: "50%",
+                          top: "auto",
+                          bottom: -2,
+                          transform: "translateX(-50%)",
+                          width: 18,
+                          height: 3,
+                        },
                       }}
                     />
                   )}
@@ -285,6 +301,10 @@ const App = () => {
                 />
                 <SolisBox css={temperatureCss} />
               </>
+            )}
+
+            {view === "energy" && (
+              <EnergyFlow css={{ gridColumn: "1 / span 4" }} />
             )}
 
             {view === "lights" && (

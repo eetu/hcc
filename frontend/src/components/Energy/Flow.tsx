@@ -88,7 +88,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
 
   const accent = theme.colors.activity.on;
   const battery = "#5fb3a3";
-  const homeColor = theme.colors.cool;
+  const homeColor = "#5b8fc2";
   const muted = theme.colors.text.muted;
   const idleStroke = theme.colors.text.main;
 

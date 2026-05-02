@@ -74,30 +74,35 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
 
   const { exportKwh, importKwh, chargeKwh, dischargeKwh } = integrate(readings);
 
-  const pvTotal = live.today_energy;
-  const pvToGrid = Math.min(pvTotal, exportKwh);
-  const pvToHome = Math.max(0, pvTotal - pvToGrid);
-  const homeKwh = pvToHome + dischargeKwh + importKwh;
-
-  const homePct = pvTotal > 0 ? Math.round((pvToHome / pvTotal) * 100) : 0;
-  const gridPct = pvTotal > 0 ? 100 - homePct : 0;
-
   const accent = theme.colors.activity.on;
   const battery = "#5fb3a3";
-  const homeColor = theme.colors.cool;
+  const homeColor = "#5b8fc2";
   const muted = theme.colors.text.muted;
+
+  const pvTotal = live.today_energy;
+  const pvToGrid = Math.min(pvTotal, exportKwh);
+  const pvToBattery = Math.max(0, Math.min(pvTotal - pvToGrid, chargeKwh));
+  const pvToHome = Math.max(0, pvTotal - pvToGrid - pvToBattery);
+  const homeKwh = pvToHome + dischargeKwh + importKwh;
+
+  const pct = (v: number) =>
+    pvTotal > 0 ? Math.round((v / pvTotal) * 100) : 0;
+  const homePct = pct(pvToHome);
+  const batteryPct = pct(pvToBattery);
+  const gridPct = pvTotal > 0 ? 100 - homePct - batteryPct : 0;
 
   // Donut geometry (viewBox 100x100, r=38)
   const r = 38;
   const C = 2 * Math.PI * r;
   const homeLen = (homePct / 100) * C;
+  const batteryLen = (batteryPct / 100) * C;
   const gridLen = (gridPct / 100) * C;
 
   const metrics: [string, string, string][] = [
     ["päivän tuotto", `${pvTotal.toFixed(1)} kWh`, accent],
     ["kulutus", `${homeKwh.toFixed(1)} kWh`, homeColor],
     ["lataus", `${chargeKwh.toFixed(1)} kWh`, battery],
-    ["purkaus", `${dischargeKwh.toFixed(1)} kWh`, battery],
+    ["käyttö", `${dischargeKwh.toFixed(1)} kWh`, battery],
     ["vienti", `${exportKwh.toFixed(1)} kWh`, accent],
     ["tuonti", `${importKwh.toFixed(1)} kWh`, muted],
   ];
@@ -182,10 +187,20 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
                   cy="50"
                   r={r}
                   fill="none"
+                  stroke={battery}
+                  strokeWidth="9"
+                  strokeDasharray={`${batteryLen} ${C}`}
+                  strokeDashoffset={-homeLen}
+                />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r={r}
+                  fill="none"
                   stroke={accent}
                   strokeWidth="9"
                   strokeDasharray={`${gridLen} ${C}`}
-                  strokeDashoffset={-homeLen}
+                  strokeDashoffset={-(homeLen + batteryLen)}
                 />
               </>
             )}
@@ -193,18 +208,21 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
           <div
             css={{
               position: "absolute",
-              inset: 0,
+              inset: 32,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
+              gap: 2,
             }}
           >
             <div css={{ fontSize: 12, color: muted }}>tuotto</div>
             <div
               css={{
-                fontSize: 22,
+                fontSize: 20,
+                lineHeight: 1,
                 fontVariantNumeric: "tabular-nums",
+                whiteSpace: "nowrap",
               }}
             >
               {pvTotal.toFixed(1)} kWh
@@ -224,6 +242,12 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
             label="kulutukseen"
             value={`${pvToHome.toFixed(1)} kWh`}
             pct={homePct}
+          />
+          <LegendRow
+            color={battery}
+            label="akkuun"
+            value={`${pvToBattery.toFixed(1)} kWh`}
+            pct={batteryPct}
           />
           <LegendRow
             color={accent}

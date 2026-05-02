@@ -25,18 +25,17 @@ const LightGroups: FC<LightGroupsProps> = ({ groups, className }) => {
         backgroundColor: theme.colors.background.main,
         boxShadow: theme.shadows.main,
         padding: "1em",
-        display: "flex",
-        flexDirection: "row",
-        gap: 8,
-        flexWrap: "wrap",
+        display: "grid",
+        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+        gap: 12,
         borderRadius: theme.border.radius,
         [mq[0]]: {
-          flexDirection: "column",
+          gridTemplateColumns: "1fr",
         },
       }}
     >
       {groups.map((g) => (
-        <LightGroup key={g.id} group={g}></LightGroup>
+        <LightGroup key={g.id} group={g} />
       ))}
     </div>
   );
@@ -58,11 +57,11 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
   }
 
   const handleClick = useCallback(
-    (id: string, isOn: boolean) => () => {
+    (id: string, on: boolean) => () => {
       fetch(api(`/api/hue/toggleGroup/${id}`), { method: "POST" }).then(
         (res) => {
           if (res.status === 200) {
-            setIsOn(!isOn);
+            setIsOn(!on);
           }
         },
       );
@@ -71,33 +70,33 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
   );
 
   const theme = useTheme();
+  const accent = theme.colors.activity.on;
+  const muted = theme.colors.text.muted;
 
   return (
     <button
+      onClick={handleClick(group.id, isOn)}
       css={{
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
-        [mq[0]]: {
-          gap: 10,
-          width: "100%",
-        },
+        gap: 14,
         color: theme.colors.text.main,
-        padding: "5px 12px 5px 4px",
+        padding: "8px 16px 8px 6px",
         cursor: "pointer",
-        width: 175,
+        width: "100%",
         borderRadius: theme.border.radius,
-        border: `3px solid ${isOn ? theme.colors.activity.on : theme.colors.text.main}`,
+        border: `3px solid ${isOn ? accent : theme.colors.text.main}`,
         background: isOn
           ? theme.colors.activity.onBackground
           : theme.colors.background.light,
         transition: "background 0.4s ease, border-color 0.3s ease",
+        textAlign: "left",
       }}
-      onClick={handleClick(group.id, isOn)}
     >
       <div
         css={{
+          flexShrink: 0,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -112,7 +111,7 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
       >
         <Icon
           css={{
-            color: isOn ? theme.colors.activity.on : theme.colors.text.muted,
+            color: isOn ? accent : muted,
             animation: isOn ? `${bulbGlow} 3.2s ease-in-out infinite` : "none",
             transition: "color 0.3s ease",
           }}
@@ -122,19 +121,53 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
           lightbulb
         </Icon>
       </div>
-      <span
+      <div
         css={{
-          fontSize: 14,
-          [mq[0]]: {
-            fontSize: 18,
-          },
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          textTransform: "lowercase",
+          flex: 1,
+          minWidth: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
         }}
       >
-        {group.name}
-      </span>
+        <span
+          css={{
+            fontSize: 16,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            textTransform: "lowercase",
+          }}
+        >
+          {group.name}
+        </span>
+        <span
+          css={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            fontFamily: theme.fonts.heading,
+            fontSize: 12,
+            fontWeight: 500,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
+            color: isOn ? accent : muted,
+            transition: "color 0.3s ease",
+          }}
+        >
+          <span
+            css={{
+              display: "inline-block",
+              width: 7,
+              height: 7,
+              borderRadius: "50%",
+              backgroundColor: isOn ? accent : muted,
+              transition: "background 0.3s ease",
+            }}
+          />
+          {isOn ? "päällä" : "pois"}
+        </span>
+      </div>
     </button>
   );
 };

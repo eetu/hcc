@@ -219,7 +219,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </text>
         <text
           x="160"
-          y="174"
+          y="178"
           textAnchor="middle"
           fontSize="24"
           fill={theme.colors.text.main}
@@ -279,7 +279,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             </g>
             <text
               x="160"
-              y="380"
+              y="373"
               textAnchor="middle"
               fontFamily={theme.fonts.heading}
               fontSize="18"
@@ -289,7 +289,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             </text>
             <text
               x="160"
-              y="406"
+              y="397"
               textAnchor="middle"
               fontSize="16"
               fill={muted}
@@ -303,7 +303,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             </text>
             <text
               x="160"
-              y="442"
+              y="429"
               textAnchor="middle"
               fontSize="24"
               fill={theme.colors.text.main}
@@ -341,7 +341,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </text>
         <text
           x="640"
-          y="174"
+          y="178"
           textAnchor="middle"
           fontSize="24"
           fill={theme.colors.text.main}
@@ -370,7 +370,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </g>
         <text
           x="640"
-          y="380"
+          y="373"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
           fontSize="18"
@@ -380,7 +380,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </text>
         <text
           x="640"
-          y="420"
+          y="429"
           textAnchor="middle"
           fontSize="24"
           fill={theme.colors.text.main}

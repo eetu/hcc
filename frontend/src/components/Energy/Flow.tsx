@@ -154,7 +154,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             : "—"}
         </div>
       </div>
-      <svg viewBox="0 0 800 420" css={{ width: "100%", height: "auto" }}>
+      <svg viewBox="0 0 800 470" css={{ width: "100%", height: "auto" }}>
         {/* PV → Inverter */}
         <path
           d="M160,110 C260,110 300,210 400,210"
@@ -214,7 +214,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         >
           aurinko
         </text>
-        <text x="160" y="64" textAnchor="middle" fontSize="16" fill={muted}>
+        <text x="160" y="72" textAnchor="middle" fontSize="16" fill={muted}>
           tänään {data.today_energy.toFixed(1)} {data.today_energy_unit}
         </text>
         <text
@@ -279,7 +279,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             </g>
             <text
               x="160"
-              y="368"
+              y="380"
               textAnchor="middle"
               fontFamily={theme.fonts.heading}
               fontSize="18"
@@ -289,7 +289,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             </text>
             <text
               x="160"
-              y="386"
+              y="406"
               textAnchor="middle"
               fontSize="16"
               fill={muted}
@@ -303,7 +303,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             </text>
             <text
               x="160"
-              y="404"
+              y="442"
               textAnchor="middle"
               fontSize="24"
               fill={theme.colors.text.main}
@@ -336,7 +336,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         >
           verkko
         </text>
-        <text x="640" y="64" textAnchor="middle" fontSize="16" fill={muted}>
+        <text x="640" y="72" textAnchor="middle" fontSize="16" fill={muted}>
           {importing > 0 ? "tuonti" : exporting > 0 ? "vienti" : "lepotila"}
         </text>
         <text
@@ -370,7 +370,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </g>
         <text
           x="640"
-          y="368"
+          y="380"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
           fontSize="18"
@@ -380,10 +380,10 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </text>
         <text
           x="640"
-          y="386"
+          y="420"
           textAnchor="middle"
-          fontSize="16"
-          fill={muted}
+          fontSize="24"
+          fill={theme.colors.text.main}
           style={{ fontVariantNumeric: "tabular-nums" }}
         >
           {home.toFixed(2)} kW

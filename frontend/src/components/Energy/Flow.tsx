@@ -321,16 +321,10 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             cy="110"
             r="36"
             fill={theme.colors.background.light}
-            stroke={muted}
+            stroke={accent}
             strokeWidth="2"
           />
-          <NodeIcon
-            cx={640}
-            cy={110}
-            size={30}
-            color={idleStroke}
-            icon={Plug}
-          />
+          <NodeIcon cx={640} cy={110} size={30} color={accent} icon={Plug} />
         </g>
         <text
           x="640"

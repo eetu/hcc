@@ -45,13 +45,16 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
   const accent = theme.colors.activity.on;
   const cool = theme.colors.cool;
   const muted = theme.colors.text.muted;
-  const gridStroke = theme.colors.text.main;
+  const idleStroke = theme.colors.text.main;
 
-  const flowStyle = {
+  const flowBase = {
     fill: "none",
     strokeWidth: 2,
     strokeDasharray: "4 6",
-    animation: `${flow} 1.4s linear infinite`,
+  };
+  const flowAnim = { animation: `${flow} 1.4s linear infinite` };
+  const flowAnimReverse = {
+    animation: `${flow} 1.4s linear infinite reverse`,
   };
 
   const pulseStyle = {
@@ -107,42 +110,47 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </div>
       </div>
       <svg viewBox="0 0 800 420" css={{ width: "100%", height: "auto" }}>
-        {/* PV → home */}
+        {/* PV → Inverter */}
         <path
-          d="M180,110 C280,110 300,210 400,210"
-          stroke={accent}
-          opacity={pvActive ? 1 : 0.2}
-          css={flowStyle}
+          d="M160,110 C260,110 300,210 400,210"
+          stroke={pvActive ? accent : idleStroke}
+          opacity={pvActive ? 1 : 0.3}
+          css={[flowBase, pvActive && flowAnim]}
         />
-        {/* PV → battery (charging) */}
+        {/* Battery ↔ Inverter (forward = discharging, reverse = charging) */}
         <path
-          d="M180,110 C220,160 220,260 180,310"
-          stroke={accent}
-          opacity={charging > 0 ? 1 : 0.2}
-          css={flowStyle}
+          d="M160,310 C260,310 300,210 400,210"
+          stroke={batteryActive ? cool : idleStroke}
+          opacity={batteryActive ? 1 : 0.3}
+          css={[
+            flowBase,
+            discharging > 0 && flowAnim,
+            charging > 0 && flowAnimReverse,
+          ]}
         />
-        {/* battery → home (discharging) */}
+        {/* Inverter ↔ Grid (forward = export, reverse = import) */}
         <path
-          d="M180,310 C280,310 300,210 400,210"
-          stroke={cool}
-          opacity={discharging > 0 ? 1 : 0.2}
-          css={flowStyle}
+          d="M400,210 C500,210 540,110 640,110"
+          stroke={importing > 0 ? accent : gridActive ? accent : idleStroke}
+          opacity={gridActive ? 1 : 0.3}
+          css={[
+            flowBase,
+            exporting > 0 && flowAnim,
+            importing > 0 && flowAnimReverse,
+          ]}
         />
-        {/* home → grid (export) or grid → home (import) */}
+        {/* Inverter → Home */}
         <path
-          d="M400,210 C500,210 520,110 620,110"
-          stroke={importing > 0 ? accent : gridStroke}
-          opacity={hasFlow(grid) ? 1 : 0.3}
-          css={{
-            ...flowStyle,
-            animationDirection: exporting > 0 ? "reverse" : "normal",
-          }}
+          d="M400,210 C500,210 540,310 640,310"
+          stroke={homeActive ? accent : idleStroke}
+          opacity={homeActive ? 1 : 0.3}
+          css={[flowBase, homeActive && flowAnim]}
         />
 
         {/* PV node */}
         <g css={pvActive ? pulseStyle : undefined}>
           <circle
-            cx="180"
+            cx="160"
             cy="110"
             r="36"
             fill={theme.colors.background.light}
@@ -150,19 +158,19 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             strokeWidth="2"
           />
           <g stroke={accent} strokeWidth="1.8" strokeLinecap="round">
-            <circle cx="180" cy="110" r="9" fill="none" />
-            <line x1="180" y1="94" x2="180" y2="98" />
-            <line x1="180" y1="122" x2="180" y2="126" />
-            <line x1="164" y1="110" x2="168" y2="110" />
-            <line x1="192" y1="110" x2="196" y2="110" />
-            <line x1="169" y1="99" x2="172" y2="102" />
-            <line x1="188" y1="118" x2="191" y2="121" />
-            <line x1="191" y1="99" x2="188" y2="102" />
-            <line x1="172" y1="118" x2="169" y2="121" />
+            <circle cx="160" cy="110" r="9" fill="none" />
+            <line x1="160" y1="94" x2="160" y2="98" />
+            <line x1="160" y1="122" x2="160" y2="126" />
+            <line x1="144" y1="110" x2="148" y2="110" />
+            <line x1="172" y1="110" x2="176" y2="110" />
+            <line x1="149" y1="99" x2="152" y2="102" />
+            <line x1="168" y1="118" x2="171" y2="121" />
+            <line x1="171" y1="99" x2="168" y2="102" />
+            <line x1="152" y1="118" x2="149" y2="121" />
           </g>
         </g>
         <text
-          x="180"
+          x="160"
           y="46"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
@@ -171,11 +179,11 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         >
           aurinko
         </text>
-        <text x="180" y="64" textAnchor="middle" fontSize="12" fill={muted}>
+        <text x="160" y="64" textAnchor="middle" fontSize="12" fill={muted}>
           tänään {data.today_energy.toFixed(1)} {data.today_energy_unit}
         </text>
         <text
-          x="180"
+          x="160"
           y="174"
           textAnchor="middle"
           fontSize="20"
@@ -185,42 +193,42 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           {pv.toFixed(2)} kW
         </text>
 
-        {/* Home node */}
-        <g css={homeActive ? pulseStyle : undefined}>
+        {/* Inverter node (center) */}
+        <g>
           <circle
             cx="400"
             cy="210"
-            r="36"
+            r="32"
             fill={theme.colors.background.light}
-            stroke={accent}
+            stroke={idleStroke}
             strokeWidth="2"
           />
-          <path
-            d="M388,215 v-13 l12,-11 l12,11 v13 h-8 v-11 h-8 v11 z"
+          <rect
+            x="384"
+            y="194"
+            width="32"
+            height="32"
+            rx="3"
             fill="none"
-            stroke={theme.colors.text.main}
+            stroke={idleStroke}
+            strokeWidth="1.5"
+          />
+          <path
+            d="M388,212 q3,-7 6,0 t6,0 t6,0"
+            fill="none"
+            stroke={idleStroke}
             strokeWidth="1.5"
           />
         </g>
         <text
           x="400"
-          y="276"
+          y="262"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
-          fontSize="14"
+          fontSize="13"
           fill={theme.colors.text.main}
         >
-          koti
-        </text>
-        <text
-          x="400"
-          y="294"
-          textAnchor="middle"
-          fontSize="12"
-          fill={muted}
-          style={{ fontVariantNumeric: "tabular-nums" }}
-        >
-          {home.toFixed(2)} kW
+          invertteri
         </text>
 
         {/* Battery node */}
@@ -228,7 +236,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           <>
             <g css={batteryActive ? pulseStyle : undefined}>
               <circle
-                cx="180"
+                cx="160"
                 cy="310"
                 r="36"
                 fill={theme.colors.background.light}
@@ -236,7 +244,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
                 strokeWidth="2"
               />
               <rect
-                x="168"
+                x="148"
                 y="298"
                 width="22"
                 height="28"
@@ -246,14 +254,14 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
                 strokeWidth="1.5"
               />
               <rect
-                x="174"
+                x="154"
                 y="292"
                 width="10"
                 height="4"
                 fill={theme.colors.text.main}
               />
               <rect
-                x="170"
+                x="150"
                 y={326 - Math.round((soc / 100) * 26)}
                 width="18"
                 height={Math.round((soc / 100) * 26)}
@@ -261,7 +269,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
               />
             </g>
             <text
-              x="180"
+              x="160"
               y="368"
               textAnchor="middle"
               fontFamily={theme.fonts.heading}
@@ -271,17 +279,21 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
               akku
             </text>
             <text
-              x="180"
+              x="160"
               y="386"
               textAnchor="middle"
               fontSize="12"
               fill={muted}
             >
               {Math.round(soc)}%
-              {charging > 0 ? " · lataa" : discharging > 0 ? " · purkaa" : ""}
+              {charging > 0
+                ? " · lataa"
+                : discharging > 0
+                  ? " · purkaa"
+                  : " · lepotila"}
             </text>
             <text
-              x="180"
+              x="160"
               y="404"
               textAnchor="middle"
               fontSize="20"
@@ -296,7 +308,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         {/* Grid node */}
         <g css={gridActive ? pulseStyle : undefined}>
           <circle
-            cx="620"
+            cx="640"
             cy="110"
             r="36"
             fill={theme.colors.background.light}
@@ -304,12 +316,12 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             strokeWidth="2"
           />
           <g stroke={theme.colors.text.main} strokeWidth="1.5" fill="none">
-            <path d="M608,124 l8,-22 l4,16 l4,-12 l4,18" />
-            <line x1="606" y1="124" x2="636" y2="124" />
+            <path d="M628,124 l8,-22 l4,16 l4,-12 l4,18" />
+            <line x1="626" y1="124" x2="656" y2="124" />
           </g>
         </g>
         <text
-          x="620"
+          x="640"
           y="46"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
@@ -318,11 +330,11 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         >
           verkko
         </text>
-        <text x="620" y="64" textAnchor="middle" fontSize="12" fill={muted}>
+        <text x="640" y="64" textAnchor="middle" fontSize="12" fill={muted}>
           {importing > 0 ? "tuonti" : exporting > 0 ? "vienti" : "lepotila"}
         </text>
         <text
-          x="620"
+          x="640"
           y="174"
           textAnchor="middle"
           fontSize="20"
@@ -330,6 +342,44 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           style={{ fontVariantNumeric: "tabular-nums" }}
         >
           {Math.abs(grid).toFixed(2)} kW
+        </text>
+
+        {/* Home node */}
+        <g css={homeActive ? pulseStyle : undefined}>
+          <circle
+            cx="640"
+            cy="310"
+            r="36"
+            fill={theme.colors.background.light}
+            stroke={accent}
+            strokeWidth="2"
+          />
+          <path
+            d="M628,315 v-13 l12,-11 l12,11 v13 h-8 v-11 h-8 v11 z"
+            fill="none"
+            stroke={theme.colors.text.main}
+            strokeWidth="1.5"
+          />
+        </g>
+        <text
+          x="640"
+          y="368"
+          textAnchor="middle"
+          fontFamily={theme.fonts.heading}
+          fontSize="14"
+          fill={theme.colors.text.main}
+        >
+          koti
+        </text>
+        <text
+          x="640"
+          y="386"
+          textAnchor="middle"
+          fontSize="12"
+          fill={muted}
+          style={{ fontVariantNumeric: "tabular-nums" }}
+        >
+          {home.toFixed(2)} kW
         </text>
       </svg>
     </div>

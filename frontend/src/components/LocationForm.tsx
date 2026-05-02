@@ -86,7 +86,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ className }) => {
         }}
       >
         <Icon size={16}>location_on</Icon>
-        Sijainti
+        sijainti
       </div>
 
       {location && (
@@ -104,7 +104,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ className }) => {
       <div css={{ display: "flex", gap: "0.5em", position: "relative" }}>
         <input
           type="text"
-          placeholder="Search city or address..."
+          placeholder="kaupunki tai osoite"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleDetect()}
@@ -142,7 +142,7 @@ const LocationForm: React.FC<LocationFormProps> = ({ className }) => {
           }}
         >
           <Icon size={16}>{query.trim() ? "search" : "my_location"}</Icon>
-          {query.trim() ? "Search" : "Detect"}
+          {query.trim() ? "hae" : "paikanna"}
         </button>
       </div>
 

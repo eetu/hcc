@@ -78,7 +78,7 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
               textAlign: "center",
             }}
           >
-            Set your location to see weather
+            aseta sijainti nähdäksesi sään
           </div>
           <LocationForm />
         </div>

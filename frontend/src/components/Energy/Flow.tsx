@@ -1,6 +1,19 @@
 import { keyframes, useTheme } from "@emotion/react";
 import { format } from "date-fns";
 import { fi } from "date-fns/locale/fi";
+import {
+  Activity,
+  Battery,
+  BatteryCharging,
+  BatteryFull,
+  BatteryLow,
+  BatteryMedium,
+  BatteryWarning,
+  House,
+  type LucideIcon,
+  Plug,
+  Sun,
+} from "lucide-react";
 import { memo } from "react";
 import useSWR from "swr";
 
@@ -15,6 +28,37 @@ const pulse = keyframes`
   0%, 100% { opacity: 1; transform: scale(1); }
   50%      { opacity: 0.75; transform: scale(1.04); }
 `;
+
+const NodeIcon: React.FC<{
+  cx: number;
+  cy: number;
+  size: number;
+  color: string;
+  icon: LucideIcon;
+}> = ({ cx, cy, size, color, icon: Icon }) => (
+  <foreignObject x={cx - size / 2} y={cy - size / 2} width={size} height={size}>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Icon size={size} color={color} strokeWidth={1.8} />
+    </div>
+  </foreignObject>
+);
+
+const batteryIcon = (soc: number, charging: boolean): LucideIcon => {
+  if (charging) return BatteryCharging;
+  if (soc >= 75) return BatteryFull;
+  if (soc >= 50) return BatteryMedium;
+  if (soc >= 25) return BatteryLow;
+  if (soc >= 10) return Battery;
+  return BatteryWarning;
+};
 
 const Flow: React.FC<{ className?: string }> = ({ className }) => {
   const theme = useTheme();
@@ -117,7 +161,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           opacity={pvActive ? 1 : 0.3}
           css={[flowBase, pvActive && flowAnim]}
         />
-        {/* Battery ↔ Inverter (forward = discharging, reverse = charging) */}
+        {/* Battery ↔ Inverter */}
         <path
           d="M160,310 C260,310 300,210 400,210"
           stroke={batteryActive ? cool : idleStroke}
@@ -128,10 +172,10 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             charging > 0 && flowAnimReverse,
           ]}
         />
-        {/* Inverter ↔ Grid (forward = export, reverse = import) */}
+        {/* Inverter ↔ Grid */}
         <path
           d="M400,210 C500,210 540,110 640,110"
-          stroke={importing > 0 ? accent : gridActive ? accent : idleStroke}
+          stroke={gridActive ? accent : idleStroke}
           opacity={gridActive ? 1 : 0.3}
           css={[
             flowBase,
@@ -157,17 +201,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             stroke={accent}
             strokeWidth="2"
           />
-          <g stroke={accent} strokeWidth="1.8" strokeLinecap="round">
-            <circle cx="160" cy="110" r="9" fill="none" />
-            <line x1="160" y1="94" x2="160" y2="98" />
-            <line x1="160" y1="122" x2="160" y2="126" />
-            <line x1="144" y1="110" x2="148" y2="110" />
-            <line x1="172" y1="110" x2="176" y2="110" />
-            <line x1="149" y1="99" x2="152" y2="102" />
-            <line x1="168" y1="118" x2="171" y2="121" />
-            <line x1="171" y1="99" x2="168" y2="102" />
-            <line x1="152" y1="118" x2="149" y2="121" />
-          </g>
+          <NodeIcon cx={160} cy={110} size={32} color={accent} icon={Sun} />
         </g>
         <text
           x="160"
@@ -193,7 +227,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           {pv.toFixed(2)} kW
         </text>
 
-        {/* Inverter node (center) */}
+        {/* Inverter node */}
         <g>
           <circle
             cx="400"
@@ -203,21 +237,12 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             stroke={idleStroke}
             strokeWidth="2"
           />
-          <rect
-            x="384"
-            y="194"
-            width="32"
-            height="32"
-            rx="3"
-            fill="none"
-            stroke={idleStroke}
-            strokeWidth="1.5"
-          />
-          <path
-            d="M388,212 q3,-7 6,0 t6,0 t6,0"
-            fill="none"
-            stroke={idleStroke}
-            strokeWidth="1.5"
+          <NodeIcon
+            cx={400}
+            cy={210}
+            size={28}
+            color={idleStroke}
+            icon={Activity}
           />
         </g>
         <text
@@ -243,29 +268,12 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
                 stroke={cool}
                 strokeWidth="2"
               />
-              <rect
-                x="148"
-                y="298"
-                width="22"
-                height="28"
-                rx="2"
-                fill="none"
-                stroke={theme.colors.text.main}
-                strokeWidth="1.5"
-              />
-              <rect
-                x="154"
-                y="292"
-                width="10"
-                height="4"
-                fill={theme.colors.text.main}
-              />
-              <rect
-                x="150"
-                y={326 - Math.round((soc / 100) * 26)}
-                width="18"
-                height={Math.round((soc / 100) * 26)}
-                fill={cool}
+              <NodeIcon
+                cx={160}
+                cy={310}
+                size={32}
+                color={cool}
+                icon={batteryIcon(soc, charging > 0)}
               />
             </g>
             <text
@@ -315,10 +323,13 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             stroke={muted}
             strokeWidth="2"
           />
-          <g stroke={theme.colors.text.main} strokeWidth="1.5" fill="none">
-            <path d="M628,124 l8,-22 l4,16 l4,-12 l4,18" />
-            <line x1="626" y1="124" x2="656" y2="124" />
-          </g>
+          <NodeIcon
+            cx={640}
+            cy={110}
+            size={30}
+            color={idleStroke}
+            icon={Plug}
+          />
         </g>
         <text
           x="640"
@@ -354,11 +365,12 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             stroke={accent}
             strokeWidth="2"
           />
-          <path
-            d="M628,315 v-13 l12,-11 l12,11 v13 h-8 v-11 h-8 v11 z"
-            fill="none"
-            stroke={theme.colors.text.main}
-            strokeWidth="1.5"
+          <NodeIcon
+            cx={640}
+            cy={310}
+            size={30}
+            color={idleStroke}
+            icon={House}
           />
         </g>
         <text

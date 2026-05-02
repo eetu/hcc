@@ -90,11 +90,12 @@ const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
       >
         <div
           css={{
-            fontWeight: "normal",
-            fontSize: 18,
             display: "flex",
             alignItems: "center",
             gap: "0.3em",
+            ...theme.typography.label,
+            color: theme.colors.text.muted,
+            letterSpacing: "0.04em",
           }}
         >
           <Icon

@@ -14,7 +14,10 @@ use super::discovery::get_bridge_address;
 pub enum HueLiveEvent {
     GroupedLight {
         id: String,
-        on: bool,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        on: Option<bool>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        brightness: Option<f64>,
     },
     Temperature {
         id: String,
@@ -127,18 +130,27 @@ fn parse_resource_update(resource: &serde_json::Value) -> Vec<HueLiveEvent> {
         return Vec::new();
     };
     match rtype {
-        "grouped_light" => resource
-            .get("on")
-            .and_then(|o| o.get("on"))
-            .and_then(|o| o.as_bool())
-            .zip(resource.get("id").and_then(|v| v.as_str()))
-            .map(|(on, id)| {
-                vec![HueLiveEvent::GroupedLight {
-                    id: id.to_string(),
-                    on,
-                }]
-            })
-            .unwrap_or_default(),
+        "grouped_light" => {
+            let Some(id) = resource.get("id").and_then(|v| v.as_str()) else {
+                return Vec::new();
+            };
+            let on = resource
+                .get("on")
+                .and_then(|o| o.get("on"))
+                .and_then(|o| o.as_bool());
+            let brightness = resource
+                .get("dimming")
+                .and_then(|d| d.get("brightness"))
+                .and_then(|b| b.as_f64());
+            if on.is_none() && brightness.is_none() {
+                return Vec::new();
+            }
+            vec![HueLiveEvent::GroupedLight {
+                id: id.to_string(),
+                on,
+                brightness,
+            }]
+        }
         "temperature" => resource
             .get("temperature")
             .and_then(|temp_obj| {

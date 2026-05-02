@@ -15,7 +15,7 @@ export type Sensor = {
 export type Group = {
   id: string;
   name: string;
-  state: { on: boolean };
+  state: { on: boolean; brightness?: number };
 };
 
 export type Response = {
@@ -24,7 +24,12 @@ export type Response = {
 };
 
 export type HueLiveEvent =
-  | { type: "grouped_light"; id: string; on: boolean }
+  | {
+      type: "grouped_light";
+      id: string;
+      on?: boolean;
+      brightness?: number;
+    }
   | { type: "temperature"; id: string; temperature: number }
   | { type: "device_power"; deviceId: string; battery: number }
   | { type: "motion"; deviceId: string; motion: boolean; updatedAt: string }

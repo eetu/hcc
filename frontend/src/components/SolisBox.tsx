@@ -3,6 +3,7 @@ import { memo } from "react";
 import useSWR from "swr";
 
 import { api, HttpError, jsonFetcher } from "../api";
+import { mq } from "../mq";
 import { SolisData } from "../types/solis";
 import Box, { DrawerRow } from "./Box";
 import Icon from "./Icon";
@@ -99,52 +100,89 @@ const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
     >
       <div
         css={{
+          position: "relative",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-between",
           flex: 1,
+          [mq[0]]: {
+            flexDirection: "row",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: 16,
+          },
         }}
       >
         <div
           css={{
             display: "flex",
-            alignItems: "center",
-            gap: "0.3em",
-            ...theme.typography.label,
-            color: theme.colors.text.muted,
-            letterSpacing: "0.04em",
-          }}
-        >
-          <Icon
-            size={18}
-            css={{
-              color: isAlarm ? theme.colors.error : "inherit",
-              opacity: 0.7,
-            }}
-          >
-            {isAlarm ? "warning" : "solar_power"}
-          </Icon>
-          {data.power_unit}
-        </div>
-        <div
-          css={{
-            marginTop: "5px",
-            display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            [mq[0]]: { alignItems: "flex-start", gap: 4 },
           }}
         >
           <div
             css={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.3em",
+              ...theme.typography.label,
+              color: theme.colors.text.muted,
+              letterSpacing: "0.04em",
+            }}
+          >
+            <Icon
+              size={18}
+              css={{
+                color: isAlarm ? theme.colors.error : "inherit",
+                opacity: 0.7,
+              }}
+            >
+              {isAlarm ? "warning" : "solar_power"}
+            </Icon>
+            {data.power_unit}
+          </div>
+          <div
+            css={{
+              marginTop: "5px",
+              display: "flex",
               fontWeight: 400,
               fontSize: 50,
               lineHeight: 1,
               fontVariantNumeric: "tabular-nums",
+              [mq[0]]: { marginTop: 0, fontSize: 64 },
             }}
           >
             {displayPower}
           </div>
+        </div>
+
+        <div
+          css={{
+            display: "none",
+            [mq[0]]: {
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              justifyContent: "center",
+              gap: 6,
+              ...theme.typography.caption,
+              color: theme.colors.text.muted,
+            },
+          }}
+        >
+          <span css={{ fontVariantNumeric: "tabular-nums" }}>
+            {`${data.today_energy} ${data.today_energy_unit} tänään`}
+          </span>
+          {data.battery_soc !== null && (
+            <span css={{ fontVariantNumeric: "tabular-nums" }}>
+              {`akku ${Math.round(data.battery_soc)} %`}
+            </span>
+          )}
+          {batteryLabel && batteryLabel !== "lepotila" && (
+            <span>{batteryLabel}</span>
+          )}
         </div>
       </div>
     </Box>

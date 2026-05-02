@@ -111,35 +111,35 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
           d="M180,110 C280,110 300,210 400,210"
           stroke={accent}
           opacity={pvActive ? 1 : 0.2}
-          style={flowStyle}
+          css={flowStyle}
         />
         {/* PV → battery (charging) */}
         <path
           d="M180,110 C220,160 220,260 180,310"
           stroke={accent}
           opacity={charging > 0 ? 1 : 0.2}
-          style={flowStyle}
+          css={flowStyle}
         />
         {/* battery → home (discharging) */}
         <path
           d="M180,310 C280,310 300,210 400,210"
           stroke={cool}
           opacity={discharging > 0 ? 1 : 0.2}
-          style={flowStyle}
+          css={flowStyle}
         />
         {/* home → grid (export) or grid → home (import) */}
         <path
           d="M400,210 C500,210 520,110 620,110"
           stroke={importing > 0 ? accent : muted}
           opacity={hasFlow(grid) ? 1 : 0.2}
-          style={{
+          css={{
             ...flowStyle,
             animationDirection: exporting > 0 ? "reverse" : "normal",
           }}
         />
 
         {/* PV node */}
-        <g style={pvActive ? pulseStyle : undefined}>
+        <g css={pvActive ? pulseStyle : undefined}>
           <circle
             cx="180"
             cy="110"
@@ -185,7 +185,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </text>
 
         {/* Home node */}
-        <g style={homeActive ? pulseStyle : undefined}>
+        <g css={homeActive ? pulseStyle : undefined}>
           <circle
             cx="400"
             cy="210"
@@ -225,7 +225,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         {/* Battery node */}
         {soc !== null && (
           <>
-            <g style={batteryActive ? pulseStyle : undefined}>
+            <g css={batteryActive ? pulseStyle : undefined}>
               <circle
                 cx="180"
                 cy="310"
@@ -293,7 +293,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         )}
 
         {/* Grid node */}
-        <g style={gridActive ? pulseStyle : undefined}>
+        <g css={gridActive ? pulseStyle : undefined}>
           <circle
             cx="620"
             cy="110"

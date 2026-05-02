@@ -41,6 +41,10 @@ declare module "@emotion/react" {
       cool: string;
       rain: string;
       pv: string;
+      battery: string;
+      home: string;
+      grid: string;
+      soc: string;
     };
     typography: {
       h1: Typography;
@@ -102,6 +106,10 @@ export const lightTheme: Theme = {
     cool: "#1565c0",
     rain: "#94daf7",
     pv: "#f5a524",
+    battery: "#5fb3a3",
+    home: "#5b8fc2",
+    grid: "#f5a524",
+    soc: "#d65a8a",
   },
   typography,
   shadows: {
@@ -138,6 +146,10 @@ export const darkTheme: Theme = {
     cool: "#42a5f5",
     rain: "#43529c",
     pv: "#a35a00",
+    battery: "#5fb3a3",
+    home: "#7aa3d1",
+    grid: "#f5a524",
+    soc: "#d65a8a",
   },
   typography,
   shadows: {

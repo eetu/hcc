@@ -72,9 +72,9 @@ const DailyHistory: React.FC<{ className?: string }> = ({ className }) => {
 
   const colors = {
     pv: theme.colors.activity.on,
-    battery: "#5fb3a3",
-    grid: theme.colors.pv,
-    soc: "#d65a8a",
+    battery: theme.colors.battery,
+    grid: theme.colors.grid,
+    soc: theme.colors.soc,
   };
 
   const points = readings.map((r) => ({

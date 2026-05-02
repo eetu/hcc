@@ -87,13 +87,14 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
   const hasFlow = (v: number) => Math.abs(v) > 0.05;
 
   const accent = theme.colors.activity.on;
-  const cool = theme.colors.cool;
+  const battery = "#5fb3a3";
+  const homeColor = theme.colors.cool;
   const muted = theme.colors.text.muted;
   const idleStroke = theme.colors.text.main;
 
   const flowBase = {
     fill: "none",
-    strokeWidth: 2,
+    strokeWidth: 3,
     strokeDasharray: "4 6",
   };
   const flowAnim = { animation: `${flow} 1.4s linear infinite` };
@@ -164,7 +165,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         {/* Battery ↔ Inverter */}
         <path
           d="M160,310 C260,310 300,210 400,210"
-          stroke={batteryActive ? cool : idleStroke}
+          stroke={batteryActive ? battery : idleStroke}
           opacity={batteryActive ? 1 : 0.3}
           css={[
             flowBase,
@@ -186,7 +187,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         {/* Inverter → Home */}
         <path
           d="M400,210 C500,210 540,310 640,310"
-          stroke={homeActive ? accent : idleStroke}
+          stroke={homeActive ? homeColor : idleStroke}
           opacity={homeActive ? 1 : 0.3}
           css={[flowBase, homeActive && flowAnim]}
         />
@@ -265,14 +266,14 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
                 cy="310"
                 r="36"
                 fill={theme.colors.background.light}
-                stroke={cool}
+                stroke={battery}
                 strokeWidth="2"
               />
               <NodeIcon
                 cx={160}
                 cy={310}
                 size={32}
-                color={cool}
+                color={battery}
                 icon={batteryIcon(soc, charging > 0)}
               />
             </g>
@@ -362,14 +363,14 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             cy="310"
             r="36"
             fill={theme.colors.background.light}
-            stroke={accent}
+            stroke={homeColor}
             strokeWidth="2"
           />
           <NodeIcon
             cx={640}
             cy={310}
             size={30}
-            color={idleStroke}
+            color={homeColor}
             icon={House}
           />
         </g>

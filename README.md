@@ -1,10 +1,30 @@
-Control center for home Hue bridge
+# halo
+
+Wall-mounted home dashboard. Hue bridge for room temperature, lights and motion; FMI for weather and PV forecast; SolisCloud for solar production, battery and grid flow. Finnish UI, monochrome with one warm accent.
+
+![dashboard](/documentation/screenshots/main.png)
 
 ## Roadmap
 
-1. Show all temperatures from philips motion sensors
-2. ?
-3. Profit
+Done
+
+- Hue temperature, light groups, motion (live SSE).
+- FMI weather + 7-day chart, Tomorrow.io fallback.
+- PV forecast bars layered on weather chart.
+- SolisCloud live: PV, battery SoC + power, grid direction.
+- SolisCloud history: 5-min recording, downsampled chart.
+- Animated PV ↔ inverter ↔ home / battery / grid energy flow.
+- Halo design system: Inter + Space Grotesk, 6px cards, accent + dark themes.
+- Sensor temperature history with adaptive sampling.
+- Screenshot demo mode (`?demo=1`) anonymizing names.
+
+Next
+
+- Energy summary panel (donut + daily / monthly metrics).
+- Per-light counts on light group toggles (`4 / 4`).
+- Multi-station Solis support.
+- Battery low / inverter alarm push notifications.
+- Cleaner offline / loading states for SolisCloud + FMI.
 
 ## Getting Started
 
@@ -147,9 +167,7 @@ for the full available area.
 
 ### Temperature (default)
 
-![temperature view](/documentation/screenshots/main.png)
-
-Glanceable home dashboard. Top row: current weather + 4 day-segments with a collapsible 7-day chart drawer (FMI temperature line, rain bars in blue, PV forecast bars in orange with daily kWh). Bottom row: temperature cards for `ulkona`, `sisällä`, `kuisti` (each averaging Hue motion sensor readings, with low-battery and trend indicators) plus the `Solis` solar production card (kW now). Tap any card to expand a drawer with per-sensor details.
+The screenshot at the top of this README is the temperature view: a full-width FMI weather card (current + 4 day-segments + collapsible 7-day chart drawer with PV forecast bars), and a row of cards for `ulkona`, `sisällä`, `kuisti` (averaged Hue sensor readings with low-battery and trend indicators) plus the live Solis solar production card. Tap any card to expand a drawer with per-sensor detail.
 
 ### Energy
 

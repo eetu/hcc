@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { Chart } from "react-chartjs-2";
 
 import { api } from "../api";
+import useScreenshotMode, { anonymize } from "../hooks/useScreenshotMode";
 
 ChartJS.register(
   CategoryScale,
@@ -81,6 +82,7 @@ type HistoryProps = {
 
 const History: React.FC<HistoryProps> = ({ className }) => {
   const theme = useTheme();
+  const demo = useScreenshotMode();
   const [range, setRange] = useState<(typeof RANGES)[number]>(RANGES[1]);
   const [response, setResponse] = useState<{
     range: (typeof RANGES)[number];
@@ -137,7 +139,7 @@ const History: React.FC<HistoryProps> = ({ className }) => {
     const color = sensorColor(sensor.id, sensor.roomType);
 
     return {
-      label: sensor.name,
+      label: demo ? anonymize(sensor.id, "anturi") : sensor.name,
       data: sensor.points,
       borderColor: color,
       backgroundColor: color,

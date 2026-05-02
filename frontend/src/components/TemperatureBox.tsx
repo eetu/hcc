@@ -2,6 +2,7 @@ import { useTheme } from "@emotion/react";
 import classNames from "classnames";
 import { memo } from "react";
 
+import useScreenshotMode, { anonymize } from "../hooks/useScreenshotMode";
 import useSensorTrend from "../hooks/useSensorTrend";
 import { mq } from "../mq";
 import { Sensor } from "../types/hue";
@@ -29,6 +30,7 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
 }) => {
   const theme = useTheme();
   const trend = useSensorTrend(sensors);
+  const demo = useScreenshotMode();
 
   const enabledSensors = sensors?.filter((r) => r.enabled);
 
@@ -87,7 +89,7 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
                         gap: 5,
                       }}
                     >
-                      {r.name}
+                      {demo ? anonymize(r.id, "anturi") : r.name}
                       {isSensorBatteryLow && (
                         <Icon
                           size={18}

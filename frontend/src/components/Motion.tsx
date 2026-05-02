@@ -5,6 +5,7 @@ import { FC, memo, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 
 import { api } from "../api";
+import useScreenshotMode, { anonymize } from "../hooks/useScreenshotMode";
 import { mq } from "../mq";
 import { Sensor } from "../types/hue";
 
@@ -22,6 +23,7 @@ type MotionProps = {
 const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery("(max-width: 600px)");
+  const demo = useScreenshotMode();
 
   const [pending, setPending] = useState<Set<string>>(() => new Set());
   const motionSensors = sensors.filter(
@@ -118,7 +120,7 @@ const Motion: FC<MotionProps> = ({ className, sensors = [], error }) => {
                   textTransform: "lowercase",
                 }}
               >
-                {s.name}
+                {demo ? anonymize(s.id, "anturi") : s.name}
               </span>
             </span>
             <span

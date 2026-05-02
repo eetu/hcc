@@ -2,6 +2,7 @@ import { keyframes, useTheme } from "@emotion/react";
 import { FC, memo, useCallback, useState } from "react";
 
 import { api } from "../api";
+import useScreenshotMode, { anonymize } from "../hooks/useScreenshotMode";
 import { mq } from "../mq";
 import { Group } from "../types/hue";
 import Icon from "./Icon";
@@ -70,6 +71,7 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
   );
 
   const theme = useTheme();
+  const demo = useScreenshotMode();
   const accent = theme.colors.activity.on;
   const muted = theme.colors.text.muted;
 
@@ -139,7 +141,7 @@ const LightGroup: FC<LightGroupProps> = ({ group }) => {
             textTransform: "lowercase",
           }}
         >
-          {group.name}
+          {demo ? anonymize(group.id, "ryhmä") : group.name}
         </span>
         <span
           css={{

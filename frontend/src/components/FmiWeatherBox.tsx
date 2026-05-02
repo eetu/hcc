@@ -7,6 +7,7 @@ import useSWR from "swr";
 
 import { api, fetcher } from "../api";
 import useLocationSettings from "../hooks/useLocationSettings";
+import useScreenshotMode from "../hooks/useScreenshotMode";
 import { PvForecast } from "../types/pv";
 import { WeatherData } from "../types/weather/fmi";
 import {
@@ -40,6 +41,7 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
   const theme = useTheme();
   const { location, isLoading: locationLoading } = useLocationSettings();
   const [now] = useState(() => new Date());
+  const demo = useScreenshotMode();
 
   const weatherUrl = location
     ? api(`/api/weather/fmi?lat=${location.lat}&lon=${location.lon}`)
@@ -174,7 +176,7 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
               textTransform: "none",
             }}
           >
-            {location?.displayName ?? ""}
+            {demo ? "" : (location?.displayName ?? "")}
           </span>
         </div>
         <div

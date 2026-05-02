@@ -1,14 +1,16 @@
 import { useTheme } from "@emotion/react";
 import classNames from "classnames";
-import { memo } from "react";
+import { FC, memo } from "react";
 
 import useScreenshotMode, { anonymize } from "../hooks/useScreenshotMode";
+import useSensorHistorySummary from "../hooks/useSensorHistorySummary";
 import useSensorTrend from "../hooks/useSensorTrend";
 import { mq } from "../mq";
 import { Sensor } from "../types/hue";
 import Box, { DrawerRow } from "./Box";
 import Icon from "./Icon";
 import OfflineState from "./OfflineState";
+import Sparkline from "./Sparkline";
 import TrendIndicator from "./TrendIndicator";
 
 type TemperatureBoxProps = {
@@ -22,6 +24,8 @@ type TemperatureBoxProps = {
 const isBatteryLow = (sensor: Sensor) =>
   sensor.battery !== undefined && sensor.battery < 10;
 
+const TREND_PILL_THRESHOLD = 0.3;
+
 const TemperatureBox: React.FC<TemperatureBoxProps> = ({
   className,
   title,
@@ -31,6 +35,7 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
 }) => {
   const theme = useTheme();
   const trend = useSensorTrend(sensors);
+  const summary = useSensorHistorySummary(sensors);
   const demo = useScreenshotMode();
 
   const enabledSensors = sensors?.filter((r) => r.enabled);
@@ -42,7 +47,14 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
       return acc + room.temperature;
     }, 0) / enabledSensors.length;
 
-  const sensorWithLowBattery = sensors.find(isBatteryLow);
+  const sensorCount = enabledSensors.length;
+  const lowestBatterySensor = sensors
+    .filter(isBatteryLow)
+    .reduce<Sensor | null>(
+      (acc, s) =>
+        acc === null || (s.battery ?? 100) < (acc.battery ?? 100) ? s : acc,
+      null,
+    );
 
   if (error) {
     return (
@@ -86,51 +98,77 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
           }}
         >
           {sensors.map((r) => {
-            const isSensorBatteryLow = isBatteryLow(r);
+            const showBatteryPill = isBatteryLow(r) && r.battery !== undefined;
             return (
-              <div
+              <DrawerRow
                 key={r.id}
-                css={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 5,
-                  backgroundColor: theme.colors.background.light,
-                }}
-              >
-                <DrawerRow
-                  label={
-                    <div
-                      css={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                      }}
-                    >
-                      {demo ? anonymize(r.id, "anturi") : r.name}
-                      {isSensorBatteryLow && (
-                        <Icon
-                          size={18}
-                          css={{
-                            color: theme.colors.error,
-                          }}
-                        >{`battery_${getBatteryStr(r.battery)}`}</Icon>
-                      )}
-                    </div>
-                  }
-                  value={
-                    <>
-                      <span>
-                        {r.temperature !== undefined
-                          ? `${Math.round(r.temperature)}°`
-                          : ""}
-                      </span>
-                    </>
-                  }
-                />
-              </div>
+                label={
+                  <div
+                    css={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 6,
+                    }}
+                  >
+                    {demo ? anonymize(r.id, "anturi") : r.name}
+                  </div>
+                }
+                value={
+                  <div
+                    css={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    {showBatteryPill && <BatteryPill battery={r.battery!} />}
+                    <span>
+                      {r.temperature !== undefined
+                        ? `${Math.round(r.temperature)}°`
+                        : ""}
+                    </span>
+                  </div>
+                }
+              />
             );
           })}
+          {summary.points.length >= 2 && (
+            <div
+              css={{
+                display: "none",
+                [mq[0]]: {
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 4,
+                  marginTop: "0.5em",
+                  paddingTop: "0.5em",
+                  borderTop: `1px ${theme.colors.border} solid`,
+                },
+              }}
+            >
+              <div
+                css={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  ...theme.typography.caption,
+                  color: theme.colors.text.muted,
+                }}
+              >
+                <span>24h</span>
+                {summary.minTemp !== null && summary.maxTemp !== null && (
+                  <span>
+                    {`min ${Math.round(summary.minTemp)}° · max ${Math.round(summary.maxTemp)}°`}
+                  </span>
+                )}
+              </div>
+              <Sparkline
+                points={summary.points}
+                color={theme.colors.activity.on}
+                height={48}
+              />
+            </div>
+          )}
         </div>
       }
     >
@@ -141,59 +179,181 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-between",
+          [mq[0]]: {
+            flexDirection: "row",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: 16,
+          },
         }}
       >
-        {sensorWithLowBattery && (
+        {lowestBatterySensor?.battery !== undefined && (
           <Icon
+            size={20}
             css={{
               position: "absolute",
-              top: -16,
-              right: -16,
-              display: "block",
+              top: -8,
+              right: -4,
               color: theme.colors.error,
+              [mq[0]]: { display: "none" },
             }}
-          >{`battery_${getBatteryStr(sensorWithLowBattery.battery)}`}</Icon>
+          >{`battery_${getBatteryStr(lowestBatterySensor.battery)}`}</Icon>
         )}
         <div
           css={{
-            ...theme.typography.label,
-            color: theme.colors.text.muted,
-            letterSpacing: "0.04em",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            [mq[0]]: {
+              alignItems: "flex-start",
+              gap: 4,
+            },
           }}
         >
-          {title}
+          <div
+            css={{
+              ...theme.typography.label,
+              color: theme.colors.text.muted,
+              letterSpacing: "0.04em",
+            }}
+          >
+            {title}
+          </div>
+          <div
+            css={{
+              position: "relative",
+              marginTop: "5px",
+              display: "flex",
+              fontWeight: 400,
+              fontSize: 50,
+              lineHeight: 1,
+              fontVariantNumeric: "tabular-nums",
+              [mq[0]]: { marginTop: 0, fontSize: 64 },
+            }}
+          >
+            {Math.round(temperature)}
+            <span>°</span>
+            {trend && trend !== "stable" && (
+              <div
+                css={{
+                  position: "absolute",
+                  right: -25,
+                  top: 0,
+                  bottom: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  opacity: 0.75,
+                  [mq[0]]: { display: "none" },
+                }}
+              >
+                <TrendIndicator trend={trend} />
+              </div>
+            )}
+          </div>
         </div>
+
         <div
           css={{
-            position: "relative",
-            marginTop: "5px",
-            display: "flex",
-            fontWeight: 400,
-            fontSize: 50,
-            lineHeight: 1,
-            fontVariantNumeric: "tabular-nums",
+            display: "none",
+            [mq[0]]: {
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              justifyContent: "center",
+              gap: 8,
+              minHeight: "100%",
+            },
           }}
         >
-          {Math.round(temperature)}
-          <span>°</span>
-          {trend && trend !== "stable" && (
-            <div
-              css={{
-                position: "absolute",
-                right: -25,
-                top: 0,
-                bottom: 0,
-                display: "flex",
-                alignItems: "center",
-                opacity: 0.75,
-              }}
-            >
-              <TrendIndicator trend={trend} />
-            </div>
-          )}
+          {summary.diff1h !== null &&
+            Math.abs(summary.diff1h) >= TREND_PILL_THRESHOLD && (
+              <TrendPill diff={summary.diff1h} />
+            )}
+          <span
+            css={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              ...theme.typography.caption,
+              color: theme.colors.text.muted,
+            }}
+          >
+            {`${sensorCount} ${sensorCount === 1 ? "anturi" : "anturia"}`}
+            {lowestBatterySensor?.battery !== undefined && (
+              <Icon size={16} css={{ color: theme.colors.error }}>
+                {`battery_${getBatteryStr(lowestBatterySensor.battery)}`}
+              </Icon>
+            )}
+          </span>
         </div>
       </div>
     </Box>
+  );
+};
+
+type TrendPillProps = { diff: number };
+
+const TrendPill: FC<TrendPillProps> = ({ diff }) => {
+  const theme = useTheme();
+  const isUp = diff >= 0;
+  const sign = diff > 0 ? "+" : "";
+  return (
+    <div
+      css={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 4,
+        padding: "2px 8px",
+        borderRadius: 999,
+        backgroundColor: theme.colors.activity.onSoft,
+        color: theme.colors.activity.on,
+        fontSize: 12,
+        fontWeight: 500,
+        fontVariantNumeric: "tabular-nums",
+      }}
+    >
+      <Icon
+        size={14}
+        css={{
+          transform: isUp ? "none" : "rotate(180deg)",
+        }}
+      >
+        trending_up
+      </Icon>
+      {`${sign}${diff.toFixed(1)}° / 1h`}
+    </div>
+  );
+};
+
+type BatteryPillProps = { battery: number };
+
+const BatteryPill: FC<BatteryPillProps> = ({ battery }) => {
+  const theme = useTheme();
+  return (
+    <div
+      css={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 4,
+        padding: "2px 8px",
+        borderRadius: 999,
+        backgroundColor: "rgba(255, 99, 71, 0.14)",
+        color: theme.colors.error,
+        fontSize: 12,
+        fontWeight: 500,
+        fontVariantNumeric: "tabular-nums",
+      }}
+    >
+      <Icon size={14}>{`battery_${getBatteryStr(battery)}`}</Icon>
+      <span
+        css={{
+          display: "none",
+          [mq[0]]: { display: "inline" },
+        }}
+      >
+        {`${battery} %`}
+      </span>
+    </div>
   );
 };
 

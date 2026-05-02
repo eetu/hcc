@@ -171,6 +171,7 @@ const History: React.FC<HistoryProps> = ({ className }) => {
         },
       },
       tooltip: {
+        itemSort: (a, b) => (b.parsed.y ?? 0) - (a.parsed.y ?? 0),
         callbacks: {
           label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1)}°`,
         },

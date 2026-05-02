@@ -11,6 +11,7 @@ import LocationForm from "./components/LocationForm";
 import Motion from "./components/Motion";
 import SolisBox from "./components/SolisBox";
 import TemperatureBox from "./components/TemperatureBox";
+import Wordmark from "./components/Wordmark";
 import { mq } from "./mq";
 import { type HueLiveEvent, type Response, type Sensor } from "./types/hue";
 
@@ -141,6 +142,13 @@ const App = () => {
 
   return (
     <>
+      <Wordmark
+        css={{
+          position: "absolute",
+          top: 14,
+          left: 18,
+        }}
+      />
       <button
         css={{
           position: "absolute",
@@ -149,11 +157,11 @@ const App = () => {
           cursor: "pointer",
           backgroundColor: "transparent",
           border: "none",
-          color: theme.colors.text.main,
+          color: theme.colors.text.muted,
         }}
         onClick={toggleFullscreen}
       >
-        <Icon>{!fullscreen ? "fullscreen" : "fullscreen_exit"}</Icon>
+        <Icon size={22}>{!fullscreen ? "fullscreen" : "fullscreen_exit"}</Icon>
       </button>
       <div
         css={{
@@ -199,25 +207,42 @@ const App = () => {
               },
             }}
           >
-            {VIEWS.map(({ id, icon }) => (
-              <button
-                key={id}
-                onClick={() => setView(id)}
-                css={{
-                  cursor: "pointer",
-                  backgroundColor: "transparent",
-                  border: "none",
-                  color:
-                    view === id
-                      ? theme.colors.text.main
+            {VIEWS.map(({ id, icon }) => {
+              const active = view === id;
+              return (
+                <button
+                  key={id}
+                  onClick={() => setView(id)}
+                  css={{
+                    position: "relative",
+                    cursor: "pointer",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    color: active
+                      ? theme.colors.activity.on
                       : theme.colors.text.muted,
-                  padding: "4px 6px",
-                  transition: "color 0.15s, border-color 0.15s",
-                }}
-              >
-                <Icon size={28}>{icon}</Icon>
-              </button>
-            ))}
+                    padding: "6px",
+                    transition: "color 0.15s ease",
+                  }}
+                >
+                  <Icon size={26}>{icon}</Icon>
+                  {active && (
+                    <span
+                      css={{
+                        position: "absolute",
+                        left: -2,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        width: 3,
+                        height: 18,
+                        borderRadius: 2,
+                        backgroundColor: theme.colors.activity.on,
+                      }}
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           <div

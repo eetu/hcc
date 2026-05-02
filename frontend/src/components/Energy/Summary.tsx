@@ -74,11 +74,6 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
 
   const { exportKwh, importKwh, chargeKwh, dischargeKwh } = integrate(readings);
 
-  const accent = theme.colors.activity.on;
-  const battery = "#5fb3a3";
-  const homeColor = "#5b8fc2";
-  const muted = theme.colors.text.muted;
-
   const pvTotal = live.today_energy;
   const pvToGrid = Math.min(pvTotal, exportKwh);
   const pvToBattery = Math.max(0, Math.min(pvTotal - pvToGrid, chargeKwh));
@@ -99,12 +94,12 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
   const gridLen = (gridPct / 100) * C;
 
   const metrics: [string, string, string][] = [
-    ["päivän tuotto", `${pvTotal.toFixed(1)} kWh`, accent],
-    ["kulutus", `${homeKwh.toFixed(1)} kWh`, homeColor],
-    ["lataus", `${chargeKwh.toFixed(1)} kWh`, battery],
-    ["käyttö", `${dischargeKwh.toFixed(1)} kWh`, battery],
-    ["vienti", `${exportKwh.toFixed(1)} kWh`, accent],
-    ["tuonti", `${importKwh.toFixed(1)} kWh`, muted],
+    ["päivän tuotto", `${pvTotal.toFixed(1)} kWh`, theme.colors.activity.on],
+    ["kulutus", `${homeKwh.toFixed(1)} kWh`, theme.colors.home],
+    ["lataus", `${chargeKwh.toFixed(1)} kWh`, theme.colors.battery],
+    ["käyttö", `${dischargeKwh.toFixed(1)} kWh`, theme.colors.battery],
+    ["vienti", `${exportKwh.toFixed(1)} kWh`, theme.colors.activity.on],
+    ["tuonti", `${importKwh.toFixed(1)} kWh`, theme.colors.text.muted],
   ];
 
   return (
@@ -178,7 +173,7 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
                   cy="50"
                   r={r}
                   fill="none"
-                  stroke={homeColor}
+                  stroke={theme.colors.home}
                   strokeWidth="9"
                   strokeDasharray={`${homeLen} ${C}`}
                 />
@@ -187,7 +182,7 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
                   cy="50"
                   r={r}
                   fill="none"
-                  stroke={battery}
+                  stroke={theme.colors.battery}
                   strokeWidth="9"
                   strokeDasharray={`${batteryLen} ${C}`}
                   strokeDashoffset={-homeLen}
@@ -197,7 +192,7 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
                   cy="50"
                   r={r}
                   fill="none"
-                  stroke={accent}
+                  stroke={theme.colors.activity.on}
                   strokeWidth="9"
                   strokeDasharray={`${gridLen} ${C}`}
                   strokeDashoffset={-(homeLen + batteryLen)}
@@ -216,7 +211,9 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
               gap: 2,
             }}
           >
-            <div css={{ fontSize: 12, color: muted }}>tuotto</div>
+            <div css={{ fontSize: 12, color: theme.colors.text.muted }}>
+              tuotto
+            </div>
             <div
               css={{
                 fontSize: 20,
@@ -238,19 +235,19 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
           }}
         >
           <LegendRow
-            color={homeColor}
+            color={theme.colors.home}
             label="kulutukseen"
             value={`${pvToHome.toFixed(1)} kWh`}
             pct={homePct}
           />
           <LegendRow
-            color={battery}
+            color={theme.colors.battery}
             label="akkuun"
             value={`${pvToBattery.toFixed(1)} kWh`}
             pct={batteryPct}
           />
           <LegendRow
-            color={accent}
+            color={theme.colors.activity.on}
             label="verkkoon"
             value={`${pvToGrid.toFixed(1)} kWh`}
             pct={gridPct}
@@ -286,7 +283,7 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
                       backgroundColor: c,
                     }}
                   />
-                  <span css={{ color: muted }}>{k}</span>
+                  <span css={{ color: theme.colors.text.muted }}>{k}</span>
                 </span>
                 <span css={{ fontVariantNumeric: "tabular-nums" }}>{v}</span>
               </div>

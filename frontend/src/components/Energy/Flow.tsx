@@ -86,12 +86,6 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
 
   const hasFlow = (v: number) => Math.abs(v) > 0.05;
 
-  const accent = theme.colors.activity.on;
-  const battery = "#5fb3a3";
-  const homeColor = "#5b8fc2";
-  const muted = theme.colors.text.muted;
-  const idleStroke = theme.colors.text.main;
-
   const flowBase = {
     fill: "none",
     strokeWidth: 3,
@@ -143,7 +137,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         <div
           css={{
             fontSize: 12,
-            color: muted,
+            color: theme.colors.text.muted,
             whiteSpace: "nowrap",
           }}
         >
@@ -158,14 +152,14 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         {/* PV → Inverter */}
         <path
           d="M160,110 C260,110 300,210 400,210"
-          stroke={accent}
+          stroke={theme.colors.activity.on}
           opacity={pvActive ? 1 : 0.3}
           css={[flowBase, pvActive && flowAnim]}
         />
         {/* Battery ↔ Inverter */}
         <path
           d="M160,310 C260,310 300,210 400,210"
-          stroke={battery}
+          stroke={theme.colors.battery}
           opacity={batteryActive ? 1 : 0.3}
           css={[
             flowBase,
@@ -176,7 +170,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         {/* Inverter ↔ Grid */}
         <path
           d="M400,210 C500,210 540,110 640,110"
-          stroke={accent}
+          stroke={theme.colors.activity.on}
           opacity={gridActive ? 1 : 0.3}
           css={[
             flowBase,
@@ -187,7 +181,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         {/* Inverter → Home */}
         <path
           d="M400,210 C500,210 540,310 640,310"
-          stroke={homeColor}
+          stroke={theme.colors.home}
           opacity={homeActive ? 1 : 0.3}
           css={[flowBase, homeActive && flowAnim]}
         />
@@ -199,10 +193,16 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             cy="110"
             r="36"
             fill={theme.colors.background.light}
-            stroke={accent}
+            stroke={theme.colors.activity.on}
             strokeWidth="2"
           />
-          <NodeIcon cx={160} cy={110} size={32} color={accent} icon={Sun} />
+          <NodeIcon
+            cx={160}
+            cy={110}
+            size={32}
+            color={theme.colors.activity.on}
+            icon={Sun}
+          />
         </g>
         <text
           x="160"
@@ -214,7 +214,13 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         >
           aurinko
         </text>
-        <text x="160" y="60" textAnchor="middle" fontSize="16" fill={muted}>
+        <text
+          x="160"
+          y="60"
+          textAnchor="middle"
+          fontSize="16"
+          fill={theme.colors.text.muted}
+        >
           tänään {data.today_energy.toFixed(1)} {data.today_energy_unit}
         </text>
         <text
@@ -235,14 +241,14 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             cy="210"
             r="32"
             fill={theme.colors.background.light}
-            stroke={idleStroke}
+            stroke={theme.colors.text.main}
             strokeWidth="2"
           />
           <NodeIcon
             cx={400}
             cy={210}
             size={28}
-            color={idleStroke}
+            color={theme.colors.text.main}
             icon={Activity}
           />
         </g>
@@ -266,14 +272,14 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
                 cy="310"
                 r="36"
                 fill={theme.colors.background.light}
-                stroke={battery}
+                stroke={theme.colors.battery}
                 strokeWidth="2"
               />
               <NodeIcon
                 cx={160}
                 cy={310}
                 size={32}
-                color={battery}
+                color={theme.colors.battery}
                 icon={batteryIcon(soc, charging > 0)}
               />
             </g>
@@ -292,7 +298,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
               y="397"
               textAnchor="middle"
               fontSize="16"
-              fill={muted}
+              fill={theme.colors.text.muted}
             >
               {Math.round(soc)}%
               {charging > 0
@@ -321,10 +327,16 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             cy="110"
             r="36"
             fill={theme.colors.background.light}
-            stroke={accent}
+            stroke={theme.colors.activity.on}
             strokeWidth="2"
           />
-          <NodeIcon cx={640} cy={110} size={30} color={accent} icon={Plug} />
+          <NodeIcon
+            cx={640}
+            cy={110}
+            size={30}
+            color={theme.colors.activity.on}
+            icon={Plug}
+          />
         </g>
         <text
           x="640"
@@ -336,7 +348,13 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         >
           verkko
         </text>
-        <text x="640" y="60" textAnchor="middle" fontSize="16" fill={muted}>
+        <text
+          x="640"
+          y="60"
+          textAnchor="middle"
+          fontSize="16"
+          fill={theme.colors.text.muted}
+        >
           {importing > 0 ? "tuonti" : exporting > 0 ? "vienti" : "lepotila"}
         </text>
         <text
@@ -357,14 +375,14 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             cy="310"
             r="36"
             fill={theme.colors.background.light}
-            stroke={homeColor}
+            stroke={theme.colors.home}
             strokeWidth="2"
           />
           <NodeIcon
             cx={640}
             cy={310}
             size={30}
-            color={homeColor}
+            color={theme.colors.home}
             icon={House}
           />
         </g>

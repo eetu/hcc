@@ -188,8 +188,10 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
             <div
               css={{
                 display: "flex",
-                fontWeight: "normal",
-                fontSize: "50px",
+                fontWeight: 400,
+                fontSize: 50,
+                lineHeight: 1,
+                fontVariantNumeric: "tabular-nums",
               }}
             >
               {`${Math.round(current.temperature)}°`}
@@ -198,10 +200,11 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
               css={{
                 display: "flex",
                 alignItems: "flex-end",
-                fontSize: "20px",
-                fontWeight: "lighter",
+                fontSize: 20,
+                fontWeight: 300,
                 alignSelf: "bottom",
-                marginBottom: "5px",
+                marginBottom: 5,
+                fontVariantNumeric: "tabular-nums",
               }}
             >{`${Math.round(current.temperatureApparent)}°`}</div>
           </div>
@@ -281,8 +284,24 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
               },
             }}
           >
-            <span css={{ fontWeight: "lighter" }}>{s.title}</span>
-            <span css={{ marginTop: 0.25 }}>{s.temp}°</span>
+            <span
+              css={{
+                fontFamily: theme.fonts.heading,
+                fontWeight: 400,
+                fontSize: 14,
+                color: theme.colors.text.muted,
+              }}
+            >
+              {s.title}
+            </span>
+            <span
+              css={{
+                marginTop: 0.25,
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {s.temp}°
+            </span>
           </div>
         ))}
       </div>

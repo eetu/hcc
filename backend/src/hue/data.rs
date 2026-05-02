@@ -151,7 +151,10 @@ async fn fetch_from_bridge(state: &Arc<AppState>) -> Result<HueResponse, HueErro
                 .get(gl.owner.rid.as_str())
                 .map(|r| r.metadata.name.clone())
                 .unwrap_or_else(|| gl.id.clone()),
-            state: GroupState { on: gl.on.on },
+            state: GroupState {
+                on: gl.on.on,
+                brightness: gl.dimming.as_ref().map(|d| d.brightness),
+            },
         })
         .collect();
 

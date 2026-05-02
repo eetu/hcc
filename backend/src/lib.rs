@@ -40,6 +40,7 @@ pub struct AppState {
         hue::handlers::events_sse,
         hue::handlers::pair,
         hue::handlers::toggle_group,
+        hue::handlers::set_brightness,
         hue::handlers::toggle_motion,
         solis::handlers::get_data,
         solis::handlers::get_history,
@@ -57,6 +58,7 @@ pub struct AppState {
         hue::events::HueLiveEvent,
         hue::handlers::PairRequest,
         hue::handlers::PairResponse,
+        hue::handlers::SetBrightnessRequest,
         solis::models::SolisWidgetData,
         solis::models::SolisReading,
         pv::models::PvForecast,
@@ -192,6 +194,10 @@ pub fn create_app(
                         .route(
                             "/toggleGroup/{id}",
                             web::post().to(hue::handlers::toggle_group),
+                        )
+                        .route(
+                            "/setBrightness/{id}",
+                            web::post().to(hue::handlers::set_brightness),
                         )
                         .route(
                             "/toggleMotion/{deviceId}",

@@ -24,7 +24,15 @@ const applyEvent = (data: Response, event: HueLiveEvent): Response => {
       return {
         ...data,
         groups: data.groups.map((g) =>
-          g.id === event.id ? { ...g, state: { on: event.on } } : g,
+          g.id === event.id
+            ? {
+                ...g,
+                state: {
+                  on: event.on ?? g.state.on,
+                  brightness: event.brightness ?? g.state.brightness,
+                },
+              }
+            : g,
         ),
       };
     case "temperature":

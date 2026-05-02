@@ -41,6 +41,9 @@ pub struct Group {
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct GroupState {
     pub on: bool,
+    /// Brightness percentage (0..=100). Hue reports it independently of `on`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub brightness: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
@@ -106,6 +109,12 @@ pub struct GroupedLightResource {
     pub id: String,
     pub owner: GroupedLightOwner,
     pub on: OnState,
+    pub dimming: Option<DimmingState>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct DimmingState {
+    pub brightness: f64,
 }
 
 #[derive(Debug, Deserialize)]

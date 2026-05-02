@@ -272,7 +272,10 @@ async fn hue_get_returns_cached_data() {
         groups: vec![hue::models::Group {
             id: "g1".into(),
             name: "Living Room".into(),
-            state: hue::models::GroupState { on: true },
+            state: hue::models::GroupState {
+                on: true,
+                brightness: Some(80.0),
+            },
         }],
     };
     state.hue_cache.set("hue".to_owned(), cached).await;

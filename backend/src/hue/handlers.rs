@@ -204,6 +204,64 @@ pub async fn toggle_group(
     }
 }
 
+// ---- POST /api/hue/setBrightness/{id} ----
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct SetBrightnessRequest {
+    /// Target brightness percentage (0..=100). 0 turns the group off.
+    pub brightness: f64,
+}
+
+#[utoipa::path(
+    post,
+    path = "/api/hue/setBrightness/{id}",
+    params(("id" = String, Path, description = "Grouped light resource ID")),
+    request_body = SetBrightnessRequest,
+    responses(
+        (status = 200, description = "Brightness set"),
+        (status = 400, description = "Invalid brightness"),
+        (status = 502, description = "Failed to set brightness")
+    )
+)]
+pub async fn set_brightness(
+    state: web::Data<Arc<AppState>>,
+    path: web::Path<String>,
+    body: web::Json<SetBrightnessRequest>,
+) -> HttpResponse {
+    let group_id = path.into_inner();
+    let brightness = body.brightness;
+
+    if !(0.0..=100.0).contains(&brightness) || brightness.is_nan() {
+        return HttpResponse::BadRequest()
+            .json(serde_json::json!({"error": "brightness must be 0..=100"}));
+    }
+
+    // Hue rejects dimming.brightness == 0; use on:false for that case.
+    // Otherwise force on:true so dragging from 0 also turns the group on.
+    let payload = if brightness <= 0.0 {
+        serde_json::json!({"on": {"on": false}})
+    } else {
+        serde_json::json!({
+            "on": {"on": true},
+            "dimming": {"brightness": brightness},
+        })
+    };
+
+    match hue_put(
+        &state,
+        &format!("/clip/v2/resource/grouped_light/{group_id}"),
+        &payload,
+    )
+    .await
+    {
+        Ok(()) => HttpResponse::Ok().finish(),
+        Err(e) => {
+            tracing::error!("Failed to set brightness for {group_id}: {e}");
+            HttpResponse::BadGateway().json(serde_json::json!({"error": e.to_string()}))
+        }
+    }
+}
+
 // ---- POST /api/hue/toggleMotion/{deviceId} ----
 
 #[utoipa::path(

@@ -3,6 +3,7 @@ import { memo, useEffect, useState } from "react";
 import useSWR from "swr";
 
 import { api, fetcher } from "../../api";
+import { mq } from "../../mq";
 import { SolisData, SolisReading } from "../../types/solis";
 
 type Aggregates = {
@@ -110,6 +111,9 @@ const Summary: React.FC<{ className?: string }> = ({ className }) => {
         boxShadow: theme.shadows.main,
         borderRadius: theme.border.radius,
         padding: "1.25em 1.5em",
+        [mq[0]]: {
+          padding: "1em",
+        },
       }}
     >
       <div

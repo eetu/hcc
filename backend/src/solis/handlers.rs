@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
 use actix_web::{web, HttpResponse};
+use serde::Deserialize;
+use utoipa::IntoParams;
 
 use crate::AppState;
 
@@ -37,6 +39,37 @@ pub async fn get_data(state: web::Data<Arc<AppState>>) -> HttpResponse {
             }
             HttpResponse::BadGateway()
                 .json(serde_json::json!({"error": e.to_string()}))
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, IntoParams)]
+pub struct SolisHistoryQuery {
+    /// Number of hours of history to return (default: 24, max: 720)
+    pub hours: Option<u32>,
+    /// Maximum number of data points to return via uniform sampling (optional)
+    pub max_points: Option<u32>,
+}
+
+#[utoipa::path(
+    get,
+    path = "/api/history/solis",
+    params(SolisHistoryQuery),
+    responses(
+        (status = 200, description = "Solis reading history", body = Vec<super::models::SolisReading>),
+        (status = 500, description = "Database error"),
+    )
+)]
+pub async fn get_history(
+    state: web::Data<Arc<AppState>>,
+    query: web::Query<SolisHistoryQuery>,
+) -> HttpResponse {
+    let hours = query.hours.unwrap_or(24).min(720);
+    match state.storage.query_solis_readings(hours, query.max_points).await {
+        Ok(readings) => HttpResponse::Ok().json(readings),
+        Err(e) => {
+            tracing::error!("Failed to query Solis history: {e}");
+            HttpResponse::InternalServerError().finish()
         }
     }
 }

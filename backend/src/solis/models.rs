@@ -31,3 +31,15 @@ pub struct SolisWidgetData {
     /// Data timestamp from inverter (UTC+8 ms)
     pub updated_at: i64,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct SolisReading {
+    pub power: f64,
+    pub grid_power: Option<f64>,
+    pub battery_soc: Option<f64>,
+    pub battery_power: Option<f64>,
+    pub today_energy: f64,
+    pub status: u8,
+    pub recorded_at: String,
+}

@@ -42,6 +42,7 @@ pub struct AppState {
         hue::handlers::toggle_group,
         hue::handlers::toggle_motion,
         solis::handlers::get_data,
+        solis::handlers::get_history,
         pv::handlers::get_forecast,
         pv::handlers::post_forecast,
         status,
@@ -57,6 +58,7 @@ pub struct AppState {
         hue::handlers::PairRequest,
         hue::handlers::PairResponse,
         solis::models::SolisWidgetData,
+        solis::models::SolisReading,
         pv::models::PvForecast,
         pv::models::PvPoint,
         StatusResponse,
@@ -169,7 +171,8 @@ pub fn create_app(
             web::scope("/api")
                 .service(
                     web::scope("/history")
-                        .route("/sensors", web::get().to(sensor_history)),
+                        .route("/sensors", web::get().to(sensor_history))
+                        .route("/solis", web::get().to(solis::handlers::get_history)),
                 )
                 .service(
                     web::scope("/settings")
@@ -294,6 +297,7 @@ pub async fn run_server() -> std::io::Result<()> {
 
     hue::events::start_stream_loop(state.clone());
     storage::start_recording_loop(state.clone());
+    solis::recording::start(state.clone());
 
     tracing::info!("Starting server on port {port}");
 

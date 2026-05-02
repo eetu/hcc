@@ -10,6 +10,8 @@ use utoipa::ToSchema;
 use crate::hue::data::fetch_hue_data;
 use crate::pv::models::PvForecast;
 use crate::pv::storage as pv_storage;
+use crate::solis::models::{SolisReading, SolisWidgetData};
+use crate::solis::storage as solis_storage;
 use crate::AppState;
 
 pub struct Storage {
@@ -57,6 +59,7 @@ impl Storage {
         )?;
 
         pv_storage::init_schema(&conn)?;
+        solis_storage::init_schema(&conn)?;
 
         Ok(Self {
             conn: Mutex::new(conn),
@@ -76,6 +79,25 @@ impl Storage {
     pub async fn prune_pv_forecast(&self) -> rusqlite::Result<usize> {
         let conn = self.conn.lock().await;
         pv_storage::prune_past(&conn)
+    }
+
+    pub async fn insert_solis_reading(&self, data: &SolisWidgetData) -> rusqlite::Result<()> {
+        let conn = self.conn.lock().await;
+        solis_storage::insert_reading(&conn, data)
+    }
+
+    pub async fn query_solis_readings(
+        &self,
+        hours: u32,
+        max_points: Option<u32>,
+    ) -> rusqlite::Result<Vec<SolisReading>> {
+        let conn = self.conn.lock().await;
+        solis_storage::query_readings(&conn, hours, max_points)
+    }
+
+    pub async fn prune_solis(&self, retain_days: u32) -> rusqlite::Result<usize> {
+        let conn = self.conn.lock().await;
+        solis_storage::prune(&conn, retain_days)
     }
 
     pub async fn insert_readings(&self, readings: &[SensorReading]) -> rusqlite::Result<()> {

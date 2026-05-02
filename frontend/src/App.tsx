@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { api } from "./api";
 import CurrentTime from "./components/CurrentTime";
+import EnergyDailyHistory from "./components/Energy/DailyHistory";
 import EnergyFlow from "./components/Energy/Flow";
 import FmiWeatherBox from "./components/FmiWeatherBox";
 import History from "./components/History";
@@ -304,7 +305,17 @@ const App = () => {
             )}
 
             {view === "energy" && (
-              <EnergyFlow css={{ gridColumn: "1 / span 4" }} />
+              <div
+                css={{
+                  gridColumn: "1 / span 4",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 16,
+                }}
+              >
+                <EnergyFlow />
+                <EnergyDailyHistory />
+              </div>
             )}
 
             {view === "lights" && (

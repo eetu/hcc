@@ -236,7 +236,7 @@ const TemperatureBox: React.FC<TemperatureBoxProps> = ({
               position: "relative",
               marginTop: "5px",
               display: "flex",
-              fontWeight: 400,
+              fontWeight: 300,
               fontSize: 50,
               lineHeight: 1,
               fontVariantNumeric: "tabular-nums",

@@ -9,10 +9,22 @@ import useLocal from "../hooks/useLocal";
 type CurrentTimeProps = {} & React.HTMLAttributes<HTMLDivElement>;
 
 const DISPLAY_FONTS = [
-  { family: '"DM Serif Display", Georgia, serif', weight: 400 },
-  { family: '"Abril Fatface", Georgia, serif', weight: 400 },
-  { family: '"Instrument Serif", Georgia, serif', weight: 400 },
-  { family: '"Inter", system-ui, sans-serif', weight: 300 },
+  {
+    family: '"DM Serif Display", Georgia, serif',
+    weight: 400,
+    tracking: "-0.02em",
+  },
+  {
+    family: '"Abril Fatface", Georgia, serif',
+    weight: 400,
+    tracking: "-0.02em",
+  },
+  {
+    family: '"Instrument Serif", Georgia, serif',
+    weight: 400,
+    tracking: "-0.02em",
+  },
+  { family: '"Inter", system-ui, sans-serif', weight: 300, tracking: "-0.1em" },
 ];
 
 const CurrentTime: React.FC<CurrentTimeProps> = ({ className }) => {
@@ -43,7 +55,7 @@ const CurrentTime: React.FC<CurrentTimeProps> = ({ className }) => {
           fontSize: "7em",
           lineHeight: 1,
           fontWeight: displayFont.weight,
-          letterSpacing: "-0.02em",
+          letterSpacing: displayFont.tracking,
           fontVariantNumeric: "tabular-nums",
           display: "flex",
           alignItems: "baseline",
@@ -64,6 +76,7 @@ const CurrentTime: React.FC<CurrentTimeProps> = ({ className }) => {
             marginLeft: "0.4em",
             marginBottom: "0.6em",
             alignSelf: "flex-end",
+            letterSpacing: "normal",
             fontVariantNumeric: "tabular-nums",
           }}
         >

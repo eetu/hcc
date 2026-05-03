@@ -184,7 +184,7 @@ const App = () => {
         }}
         onClick={toggleFullscreen}
       >
-        <Icon size={22}>{!fullscreen ? "fullscreen" : "fullscreen_exit"}</Icon>
+        <Icon size={20}>{!fullscreen ? "fullscreen" : "fullscreen_exit"}</Icon>
       </button>
       <div
         css={{

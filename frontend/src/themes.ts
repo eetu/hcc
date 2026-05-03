@@ -15,6 +15,7 @@ declare module "@emotion/react" {
     fonts: {
       body: string;
       heading: string;
+      display: string;
     };
     colors: {
       body: string;
@@ -64,6 +65,7 @@ declare module "@emotion/react" {
 const fonts = {
   body: '"Inter", system-ui, sans-serif',
   heading: '"Space Grotesk", "Inter", sans-serif',
+  display: '"Abril Fatface", "Space Grotesk", monospace',
 };
 
 const typography = {

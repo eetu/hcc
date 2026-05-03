@@ -4,16 +4,28 @@ import { fi } from "date-fns/locale/fi";
 import React, { memo } from "react";
 
 import useCurrentTime from "../hooks/useCurrentTime";
+import useLocal from "../hooks/useLocal";
 
 type CurrentTimeProps = {} & React.HTMLAttributes<HTMLDivElement>;
+
+const DISPLAY_FONTS = [
+  { family: '"DM Serif Display", Georgia, serif', weight: 400 },
+  { family: '"Abril Fatface", Georgia, serif', weight: 400 },
+  { family: '"Instrument Serif", Georgia, serif', weight: 400 },
+  { family: '"Inter", system-ui, sans-serif', weight: 300 },
+];
 
 const CurrentTime: React.FC<CurrentTimeProps> = ({ className }) => {
   const theme = useTheme();
   const currentTime = useCurrentTime();
+  const [fontIndex, setFontIndex] = useLocal("clockFontIndex", 0);
+  const displayFont = DISPLAY_FONTS[fontIndex] ?? DISPLAY_FONTS[0];
 
   const hh = format(currentTime, "HH");
   const mm = format(currentTime, "mm");
   const ss = format(currentTime, "ss");
+
+  const cycleFont = () => setFontIndex((i) => (i + 1) % DISPLAY_FONTS.length);
 
   return (
     <div
@@ -25,15 +37,19 @@ const CurrentTime: React.FC<CurrentTimeProps> = ({ className }) => {
       }}
     >
       <div
+        onClick={cycleFont}
         css={{
+          fontFamily: displayFont.family,
           fontSize: "7em",
           lineHeight: 1,
-          fontWeight: 400,
+          fontWeight: displayFont.weight,
           letterSpacing: "-0.02em",
           fontVariantNumeric: "tabular-nums",
           display: "flex",
           alignItems: "baseline",
           gap: "0.05em",
+          cursor: "pointer",
+          userSelect: "none",
         }}
       >
         <span>{hh}</span>

@@ -27,8 +27,8 @@ const Arrow: React.FC<ArrowProps> = ({ className, deg }) => {
           height: "inherit",
           width: "inherit",
           borderRadius: "100%",
-          border: `1px solid ${theme.colors.text.main}`,
-          opacity: 0.5,
+          border: `2px solid ${theme.colors.text.main}`,
+          opacity: 0.75,
         }}
       />
       <div

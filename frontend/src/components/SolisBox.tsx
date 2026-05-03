@@ -161,6 +161,7 @@ const SolisBox: React.FC<SolisBoxProps> = ({ className }) => {
               fontWeight: 300,
               fontSize: 50,
               lineHeight: 1,
+              letterSpacing: "-0.1em",
               fontVariantNumeric: "tabular-nums",
               [mq[0]]: { marginTop: 0, fontSize: 64 },
             }}

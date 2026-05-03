@@ -213,6 +213,7 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
                 fontWeight: 300,
                 fontSize: 50,
                 lineHeight: 1,
+                letterSpacing: "-0.1em",
                 fontVariantNumeric: "tabular-nums",
               }}
             >

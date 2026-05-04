@@ -90,7 +90,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
 
   const flowBase = {
     fill: "none",
-    strokeWidth: isMobile ? 5 : 3,
+    strokeWidth: 5,
     strokeDasharray: "4 6",
   };
   const flowAnim = { animation: `${flow} 1.4s linear infinite` };
@@ -109,10 +109,12 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
   const batteryActive = hasFlow(batteryPower);
   const gridActive = hasFlow(grid);
 
-  const strokeWidth = isMobile ? 4 : 2;
-  const nodeSize = isMobile ? 42 : 36;
-  const nodeTitleFontSize = isMobile ? 24 : 18;
-  const nodeSubTitleFontSize = isMobile ? 20 : 16;
+  const strokeWidth = 4;
+  const nodeSize = 42;
+  const nodeTitleFontSize = 24;
+  const socCircumference = 2 * Math.PI * nodeSize;
+  const socArc =
+    (Math.max(0, Math.min(100, soc ?? 0)) / 100) * socCircumference;
 
   return (
     <div
@@ -216,22 +218,13 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </g>
         <text
           x="160"
-          y="36"
+          y="50"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
           fontSize={nodeTitleFontSize}
           fill={theme.colors.text.main}
         >
           aurinko
-        </text>
-        <text
-          x="160"
-          y="60"
-          textAnchor="middle"
-          fontSize={nodeSubTitleFontSize}
-          fill={theme.colors.text.muted}
-        >
-          tänään {data.today_energy.toFixed(1)} {data.today_energy_unit}
         </text>
         <text
           x="160"
@@ -262,20 +255,19 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             icon={Activity}
           />
         </g>
-        <text
-          x="400"
-          y={262 + (isMobile ? 12 : 0)}
-          textAnchor="middle"
-          fontFamily={theme.fonts.heading}
-          fontSize={nodeTitleFontSize}
-          fill={theme.colors.text.main}
-        >
-          invertteri
-        </text>
-
         {/* Battery node */}
         {soc !== null && (
           <>
+            <text
+              x="160"
+              y="250"
+              textAnchor="middle"
+              fontFamily={theme.fonts.heading}
+              fontSize={nodeTitleFontSize}
+              fill={theme.colors.text.main}
+            >
+              akku
+            </text>
             <g css={batteryActive ? pulseStyle : undefined}>
               <circle
                 cx="160"
@@ -284,6 +276,18 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
                 fill={theme.colors.background.light}
                 stroke={theme.colors.battery}
                 strokeWidth={strokeWidth}
+                strokeOpacity={0.2}
+              />
+              <circle
+                cx="160"
+                cy="310"
+                r={nodeSize}
+                fill="none"
+                stroke={theme.colors.battery}
+                strokeWidth={strokeWidth}
+                strokeDasharray={`${socArc} ${socCircumference}`}
+                strokeLinecap="round"
+                transform="rotate(-90 160 310)"
               />
               <NodeIcon
                 cx={160}
@@ -295,31 +299,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
             </g>
             <text
               x="160"
-              y={373 + (isMobile ? 5 : 0)}
-              textAnchor="middle"
-              fontFamily={theme.fonts.heading}
-              fontSize={nodeTitleFontSize}
-              fill={theme.colors.text.main}
-            >
-              akku
-            </text>
-            <text
-              x="160"
-              y={397 + (isMobile ? 5 : 0)}
-              textAnchor="middle"
-              fontSize={nodeSubTitleFontSize}
-              fill={theme.colors.text.muted}
-            >
-              {Math.round(soc)}%
-              {charging > 0
-                ? " · lataa"
-                : discharging > 0
-                  ? " · purkaa"
-                  : " · lepotila"}
-            </text>
-            <text
-              x="160"
-              y={429 + (isMobile ? 5 : 0)}
+              y="378"
               textAnchor="middle"
               fontSize="24"
               fill={theme.colors.text.main}
@@ -350,7 +330,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </g>
         <text
           x="640"
-          y="36"
+          y="50"
           textAnchor="middle"
           fontFamily={theme.fonts.heading}
           fontSize={nodeTitleFontSize}
@@ -360,16 +340,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </text>
         <text
           x="640"
-          y="60"
-          textAnchor="middle"
-          fontSize={nodeSubTitleFontSize}
-          fill={theme.colors.text.muted}
-        >
-          {importing > 0 ? "tuonti" : exporting > 0 ? "vienti" : "lepotila"}
-        </text>
-        <text
-          x="640"
-          y={178 + (isMobile ? 5 : 0)}
+          y="178"
           textAnchor="middle"
           fontSize="24"
           fill={theme.colors.text.main}
@@ -379,6 +350,16 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </text>
 
         {/* Home node */}
+        <text
+          x="640"
+          y="250"
+          textAnchor="middle"
+          fontFamily={theme.fonts.heading}
+          fontSize={nodeTitleFontSize}
+          fill={theme.colors.text.main}
+        >
+          koti
+        </text>
         <g css={homeActive ? pulseStyle : undefined}>
           <circle
             cx="640"
@@ -398,17 +379,7 @@ const Flow: React.FC<{ className?: string }> = ({ className }) => {
         </g>
         <text
           x="640"
-          y={373 + (isMobile ? 5 : 0)}
-          textAnchor="middle"
-          fontFamily={theme.fonts.heading}
-          fontSize={nodeTitleFontSize}
-          fill={theme.colors.text.main}
-        >
-          koti
-        </text>
-        <text
-          x="640"
-          y={429 + (isMobile ? 5 : 0)}
+          y="378"
           textAnchor="middle"
           fontSize="24"
           fill={theme.colors.text.main}

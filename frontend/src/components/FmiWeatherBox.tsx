@@ -20,7 +20,6 @@ import Box from "./Box";
 import Icon from "./Icon";
 import LocationForm from "./LocationForm";
 import OfflineState from "./OfflineState";
-import RaindropIcon from "./RaindropIcon";
 import WeatherChart from "./WeatherChart";
 
 type WeatherIconProps = {
@@ -257,7 +256,7 @@ const WeatherBox: React.FC<WeatherBoxProps> = ({ className }) => {
                 {today.precipitationType === "snow" ? (
                   <Icon>ac_unit</Icon>
                 ) : (
-                  <RaindropIcon />
+                  <Icon>water_drop</Icon>
                 )}
                 <span css={{ marginLeft: 10 }}>
                   {today.precipitation.toFixed(1)} mm

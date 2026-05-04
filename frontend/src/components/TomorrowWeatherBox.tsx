@@ -12,7 +12,6 @@ import { getTemperatureSegments } from "../weather/tomorrow/utils";
 import Arrow from "./Arrow";
 import Box from "./Box";
 import Icon from "./Icon";
-import RaindropIcon from "./RaindropIcon";
 import Tooltip from "./Tooltip";
 import WeatherChart from "./WeatherChart";
 
@@ -197,7 +196,7 @@ const TomorrowWeatherBox: React.FC<TomorrowWeatherBoxProps> = ({
                 }}
               >
                 {today.values.rainAccumulation > 0 ? (
-                  <RaindropIcon />
+                  <Icon>water_drop</Icon>
                 ) : (
                   <Icon>ac_unit</Icon>
                 )}

@@ -22,7 +22,7 @@ type TemperatureBoxProps = {
 };
 
 const isBatteryLow = (sensor: Sensor) =>
-  sensor.battery !== undefined && sensor.battery < 10;
+  sensor.battery !== undefined && sensor.battery < 2;
 
 const TREND_PILL_THRESHOLD = 0.3;
 

@@ -35,9 +35,9 @@ TOMORROW_IO_API_KEY=        # tomorrow.io API key
 HUE_BRIDGE_ADDRESS=         # optional — auto-discovered via meethue.com if omitted
 HUE_BRIDGE_USER=            # obtained via the pairing flow below
 LANGUAGE=fi
-HCC_IMAGE_TAG=              # version label shown on the front page
-HCC_DB_PATH=/data/hcc.db    # SQLite database path (default: hcc.db in working directory)
-HCC_HISTORY_RETENTION_DAYS=90 # days of sensor history to keep (default: 0/disabled)
+HALO_IMAGE_TAG=              # version label shown on the front page
+HALO_DB_PATH=/data/halo.db   # SQLite database path (default: halo.db in working directory)
+HALO_HISTORY_RETENTION_DAYS=90 # days of sensor history to keep (default: 0/disabled)
 
 # Maps room types to lists of room names as configured in the Hue app.
 # Rooms not listed default to "inside".
@@ -83,11 +83,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Sensor history
 
-Temperature readings from all enabled and connected sensors are automatically recorded to a SQLite database every 5 minutes. Old readings are pruned automatically based on `HCC_HISTORY_RETENTION_DAYS` (default: 90).
+Temperature readings from all enabled and connected sensors are automatically recorded to a SQLite database every 5 minutes. Old readings are pruned automatically based on `HALO_HISTORY_RETENTION_DAYS` (default: 90).
 
 ### Storage
 
-In Docker the database is stored in a named volume (`hcc-data`) at `/data/hcc.db`. In development it defaults to `hcc.db` in the working directory.
+In Docker the database is stored in a named volume (`halo-data`) at `/data/halo.db`. In development it defaults to `halo.db` in the working directory.
 
 ### API
 
@@ -102,7 +102,7 @@ GET /api/history/sensors?sensor_id=<id>&hours=<n>
 
 ## Solis history
 
-When SolisCloud is configured, the backend polls `/v1/api/stationDetail` every 5 minutes and writes a row to `solis_readings` (PV power, grid power, battery SoC + power, today's energy, status). Readings during inverter offline (`status=2`) are skipped to keep gaps visible in the chart. Retention follows `HCC_HISTORY_RETENTION_DAYS`.
+When SolisCloud is configured, the backend polls `/v1/api/stationDetail` every 5 minutes and writes a row to `solis_readings` (PV power, grid power, battery SoC + power, today's energy, status). Readings during inverter offline (`status=2`) are skipped to keep gaps visible in the chart. Retention follows `HALO_HISTORY_RETENTION_DAYS`.
 
 ```
 GET /api/history/solis?hours=<n>&max_points=<m>
@@ -129,16 +129,16 @@ wraps both:
 ```bash
 # Auto-detect: uses local uv repo if ../fmi-pv-forecast-runner/ is checked out,
 # otherwise pulls the published Docker image.
-HCC_PV_ENV_FILE=.env.pv ./scripts/refresh-pv-forecast.sh
+HALO_PV_ENV_FILE=.env.pv ./scripts/refresh-pv-forecast.sh
 
 # Force a specific mode:
 ./scripts/refresh-pv-forecast.sh uv
 ./scripts/refresh-pv-forecast.sh docker
 ```
 
-Required env vars (place in `$HCC_PV_ENV_FILE` or export beforehand):
+Required env vars (place in `$HALO_PV_ENV_FILE` or export beforehand):
 `PV_LAT`, `PV_LON`, `PV_TILT`, `PV_AZIMUTH`, `PV_KW`. Optional overrides:
-`HCC_BACKEND_URL` (default `http://localhost:3000`), `PV_RUNNER_PATH`,
+`HALO_BACKEND_URL` (default `http://localhost:3000`), `PV_RUNNER_PATH`,
 `PV_RUNNER_IMAGE`.
 
 ### Cold-start and periodic refresh
@@ -148,7 +148,7 @@ deploy. For a 3-hour refresh cadence (matching the upstream forecast
 update interval), add a host cron entry:
 
 ```cron
-17 */3 * * * cd /opt/hcc && HCC_PV_ENV_FILE=/opt/hcc/.env.pv ./scripts/refresh-pv-forecast.sh >>/var/log/hcc-pv.log 2>&1
+17 */3 * * * cd /opt/halo && HALO_PV_ENV_FILE=/opt/halo/.env.pv ./scripts/refresh-pv-forecast.sh >>/var/log/halo-pv.log 2>&1
 ```
 
 ### Storage and rendering

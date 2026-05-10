@@ -14,7 +14,7 @@ pub fn start(state: Arc<AppState>) {
         return;
     }
     if state.settings.history_retention_days == 0 {
-        tracing::info!("Solis history recording disabled (HCC_HISTORY_RETENTION_DAYS=0)");
+        tracing::info!("Solis history recording disabled (HALO_HISTORY_RETENTION_DAYS=0)");
         return;
     }
 

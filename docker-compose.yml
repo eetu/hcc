@@ -1,7 +1,7 @@
 services:
-  hcc:
-    image: "ghcr.io/eetu/hcc:main"
-    container_name: hcc
+  halo:
+    image: "ghcr.io/eetu/halo:main"
+    container_name: halo
     restart: always
     environment:
       - TOMORROW_IO_API_KEY=${TOMORROW_IO_API_KEY}
@@ -9,10 +9,10 @@ services:
       - HUE_BRIDGE_USER=${HUE_BRIDGE_USER}
       - HUE_ROOM_TYPES=${HUE_ROOM_TYPES}
       - LANGUAGE=${LANGUAGE}
-      - HCC_DB_PATH=/data/hcc.db
-      - HCC_HISTORY_RETENTION_DAYS=90
+      - HALO_DB_PATH=/data/halo.db
+      - HALO_HISTORY_RETENTION_DAYS=90
     volumes:
-      - hcc-data:/data
+      - halo-data:/data
     ports:
       - 3000:3000
   watchtower:
@@ -21,6 +21,6 @@ services:
     restart: on-failure
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 900 hcc
+    command: --interval 900 halo
 volumes:
-  hcc-data:
+  halo-data:

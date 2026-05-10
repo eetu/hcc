@@ -374,7 +374,7 @@ const App = () => {
                   <Icon css={{ opacity: 1 }} size={16}>
                     local_offer
                   </Icon>
-                  {import.meta.env.VITE_HCC_IMAGE_TAG}
+                  {import.meta.env.VITE_HALO_IMAGE_TAG}
                 </div>
               </div>
             )}

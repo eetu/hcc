@@ -33,7 +33,7 @@ All stored queries accept these location params (use one):
 | `timezone` | string | e.g., `Europe/Helsinki` (default: UTC) |
 | `maxlocations` | int | How many stations (search radius 50km) |
 
-## Stored Queries Used by HCC
+## Stored Queries Used by halo
 
 ### 1. Current Observations
 
@@ -172,7 +172,7 @@ windDirection = (atan2(-u, -v) * 180 / π + 360) % 360
 
 ## Other Available Stored Queries
 
-These are available but not currently used by HCC:
+These are available but not currently used by halo:
 
 | Query | Description |
 |-------|-------------|

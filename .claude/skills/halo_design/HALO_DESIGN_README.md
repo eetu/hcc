@@ -1,4 +1,4 @@
-# HCC — Hue Control Center Design System
+# halo — Home Dashboard Design System
 
 A small, single‑purpose **home‑automation dashboard** that pairs with a Philips Hue bridge and surfaces the data you actually look at every day: room temperatures from Hue motion sensors, weather (FMI / Tomorrow.io), solar production (Solis inverter + FMI PV forecast), motion activity, and Hue light groups.
 
@@ -8,7 +8,7 @@ It's a wall‑mounted / always‑on dashboard first — Finnish, monochrome with
 
 This design system was reverse‑engineered from a single source:
 
-- **Code:** `eetu/hcc` (branch `develop`) — `frontend/` directory. Vite + React 19 + Emotion. Theme defined in `frontend/src/themes.ts`. UI in `frontend/src/components/`. Reference screenshot: `frontend/documentation/screenshot.png` (also copied to `assets/screenshot.png`).
+- **Code:** `eetu/halo` (branch `develop`) — `frontend/` directory. Vite + React 19 + Emotion. Theme defined in `frontend/src/themes.ts`. UI in `frontend/src/components/`. Reference screenshot: `frontend/documentation/screenshot.png` (also copied to `assets/screenshot.png`).
 - **Stack signals:** Open Sans (Google Fonts, weights 300 / 400 / 700), Material Icons + Material Icons Outlined (Google Fonts), Chart.js for time‑series, `@floating-ui/react` for tooltips, Finnish locale via `date-fns/locale/fi`.
 
 There is one product surface: the **dashboard** (`ui_kits/dashboard/`). No marketing site, no mobile app, no separate admin tool.
@@ -85,7 +85,7 @@ Two themes, swapped by `prefers-color-scheme`. The accent (`activity.on = #f78f0
 | **Inter** | Body, labels, controls, **all numeric values** (clock, temperatures, kW), and the **wordmark**. The neutral workhorse, with a heavy 600 used for the brand mark. | 300 / 400 / 500 / 600 / 700 |
 | **Space Grotesk** | Section labels, nav, the date sub under the clock, the seconds counter. Geometric with a touch of character. | 400 / 500 / 600 |
 
-Two variables expose them: `--hcc-font` (Inter), `--hcc-font-heading` (Space Grotesk). Numeric values — clock, temperature digits, kW readouts — share the same Inter treatment with `font-variant-numeric: tabular-nums` so they read as one family of measurements. The wordmark uses Inter at weight 600 with tight (−0.04em) tracking and a warm accent dot — it sits in the same family as the numerals so brand and data feel of‑a‑piece.
+Two variables expose them: `--halo-font` (Inter), `--halo-font-heading` (Space Grotesk). Numeric values — clock, temperature digits, kW readouts — share the same Inter treatment with `font-variant-numeric: tabular-nums` so they read as one family of measurements. The wordmark uses Inter at weight 600 with tight (−0.04em) tracking and a warm accent dot — it sits in the same family as the numerals so brand and data feel of‑a‑piece.
 
 | Token | Size | Family / weight |
 |---|---|---|

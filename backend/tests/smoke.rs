@@ -1,12 +1,12 @@
 use actix_web::{test, web, App};
-use hcc_backend::settings::Settings;
-use hcc_backend::{create_test_app_state, create_test_app_state_with, hue, weather};
+use halo_backend::settings::Settings;
+use halo_backend::{create_test_app_state, create_test_app_state_with, hue, weather};
 use wiremock::matchers::{body_json, method, path};
 use wiremock::{Mock, MockServer, ResponseTemplate};
 
 /// Build a test app with only the API routes (no static file serving).
 fn test_app(
-    state: std::sync::Arc<hcc_backend::AppState>,
+    state: std::sync::Arc<halo_backend::AppState>,
 ) -> App<
     impl actix_web::dev::ServiceFactory<
         actix_web::dev::ServiceRequest,
@@ -18,7 +18,7 @@ fn test_app(
 > {
     App::new()
         .app_data(web::Data::new(state))
-        .route("/status", web::get().to(hcc_backend::status))
+        .route("/status", web::get().to(halo_backend::status))
         .service(
             web::scope("/api")
                 .service(

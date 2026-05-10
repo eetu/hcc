@@ -1,30 +1,30 @@
 #!/usr/bin/env bash
-# Refresh the PV forecast in the HCC backend.
+# Refresh the PV forecast in the halo backend.
 #
 # Usage:
 #   scripts/refresh-pv-forecast.sh                  # auto-detect: uv if local repo present, else docker
 #   scripts/refresh-pv-forecast.sh uv               # force local uv invocation
 #   scripts/refresh-pv-forecast.sh docker           # force docker invocation
 #
-# Required env (sourced from $HCC_PV_ENV_FILE if set, otherwise inherited):
+# Required env (sourced from $HALO_PV_ENV_FILE if set, otherwise inherited):
 #   PV_LAT, PV_LON, PV_TILT, PV_AZIMUTH, PV_KW
 # Optional:
-#   HCC_BACKEND_URL  default http://localhost:3000
-#   PV_RUNNER_PATH   path to local fmi-pv-forecast-runner repo (default: ../fmi-pv-forecast-runner)
-#   PV_RUNNER_IMAGE  docker image to use (default: ghcr.io/eetu/fmi-pv-forecast-runner:latest)
-#   HCC_PV_ENV_FILE  path to a .env file to source for PV_* vars
+#   HALO_BACKEND_URL  default http://localhost:3000
+#   PV_RUNNER_PATH    path to local fmi-pv-forecast-runner repo (default: ../fmi-pv-forecast-runner)
+#   PV_RUNNER_IMAGE   docker image to use (default: ghcr.io/eetu/fmi-pv-forecast-runner:latest)
+#   HALO_PV_ENV_FILE  path to a .env file to source for PV_* vars
 
 set -euo pipefail
 
 mode="${1:-auto}"
-backend_url="${HCC_BACKEND_URL:-http://localhost:3000}"
+backend_url="${HALO_BACKEND_URL:-http://localhost:3000}"
 runner_path="${PV_RUNNER_PATH:-../fmi-pv-forecast-runner}"
 runner_image="${PV_RUNNER_IMAGE:-ghcr.io/eetu/fmi-pv-forecast-runner:latest}"
 
-if [[ -n "${HCC_PV_ENV_FILE:-}" && -f "$HCC_PV_ENV_FILE" ]]; then
+if [[ -n "${HALO_PV_ENV_FILE:-}" && -f "$HALO_PV_ENV_FILE" ]]; then
   set -a
   # shellcheck disable=SC1090
-  source "$HCC_PV_ENV_FILE"
+  source "$HALO_PV_ENV_FILE"
   set +a
 fi
 

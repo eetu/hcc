@@ -248,7 +248,7 @@ fn row_to_reading(row: &rusqlite::Row) -> rusqlite::Result<SensorReading> {
 
 pub fn start_recording_loop(state: Arc<AppState>) {
     if state.settings.history_retention_days == 0 {
-        tracing::info!("Sensor history recording disabled (HCC_HISTORY_RETENTION_DAYS=0)");
+        tracing::info!("Sensor history recording disabled (HALO_HISTORY_RETENTION_DAYS=0)");
         return;
     }
 

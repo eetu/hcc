@@ -12,7 +12,7 @@
 
 It's designed to be **glanceable from across the room** — Finnish UI, monochrome with a single warm orange accent, generous whitespace, no chrome, no marketing voice. Touch-first; this device lives on a wall.
 
-This bundle is the design handoff for a redesign / rebuild of the Halo dashboard. It supersedes the original `eetu/hcc` frontend — same product surface, refined visual language, expanded Energy view.
+This bundle is the design handoff for a redesign / rebuild of the Halo dashboard. It supersedes the original `eetu/halo` frontend — same product surface, refined visual language, expanded Energy view.
 
 ## About the design files
 
@@ -58,7 +58,7 @@ SVG, viewBox `0 0 800 420`. Four primary nodes at r=36: PV (180,110), Battery (1
 All labels (node name in Space Grotesk 14, sub-label in 12 muted, big kW number in Inter 20 tabular-nums) sit **outside** the circles — never inside. Header: `energiavirta` left, timestamp `02.05.2026 09.41 · ±1 min` right, `whiteSpace: nowrap`.
 
 **b) `SummaryPanel` — daily summary donut + metrics.**
-Header: `päivän yhteenveto` + range pills (`päivä` / `kk` / `vuosi` / `kaikki`). Active pill: 1px `#f78f08` border, `rgba(247,143,8,0.10)` background, accent text. Inactive: 1px `--hcc-border` border, transparent.
+Header: `päivän yhteenveto` + range pills (`päivä` / `kk` / `vuosi` / `kaikki`). Active pill: 1px `#f78f08` border, `rgba(247,143,8,0.10)` background, accent text. Inactive: 1px `--halo-border` border, transparent.
 
 180px-wide donut on the left (SVG, viewBox 100×100, rotated -90°, two arcs via `stroke-dasharray`):
 - Arc 1: PV → consumption, `#f78f08`
@@ -79,7 +79,7 @@ X-axis ticks at 00.00 / 06.00 / 12.00 / 18.00 / 24.00. Below: wrap-flex legend w
 
 ### 3. Lights view
 
-Full-width grid of `LightGroup` chunky toggle buttons. Each: 6px radius, **3px border** (the only thick border in the system) — accent `#f78f08` when on, `--hcc-text-main` when off. Lit state fills with the cream gradient `--hcc-accent-bg` (`linear-gradient(153deg, rgba(255,237,207,1) 0%, rgba(255,239,171,1) 56%)`). Inside: a fully round (`borderRadius: 100%`) chip holding a filled Material `lightbulb` icon, with `rgba(247,143,8,0.15)` (light) or `rgba(0,0,0,0.15)` (dark) background to feel set into the parent. Lit bulbs get a soft animated drop-shadow glow.
+Full-width grid of `LightGroup` chunky toggle buttons. Each: 6px radius, **3px border** (the only thick border in the system) — accent `#f78f08` when on, `--halo-text-main` when off. Lit state fills with the cream gradient `--halo-accent-bg` (`linear-gradient(153deg, rgba(255,237,207,1) 0%, rgba(255,239,171,1) 56%)`). Inside: a fully round (`borderRadius: 100%`) chip holding a filled Material `lightbulb` icon, with `rgba(247,143,8,0.15)` (light) or `rgba(0,0,0,0.15)` (dark) background to feel set into the parent. Lit bulbs get a soft animated drop-shadow glow.
 
 ### 4. Motion view
 
@@ -99,7 +99,7 @@ Full-width card. Single text input for location (`kaupunki tai osoite`, default 
 
 ### Brand mark (top-left, absolute)
 - 22×22 SVG: thin ring (`stroke-width: 3`, currentColor) + 6r filled circle accent center. The ring is the "halo".
-- Wordmark: Inter 600, lowercase, `letter-spacing: -0.04em`, 22px, `--hcc-text-main`. Trailing period in `--hcc-accent`.
+- Wordmark: Inter 600, lowercase, `letter-spacing: -0.04em`, 22px, `--halo-text-main`. Trailing period in `--halo-accent`.
 - The wordmark is the brand. Use the same Inter 600 treatment everywhere — never substitute a display font.
 
 ### Clock (centered, below brand)
@@ -110,7 +110,7 @@ Full-width card. Single text input for location (`kaupunki tai osoite`, default 
 ### Nav rail (left, 48px wide)
 - 6 buttons, vertical stack, 4px gap. Material Icons Outlined at 26px.
 - Active: accent color + 3×18px accent pill at `left: -2; top: 50%`.
-- Inactive: `--hcc-text-muted`. No hover state — this is a touch device.
+- Inactive: `--halo-text-muted`. No hover state — this is a touch device.
 - Icons: `thermostat / bolt / lightbulb / directions_run / timeline / settings`
 
 ### Fullscreen toggle (top-right, absolute)
@@ -167,34 +167,34 @@ All times in Europe/Helsinki. All copy in Finnish via `date-fns/locale/fi`.
 
 ## Design tokens
 
-All tokens live in `design_files/colors_and_type.css` as CSS custom properties. The codebase exposes the same tokens via `frontend/src/themes.ts` (Emotion theme). Token names use the legacy `--hcc-*` prefix for backwards compatibility — keep them.
+All tokens live in `design_files/colors_and_type.css` as CSS custom properties. The codebase exposes the same tokens via `frontend/src/themes.ts` (Emotion theme). Token names use the `--halo-*` prefix.
 
 ### Colors — light theme
 
 | Token | Value | Use |
 |---|---|---|
-| `--hcc-body` | `#f0f0f0` | Page background |
-| `--hcc-bg-main` | `#ffffff` | Card surface |
-| `--hcc-bg-light` | `#fbfbfb` | Drawer / nested surface |
-| `--hcc-text-main` | `#525252` | Primary text (never pure black) |
-| `--hcc-text-muted` | `#a0a0a0` | Inactive nav, secondary labels |
-| `--hcc-text-light` | `#e9e9e9` | Footer chrome |
-| `--hcc-border` | `lightgray` | 1px hairlines |
-| `--hcc-accent` | `#f78f08` | The only saturated brand color |
-| `--hcc-accent-bg` | `linear-gradient(153deg, rgba(255,237,207,1) 0%, rgba(255,239,171,1) 56%)` | Behind a lit bulb |
-| `--hcc-accent-soft` | `rgba(247,143,8,0.15)` | Subtle accent fills |
-| `--hcc-off-bg` | `#d9d9d9` | Behind an unlit bulb |
-| `--hcc-error` | `tomato` | Low battery, alarm |
-| `--hcc-connected` | `#4caf50` | Sensor pill connected |
-| `--hcc-disconnected` | `#f44336` | Sensor pill disconnected |
-| `--hcc-warm` | `#e65100` | Weather chart warm trend |
-| `--hcc-cool` | `#1565c0` | Weather chart cool trend |
-| `--hcc-rain` | `#94daf7` | Rain bars, battery flow |
-| `--hcc-pv` | `#f5a524` | Grid line in energy chart |
+| `--halo-body` | `#f0f0f0` | Page background |
+| `--halo-bg-main` | `#ffffff` | Card surface |
+| `--halo-bg-light` | `#fbfbfb` | Drawer / nested surface |
+| `--halo-text-main` | `#525252` | Primary text (never pure black) |
+| `--halo-text-muted` | `#a0a0a0` | Inactive nav, secondary labels |
+| `--halo-text-light` | `#e9e9e9` | Footer chrome |
+| `--halo-border` | `lightgray` | 1px hairlines |
+| `--halo-accent` | `#f78f08` | The only saturated brand color |
+| `--halo-accent-bg` | `linear-gradient(153deg, rgba(255,237,207,1) 0%, rgba(255,239,171,1) 56%)` | Behind a lit bulb |
+| `--halo-accent-soft` | `rgba(247,143,8,0.15)` | Subtle accent fills |
+| `--halo-off-bg` | `#d9d9d9` | Behind an unlit bulb |
+| `--halo-error` | `tomato` | Low battery, alarm |
+| `--halo-connected` | `#4caf50` | Sensor pill connected |
+| `--halo-disconnected` | `#f44336` | Sensor pill disconnected |
+| `--halo-warm` | `#e65100` | Weather chart warm trend |
+| `--halo-cool` | `#1565c0` | Weather chart cool trend |
+| `--halo-rain` | `#94daf7` | Rain bars, battery flow |
+| `--halo-pv` | `#f5a524` | Grid line in energy chart |
 
 ### Colors — dark theme
 
-Body `#0f0f0f`, surface `#252525`, drawer `#1c1c1c`. Text main `#d6d6d6` / muted `#8a8a8a` / light `#646464`. Same accent `#f78f08`. `--hcc-accent-bg` becomes `rgba(247,143,8,0.2)`. `--hcc-shadow: none`. Border becomes a 1px hairline `#1f1f1f`.
+Body `#0f0f0f`, surface `#252525`, drawer `#1c1c1c`. Text main `#d6d6d6` / muted `#8a8a8a` / light `#646464`. Same accent `#f78f08`. `--halo-accent-bg` becomes `rgba(247,143,8,0.2)`. `--halo-shadow: none`. Border becomes a 1px hairline `#1f1f1f`.
 
 ### Typography
 
@@ -225,8 +225,8 @@ Pragmatic, not a strict scale. Recurring values: `4, 5, 8, 10, 16, 20, 24` px an
 
 | Token | Value |
 |---|---|
-| `--hcc-radius` | `6px` (every card, drawer, range pill, light button) |
-| `--hcc-radius-pill` | `4px` |
+| `--halo-radius` | `6px` (every card, drawer, range pill, light button) |
+| `--halo-radius-pill` | `4px` |
 | Light group chip | `border-radius: 100%` (only fully-round element) |
 | Light group border | `3px` (only thick border in the system) |
 | Card padding | `1.5em` |
@@ -248,9 +248,9 @@ Dark theme — `none`. Surface vs body contrast carries the elevation.
 
 | Token | Value |
 |---|---|
-| `--hcc-ease` | `ease` (browser default — no custom curves) |
-| `--hcc-d-fast` | `0.15s` (color transitions, range pill swaps) |
-| `--hcc-d-med` | `0.5s` (tooltip fade) |
+| `--halo-ease` | `ease` (browser default — no custom curves) |
+| `--halo-d-fast` | `0.15s` (color transitions, range pill swaps) |
+| `--halo-d-med` | `0.5s` (tooltip fade) |
 | Drawer | 150ms ease, `grid-template-rows: 0fr → 1fr` |
 | Energy flow scroll | 1.4s linear infinite |
 | Energy node pulse | 2.4s ease-in-out infinite |
@@ -360,7 +360,7 @@ To view the prototype: open `design_files/ui_kits/dashboard/index.html` in a bro
 To make this design system available to Claude Code inside the Halo repo:
 
 ```
-eetu/hcc/.claude/skills/halo-design/
+eetu/halo/.claude/skills/halo-design/
 ├── SKILL.md                  ← from this bundle
 ├── README.md                 ← rename HALO_DESIGN_README.md back to README.md
 ├── colors_and_type.css
@@ -372,7 +372,7 @@ Copy `SKILL.md`, `HALO_DESIGN_README.md` (rename to `README.md`), `colors_and_ty
 
 ## Implementation checklist
 
-- [ ] Confirm or import design tokens into `frontend/src/themes.ts` — light + dark, all `--hcc-*` keys above.
+- [ ] Confirm or import design tokens into `frontend/src/themes.ts` — light + dark, all `--halo-*` keys above.
 - [ ] Wire Inter + Space Grotesk + Material Icons Outlined + Material Icons via Google Fonts (or self-host for offline).
 - [ ] `App.tsx` — fixed 720px column, clock + nav rail + view router. Six views routed by local state.
 - [ ] `Clock.tsx` — 1s interval; HH + accent dot + MM + seconds + date sub.

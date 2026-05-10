@@ -52,7 +52,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            HCC_IMAGE_TAG=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+            HALO_IMAGE_TAG=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
           platforms: linux/arm64
           # Skip the provenance + SBOM attestations buildx attaches by
           # default. Each one becomes its own ghcr "version", inflating
@@ -64,7 +64,7 @@ jobs:
       - name: Prune untagged image versions
         uses: actions/delete-package-versions@v5
         with:
-          package-name: hcc
+          package-name: halo
           package-type: container
           delete-only-untagged-versions: true
           min-versions-to-keep: 5

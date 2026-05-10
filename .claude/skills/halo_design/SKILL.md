@@ -21,7 +21,7 @@ Key things to keep in mind for Halo:
 - **Finnish, lowercase, terse.** No marketing voice. Numbers do the talking.
 - **Monochrome + one warm accent.** Greys, with `#f78f08` as the only saturated color (lit lights, active motion, warm trends, energy flow). Optional warm/cool weather hues.
 - **Two families.** Inter (body + numerals + wordmark, 300–700) and Space Grotesk (section labels, nav, date sub, seconds counter, 400–600). The wordmark is Inter 600 with tight (−0.04em) tracking and a warm accent dot.
-- **Brand mark:** thin ring + warm centre. The wordmark "halo." is set in Inter 600 lowercase — same family as the numerals on the dashboard, so brand and data read as one. Tokens still read `--hcc-*` for backwards compatibility with the source repo.
+- **Brand mark:** thin ring + warm centre. The wordmark "halo." is set in Inter 600 lowercase — same family as the numerals on the dashboard, so brand and data read as one. Tokens use the `--halo-*` prefix.
 - **Cards: 6px radius, soft shadow** in light theme; shadow turns off in dark.
 - **No emoji, no hero imagery.** Material Icons (Outlined default; Filled only for the lit-bulb, which softly glows).
 - **Calm motion with small wow moments.** Drawer unfolds (150ms), clock colon pulses on every second, lit bulbs breathe, active motion dot pulses outward, energy-flow strokes scroll along their paths, temperature counters ease to new values.

@@ -5,8 +5,8 @@ FROM --platform=$BUILDPLATFORM tonistiigi/xx AS xx
 
 # --- Stage 1: Build frontend (native, output is platform-independent) ---
 FROM --platform=$BUILDPLATFORM node:24-alpine AS frontend-build
-ARG HCC_IMAGE_TAG
-ENV VITE_HCC_IMAGE_TAG=$HCC_IMAGE_TAG
+ARG HALO_IMAGE_TAG
+ENV VITE_HALO_IMAGE_TAG=$HALO_IMAGE_TAG
 WORKDIR /app
 COPY frontend/package.json frontend/yarn.lock frontend/.yarnrc.yml* ./
 RUN corepack enable && yarn install --immutable --network-timeout 1000000
@@ -34,15 +34,15 @@ RUN touch src/main.rs && xx-cargo build --release
 # --- Stage 4: Runtime ---
 FROM scratch AS runner
 WORKDIR /app
-LABEL org.opencontainers.image.description="HCC for raspi"
-LABEL org.opencontainers.image.source="https://github.com/eetu/hcc"
+LABEL org.opencontainers.image.description="halo for raspi"
+LABEL org.opencontainers.image.source="https://github.com/eetu/halo"
 
 COPY --from=backend-build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=backend-build /app/target/*/release/hcc-backend ./hcc-backend
+COPY --from=backend-build /app/target/*/release/halo-backend ./halo-backend
 COPY --from=frontend-build /app/dist ./dist
 
 USER 1000
 
 EXPOSE 3000
 
-CMD ["./hcc-backend"]
+CMD ["./halo-backend"]

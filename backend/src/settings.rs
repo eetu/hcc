@@ -57,7 +57,7 @@ impl Settings {
                 .ok()
                 .and_then(|p| p.parse().ok())
                 .unwrap_or(3000),
-            history_retention_days: env::var("HCC_HISTORY_RETENTION_DAYS")
+            history_retention_days: env::var("HALO_HISTORY_RETENTION_DAYS")
                 .ok()
                 .and_then(|d| d.parse().ok())
                 .unwrap_or(0),

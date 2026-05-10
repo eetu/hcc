@@ -284,7 +284,7 @@ pub async fn run_server() -> std::io::Result<()> {
 
     let (hue_events_tx, _) = broadcast::channel(256);
 
-    let db_path = std::env::var("HCC_DB_PATH").unwrap_or_else(|_| "hcc.db".into());
+    let db_path = std::env::var("HALO_DB_PATH").unwrap_or_else(|_| "halo.db".into());
     let storage = storage::Storage::open(std::path::Path::new(&db_path))
         .expect("Failed to open SQLite database");
 

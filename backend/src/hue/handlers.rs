@@ -108,7 +108,7 @@ pub async fn pair(state: web::Data<Arc<AppState>>, body: web::Json<PairRequest>)
         format!("https://{bridge_ip}/api")
     };
     let payload = serde_json::json!({
-        "devicetype": "hcc#server",
+        "devicetype": "halo#server",
         "generateclientkey": true,
     });
 
